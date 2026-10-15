@@ -1,0 +1,14 @@
+{
+  "name": "kriale/plataforma-soni-api",
+  "description": "API Slim 4 da Plataforma SONI",
+  "type": "project",
+  "require": {
+    "php": "^8.2",
+    "slim/slim": "^4.14",
+    "slim/psr7": "^1.7",
+    "vlucas/phpdotenv": "^5.6",
+    "firebase/php-jwt": "^6.10"
+  },
+  "autoload": { "psr-4": { "Soni\\": "src/" } },
+  "scripts": { "start": "php -S localhost:8282 -t public public/index.php" }
+}

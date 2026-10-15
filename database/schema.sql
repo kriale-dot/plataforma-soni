@@ -1,0 +1,99 @@
+-- SONI — esquema preliminar (não foi aplicado no banco). MySQL 8 / utf8mb4.
+
+CREATE TABLE IF NOT EXISTS tests (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  slug VARCHAR(180) NOT NULL UNIQUE,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  status ENUM('DRAFT','PUBLISHED') NOT NULL DEFAULT 'DRAFT',
+  published_at DATETIME NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS test_questions (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  test_id BIGINT UNSIGNED NOT NULL,
+  sort_order INT UNSIGNED NOT NULL,
+  body_text TEXT NULL,
+  question_type ENUM('SINGLE_CHOICE','MULTIPLE_CHOICE') NOT NULL DEFAULT 'SINGLE_CHOICE',
+  points DECIMAL(8,2) NOT NULL DEFAULT 1.00,
+  CONSTRAINT fk_questions_test FOREIGN KEY (test_id) REFERENCES tests(id) ON DELETE CASCADE,
+  UNIQUE KEY uq_question_order (test_id,sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS test_question_media (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  question_id BIGINT UNSIGNED NOT NULL,
+  media_type ENUM('IMAGE','AUDIO') NOT NULL,
+  storage_path VARCHAR(600) NOT NULL,
+  alternative_text VARCHAR(500) NULL,
+  sort_order INT UNSIGNED NOT NULL DEFAULT 0,
+  CONSTRAINT fk_question_media FOREIGN KEY (question_id) REFERENCES test_questions(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS test_options (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  question_id BIGINT UNSIGNED NOT NULL,
+  sort_order INT UNSIGNED NOT NULL,
+  body_text TEXT NULL,
+  is_correct TINYINT(1) NOT NULL DEFAULT 0,
+  CONSTRAINT fk_option_question FOREIGN KEY (question_id) REFERENCES test_questions(id) ON DELETE CASCADE,
+  UNIQUE KEY uq_option_order (question_id,sort_order)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS test_option_media (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  option_id BIGINT UNSIGNED NOT NULL,
+  media_type ENUM('IMAGE','AUDIO') NOT NULL,
+  storage_path VARCHAR(600) NOT NULL,
+  alternative_text VARCHAR(500) NULL,
+  sort_order INT UNSIGNED NOT NULL DEFAULT 0,
+  CONSTRAINT fk_option_media FOREIGN KEY (option_id) REFERENCES test_options(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS test_attempts (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  test_id BIGINT UNSIGNED NOT NULL,
+  public_token_hash CHAR(64) NOT NULL UNIQUE,
+  score DECIMAL(10,2) NULL,
+  started_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  submitted_at DATETIME NULL,
+  CONSTRAINT fk_attempt_test FOREIGN KEY (test_id) REFERENCES tests(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS test_attempt_answers (
+  attempt_id BIGINT UNSIGNED NOT NULL,
+  question_id BIGINT UNSIGNED NOT NULL,
+  option_id BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (attempt_id,question_id,option_id),
+  CONSTRAINT fk_answer_attempt FOREIGN KEY (attempt_id) REFERENCES test_attempts(id) ON DELETE CASCADE,
+  CONSTRAINT fk_answer_question FOREIGN KEY (question_id) REFERENCES test_questions(id),
+  CONSTRAINT fk_answer_option FOREIGN KEY (option_id) REFERENCES test_options(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS library_documents (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  category VARCHAR(120) NULL,
+  description TEXT NULL,
+  storage_path VARCHAR(600) NOT NULL,
+  mime_type ENUM('application/pdf','image/png') NOT NULL,
+  size_bytes BIGINT UNSIGNED NOT NULL,
+  is_published TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS library_videos (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  source_type ENUM('YOUTUBE','UPLOAD') NOT NULL,
+  youtube_video_id VARCHAR(32) NULL,
+  storage_path VARCHAR(600) NULL,
+  mime_type VARCHAR(100) NULL,
+  is_published TINYINT(1) NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Migrações formais, políticas de publicação e auditoria ainda serão implementadas.
