@@ -5,18 +5,25 @@ SONI — Sonorização de Igrejas. Plataforma educacional com site institucional
 ## Tecnologias e cores
 - Frontend: React 19 e Vite 6.
 - API: PHP 8.2+ e Slim 4.
-- Banco planejado: MySQL 8 (modelo preliminar em database/schema.sql).
+- Banco usado nos testes: MariaDB 11.4 (SQL compatível com MySQL 8 onde aplicável).
 - Paleta oficial: **Harmonia Técnica**, com azul petróleo #153B4A, turquesa #2FA89C, areia #F3EBDD, âmbar #D8A24A e grafite #27333A.
 
 ## Requisito definitivo — site institucional editável
 O site público da SONI **não será estático**: o administrador poderá montar e atualizar as seções via editor visual por blocos, no modelo da plataforma Tânia (`kriale-dot/mapa-percepcao-relacional`). Poderá editar títulos, textos, imagens, áudios, vídeos, links e chamadas para ação; incluir, ocultar, excluir e reordenar blocos. Haverá integração com as áreas de testes, documentos e vídeos.
 
-**Status:** v0.5.0 adiciona upload de imagens/áudio/vídeo com prévia particular do bloco. CMS textual da v0.4.0 e site dinâmico permanecem; validação v0.5 no Windows pendente. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
+**Status atual:** o CMS dinâmico com upload e prévia de mídias integra o MVP v0.9.0; estrutura e critérios em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
 
-## Situação — v0.7.0
-Implementado no código: site institucional dinâmico por blocos, tela /admin, editor /admin/site após login, rotas privadas JWT para CRUD e ordem, proxy Vite /api, conexão MariaDB PDO, upload de mídia autenticado e migration do CMS.
+## Situação atual — SONI MVP v0.9.0
 
-**React/Slim, login e API pública MariaDB validados no Windows. Editor v0.4.0 aprovado no CI e validado no Windows; novo upload v0.5.0 precisa de verificação local.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
+**MVP funcional aprovado e congelado em 2026-10-15.** O responsável confirmou os testes locais; o GitHub Actions 38817558203 aprovou React, API PHP, MariaDB 11.4 e testes HTTP. Migrações 001–005 foram executadas no Windows.
+
+O MVP contém site institucional por blocos, administração JWT, testes interativos com pontuação/devolutivas, documentos PDF/PNG e vídeos do YouTube/MP4/WebM. O novo logotipo encontra-se em `frontend/src/assets/soni-logo.png`.
+
+**A v0.9.0 não está liberada para produção.** A primeira versão pública será **v1.0.0**, depois de executar os requisitos obrigatórios de segurança, deploy, backup externo, restauração, monitoramento e homologação.
+
+- [Escopo oficial e política de congelamento](docs/SONI_MVP_ESCOPO.md)
+- [Checklist de lançamento da v1.0.0](docs/SONI_CHECKLIST_LANCAMENTO.md)
+- [Status atualizado](docs/SONI_STATUS.md)
 
 ## MariaDB / CMS institucional
 

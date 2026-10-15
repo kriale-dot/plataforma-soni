@@ -1,5 +1,16 @@
 # SONI — Histórico de versões
 
+## Marco de produto — 2026-10-15 — MVP v0.9.0 aprovado e congelado
+- Aceite explícito do responsável após informar que os testes passaram.
+- Funcionalidades contempladas: CMS/site, administração, quizzes e devolutivas, documentos e vídeos, backup básico.
+- Código de referência testado: `4c3964ee319f77f366349c5238d005c334d5b414`; GitHub Actions `38817558203` aprovado. Migração 005 aplicada no Windows.
+- Versão `0.9.0` representa **MVP funcional em ambiente de desenvolvimento**, não deploy público.
+- Desenvolvimento funcional congelado até release `1.0.0`, exceto correções e requisitos bloqueadores da preparação de produção.
+- Documentos de decisão e execução: `docs/SONI_MVP_ESCOPO.md` e `docs/SONI_CHECKLIST_LANCAMENTO.md`.
+- **Portão de lançamento:** itens P0 comprovados, implantação HTTPS, backup/restore ensaiado, segurança, monitoramento e smoke tests públicos; a v1.0.0 não está liberada neste momento.
+
+
+
 ## v0.9.0 — 2026-10-15 — Biblioteca de Vídeos
 - Migração `005_videos.sql`: categorias e itens com origem YouTube ou mídia MP4/WebM, rascunho/publicação e visibilidade.
 - API autenticada JWT `/api/admin/videos`, `/api/admin/video-categories` e CRUD (upload usa rota de mídia já existente).
@@ -44,21 +55,21 @@
 
 
 ## v0.7.0 — 2026-10-15 — Primeiro Teste seus Conhecimentos
-- Banco \`002_quizzes.sql\`: categorias, testes, enunciados, alternativas, resultados e respostas, com referência a imagem e áudio enviados no CMS.
-- \`QuizService.php\`: endpoints administrativos JWT, validação de publicação, criação/alteração/exclusão de questões e correção de testes.
-- API pública: \`GET /api/quizzes\`, \`GET /api/quizzes/{id}\`, \`POST /api/quizzes/{id}/attempts\` (avaliação anônima com correção após finalizar).
+- Banco `002_quizzes.sql`: categorias, testes, enunciados, alternativas, resultados e respostas, com referência a imagem e áudio enviados no CMS.
+- `QuizService.php`: endpoints administrativos JWT, validação de publicação, criação/alteração/exclusão de questões e correção de testes.
+- API pública: `GET /api/quizzes`, `GET /api/quizzes/{id}`, `POST /api/quizzes/{id}/attempts` (avaliação anônima com correção após finalizar).
 - Não revelar resposta correta nem explicação no GET público. Envio exige todas as questões respondidas, opção válida e pertencente à questão.
 - Edição de questões publicada bloqueada; após registrar tentativas, exige criar novo teste para manter consistência dos resultados.
-- Painel de testes em \`/admin/quizzes\` para categorias, provas, questões, opções e upload/reuso de mídia.
-- Site público em \`/testes\`, com aplicação interativa, resultado e explicações após finalizar.
-- \`site_media\` passa a autorizar acesso público a mídia de testes publicados; ferramenta de auditoria reconhece mídias referenciadas em questões/alternativas.
+- Painel de testes em `/admin/quizzes` para categorias, provas, questões, opções e upload/reuso de mídia.
+- Site público em `/testes`, com aplicação interativa, resultado e explicações após finalizar.
+- `site_media` passa a autorizar acesso público a mídia de testes publicados; ferramenta de auditoria reconhece mídias referenciadas em questões/alternativas.
 - Teste HTTP integrado aprovado no CI 38802753975: criação/publicação, gabarito invisível antes de responder, correção, edição protegida após tentativas e mídia de enunciados/alternativas, além de PHP lint e build React.
-- **Necessário executar a migração nova** com \`php bin/migrate.php\` no Windows.
+- **Necessário executar a migração nova** com `php bin/migrate.php` no Windows.
 - Pendências: rate limit de tentativas, versões/relatórios avançados, estatísticas, embaralhamento e testes com arquivos multimídia reais em várias plataformas.
 
 ## Validação local — 2026-10-15 — Backup v0.6.0 e auditoria
-- \`php bin/backup.php\`: responsável confirmou "Backup concluído e verificado", snapshot privado \`20261015-201352-540b7e04\`.
-- \`php bin/media-audit.php\`: responsável confirmou 0 arquivos sem referência com idade > 30 dias; nenhum arquivo alterado.
+- `php bin/backup.php`: responsável confirmou "Backup concluído e verificado", snapshot privado `20261015-201352-540b7e04`.
+- `php bin/media-audit.php`: responsável confirmou 0 arquivos sem referência com idade > 30 dias; nenhum arquivo alterado.
 - A integridade da cópia foi verificada; **a restauração isolada e cópia em disco externo não foram informadas**.
 
 

@@ -1,9 +1,21 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.9.0 (Biblioteca de Vídeos YouTube/MP4/WebM)  
-**Etapa:** 6 — Biblioteca de Vídeos  
-**Estado:** v0.8.0 com migração 004 aplicada no Windows, uso visual de PDF/PNG ainda pendente de confirmação. Repositório local/remoto sincronizado no commit 0841ebe. v0.9.0 Biblioteca de Vídeos implementada e aprovada no GitHub Actions 38817558203 (React, PHP, MariaDB 11.4 e testes HTTP); migração 005 concluída no Windows segundo retorno do responsável; validação funcional do player e editor ainda pendente.
+**Versão:** 0.9.0 — MVP funcional congelado (próxima meta: 1.0.0)  
+**Etapa:** 7/8 — Preparação para produção, segurança e implantação  
+**Estado:** MVP v0.9.0 aprovado pelo responsável em 2026-10-15 após confirmação de testes locais; CI React/PHP/MariaDB aprovado (38817558203). Migrações 001–005 aplicadas no Windows. **Ainda não liberado para produção:** faltam checklist P0, cópia externa e restauração de backup, HTTPS, limites de abuso, homologação e monitoramento.
+
+
+## Marco oficial — MVP v0.9.0 congelado (2026-10-15)
+- [x] Responsável aprovou explicitamente o congelamento da v0.9.0 como produto mínimo viável.
+- [x] Responsável informou "Os testes passaram" após a implementação da biblioteca de vídeos; foi uma confirmação funcional geral, sem relatório caso a caso.
+- [x] Escopo oficial: site institucional, administração, testes com devolutivas, bibliotecas de documentos/vídeos e manutenção básica.
+- [x] Registrada a decisão em `docs/SONI_MVP_ESCOPO.md`.
+- [x] Criado o checklist de lançamento com bloqueadores P0 em `docs/SONI_CHECKLIST_LANCAMENTO.md`.
+- [ ] Validar ambiente de produção, HTTPS, limites de abuso, proteção de uploads, política de privacidade, backups externos, restauração isolada, deploy, monitoramento, conteúdo e testes ponta a ponta.
+- [ ] Realizar aceite GO/NO-GO para a v1.0.0; publicação e disponibilidade pública **não confirmadas**.
+
+**Política:** fase de estabilização. Somente correções, segurança, backup, conteúdo essencial, implantação e testes. Funcionalidades novas ficam após a v1.0.0.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -43,7 +55,7 @@
 - [x] Editor React com envio, seleção de mídias e pré-visualização particular de blocos.
 - [x] CI aprovado no commit a9ce7fe, execução 38797251656: upload PNG, JWT, leitura pública/privada, HTTP Range, publicação, ocultação e rejeição de extensões/tipos incompatíveis; compilação React e verificação PHP também aprovadas.
 - [x] O responsável confirmou no Windows (2026-10-15): "Já testei imagem, audio e vídeo e todos estao funcionando". Uploads e reprodução dos três tipos de mídia validados na prática; não houve relatório separado dos limites extremos do php.ini.
-- [ ] Implementar limpeza de mídias órfãs, backup, auditoria e ajustes SEO/acessibilidade.
+- [x] Backup e auditoria conservadora entregues em v0.6.0. Ajustes SEO/acessibilidade continuam pendentes para revisão de lançamento.
 
 ## Manutenção e backup v0.6.0
 - [x] Implementado `php bin/backup.php`: exportação SQL MariaDB com senha fora dos argumentos, cópia das mídias e manifesto SHA-256, armazenamento fora do webroot.
@@ -51,23 +63,23 @@
 - [x] Implementado `php bin/media-audit.php`: análise sem modificação por padrão; exclui da lista mídias usadas em blocos publicados, ocultos, rascunhos e logotipo.
 - [x] Implementada quarentena opcional (movimentação recuperável, não remoção permanente), restrita a mídias sem vínculo mais antigas que 30 dias, dependente de backup íntegro criado nas últimas 12 horas.
 - [x] GitHub Actions 38799724661 aprovou exportação SQL, integridade SHA-256, identificação de órfãos, preservação de mídia em uso e quarentena no MariaDB descartável.
-- [ ] Executar primeiro os comandos seguros de backup e auditoria no Windows do responsável.
+- [x] Backup e auditoria segura executados no Windows pelo responsável; cópia off-site e restauração isolada seguem pendentes.
 - [ ] Testar restauração completa em banco separado, testar backup externo/off-site e definir retenção/quota.
 
 
 ## Confirmação local da v0.6.0 — 2026-10-15
-- [x] O responsável executou \`php bin/backup.php\`: "Backup concluído e verificado", snapshot \`20261015-201352-540b7e04\` (diretório privado, não versionado).
-- [x] O responsável executou \`php bin/media-audit.php\`: 0 mídias sem referência com mais de 30 dias; simulação sem alterações.
+- [x] O responsável executou `php bin/backup.php`: "Backup concluído e verificado", snapshot `20261015-201352-540b7e04` (diretório privado, não versionado).
+- [x] O responsável executou `php bin/media-audit.php`: 0 mídias sem referência com mais de 30 dias; simulação sem alterações.
 - [ ] Confirmar cópia do backup para outro disco/destino seguro e ensaio de restauração isolada; a verificação SHA-256 não é restauração.
 
 ## Primeira versão dos questionários — v0.7.0
-- [x] Código da migração \`002_quizzes.sql\`: categorias, testes, questões, alternativas, tentativas e respostas, com mídias opcionais de imagem e áudio.
+- [x] Código da migração `002_quizzes.sql`: categorias, testes, questões, alternativas, tentativas e respostas, com mídias opcionais de imagem e áudio.
 - [x] API administrativa JWT para criar/editar categorias e testes e gerenciar questões e alternativas; publicação sujeita à validação de todas as questões.
 - [x] API pública de catálogo e aplicação, sem revelar gabarito/explicação antes de completar a tentativa; correção e persistência do resultado no servidor.
 - [x] Formulário do aluno com seleção de uma alternativa por questão e explicações após envio; painel do administrador com cadastro de mídia via biblioteca existente.
 - [x] Mídias associadas aos testes publicados podem ser reproduzidas via rota pública; auditoria de mídias protege vínculos em questões e alternativas, inclusive rascunhos.
 - [x] Teste HTTP integrado ao CI para rascunhos, publicação, alternativas, gabarito e persistência de tentativas.
-- [ ] Verificar CI da v0.7.0 e testar no Windows. Uma nova migração SQL precisa ser aplicada com \`php bin/migrate.php\`.
+- [x] CI da versão de quizzes executado e migração 002 aplicada no Windows; validação e devolutivas confirmadas na v0.7.1.
 - [ ] Para produção: rate limiting das tentativas anônimas, prevenção de abuso, controles de sessão, questões aleatórias, versões avançadas e relatórios de desempenho.
 
 ## Devolutivas por faixas — v0.7.1
@@ -110,7 +122,8 @@
 - [x] CI 38817558203 passou em React, PHP e MariaDB 11.4: migração 005, JWT, link YouTube, vídeo MP4 privado/publicado, pesquisa, ocultação e exclusão segura.
 - [x] Correção da inconsistência `composer.lock` x `composer.json` após sincronização local/remota.
 - [x] Responsável confirmou migração 005_videos.sql aplicada no Windows: 001–004 já aplicadas; «Migrações concluídas.»
-- [ ] Validar no navegador cadastro/preview/publicação de YouTube e MP4/WebM, pesquisa e player; confirmar logotipo.
+- [x] Responsável informou que os testes funcionais da biblioteca de vídeos passaram no Windows. Não foi discriminado individualmente cada teste de MP4/WebM, busca, ocultação e logotipo.
+- [ ] Registrar, na homologação, evidência por cenário em HTTPS real.
 - [ ] Limites de upload PHP para 32 MiB, vídeos maiores via armazenamento externo, proteção de abuso e rate limiting antes da produção.
 
 ## Problema de comunicação local identificado em 2026-10-15
@@ -133,15 +146,16 @@
 - [x] Fluxo de edição/salvamento/visualização pública validado pelo responsável em 2026-10-15; testes específicos de exclusão/ordem/ocultação no Windows não foram discriminados.
 - [ ] Editor não vai alterar a paleta oficial, apenas conteúdo configurável.
 
-## Ainda não desenvolvido
-- [x] Interface real para gerenciar configurações e blocos textuais; gestão de mídia/testes/documentos/vídeos ainda não implementada.
-- [x] Estrutura de migrations e conexão PDO/MariaDB incluída no código; execução local e conexão definitiva pendentes.
-- [ ] Motor de provas, cadastro e aplicação com texto/imagem/áudio.
-- [ ] Biblioteca PDF/PNG com upload seguro.
-- [ ] Biblioteca de vídeos por YouTube e upload.
-- [ ] Testes completos, backup e deploy.
+## Pendências reais para produção
+- [ ] Rate limiting administrativo e nos quizzes públicos; revisar segurança, privacidade e dependências.
+- [ ] Backup criptografado fora do servidor e restauração completa validada em ambiente isolado.
+- [ ] HTTPS, configurações de produção, ambiente, domínio e monitoramento.
+- [ ] Verificação visual documentada de PDF/PNG e fluxos de erro; testes de ponta a ponta em dispositivos reais.
+- [ ] Preparação de conteúdos mínimos e ensaio com primeiros usuários.
+
+**Novos módulos e melhorias opcionais:** adiados para pós-lançamento, conforme escopo congelado.
 
 ## Próxima ação
-CI aprovado e migração 005 confirmada no Windows. Reiniciar PHP/Vite. Em /admin/videos cadastrar YouTube em rascunho, conferir prévia, publicar, testar busca/player em /videos e repetir com MP4/WebM pequeno. A migração 004 foi confirmada no Windows; uso visual da biblioteca de documentos ainda não foi informado.
+Começar o checklist P0 em `docs/SONI_CHECKLIST_LANCAMENTO.md`: definir servidor, domínio, fluxo de deploy e ambiente isolado; depois segurança, backup off-site, teste de restauração, homologação e aceite da v1.0.0. **Não criar funcionalidades novas nesta fase.**
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

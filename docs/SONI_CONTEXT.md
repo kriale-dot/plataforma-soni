@@ -68,3 +68,9 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Biblioteca /videos e /admin/videos, categorias, busca, origem YouTube por ID verificado ou uploads MP4/WebM pela biblioteca de mídia existente.
 - Banco migration 005; armazenagem segura e acesso público somente quando publicado/visível; auditoria protege vídeos em rascunho.
 - Repositório estava sincronizado no commit 0841ebe antes da v0.9, preservando novo logo em frontend/src/assets/soni-logo.png e App.jsx.
+
+## Marco de produto — congelamento do MVP (2026-10-15)
+- O responsável informou que os testes passaram e aprovou considerar a SONI 0.9.0 como MVP funcional oficial.
+- A etapa seguinte é preparar v1.0.0 para produção, com escopo de funcionalidades congelado.
+- Documentos de referência: docs/SONI_MVP_ESCOPO.md e docs/SONI_CHECKLIST_LANCAMENTO.md. Não iniciar novas funcionalidades opcionais até homologação da v1.0.0.
+- Aprovação funcional local não substitui HTTPS, security hardening, rate limiting, backup off-site, restauração e monitoramento.
