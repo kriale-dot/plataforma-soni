@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.6.0 (backup verificável e auditoria de mídias)  
 **Etapa:** 3 — Proteção dos dados e manutenção do CMS  
-**Estado:** v0.5.0 validada localmente; ferramentas de backup e auditoria v0.6.0 implementadas no código, aguardando CI e teste guiado no Windows.
+**Estado:** v0.5.0 validada localmente; ferramentas de backup e auditoria v0.6.0 aprovadas em CI MariaDB 11.4 (execução 38799724661), teste guiado no Windows pendente.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -50,7 +50,8 @@
 - [x] Implementada verificação de integridade do snapshot; cópias incompletas não são promovidas a backup concluído.
 - [x] Implementado `php bin/media-audit.php`: análise sem modificação por padrão; exclui da lista mídias usadas em blocos publicados, ocultos, rascunhos e logotipo.
 - [x] Implementada quarentena opcional (movimentação recuperável, não remoção permanente), restrita a mídias sem vínculo mais antigas que 30 dias, dependente de backup íntegro criado nas últimas 12 horas.
-- [ ] Validar os scripts de manutenção no GitHub Actions e executá-los primeiro em modo seguro no Windows.
+- [x] GitHub Actions 38799724661 aprovou exportação SQL, integridade SHA-256, identificação de órfãos, preservação de mídia em uso e quarentena no MariaDB descartável.
+- [ ] Executar primeiro os comandos seguros de backup e auditoria no Windows do responsável.
 - [ ] Testar restauração completa em banco separado, testar backup externo/off-site e definir retenção/quota.
 
 ## Problema de comunicação local identificado em 2026-10-15

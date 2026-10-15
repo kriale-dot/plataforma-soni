@@ -279,6 +279,9 @@ final class SiteMaintenance
                 if (!is_file($from) || is_link($from)) {
                     throw new RuntimeException('Arquivo de mídia ausente ou inseguro; operação interrompida.');
                 }
+                if (hash_file('sha256', $from) !== $manifest['files']['media/' . $relative]) {
+                    throw new RuntimeException('Mídia alterada após o backup; faça nova cópia antes da quarentena.');
+                }
                 $folder = $quarantineRoot . '/' . gmdate('Ymd');
                 self::ensureDirectory($folder);
                 $to = $folder . '/' . $id . '-' . bin2hex(random_bytes(6)) . '.' . pathinfo($relative, PATHINFO_EXTENSION);

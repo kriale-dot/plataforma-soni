@@ -40,7 +40,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.5.0']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.6.0']);
 });
 
 // Configurações e blocos públicos; não retornar rascunhos ou blocos ocultos.
