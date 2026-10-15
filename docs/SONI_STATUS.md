@@ -27,6 +27,7 @@
 - [x] Script php bin/migrate.php com histórico schema_migrations e checksum.
 - [x] Script php bin/db-check.php para testar conexão e conteúdo sem expor senhas.
 - [x] Endpoint público GET /api/site para recuperar somente blocos visíveis/publicados do banco.
+- [x] GitHub Actions executou a migração 001 em MariaDB 11.4 temporário, repetiu a migração sem duplicar registros e aprovou o filtro de rascunhos/ocultos (CI do commit ca9eab8).
 - [ ] Criar banco plataforma_soni e usuário soni_app no MariaDB local, configurar api/.env e executar migração.
 - [ ] Verificar php bin/db-check.php e GET /api/site no navegador do responsável.
 - [ ] Implementar CRUD de edição e site React dinâmico (não incluídos nesta entrega).

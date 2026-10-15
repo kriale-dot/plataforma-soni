@@ -8,7 +8,8 @@
 - api/bin/db-check.php: verificação de conexão e contagem dos blocos públicos.
 - api/src/SiteRepository.php e GET /api/site: leitura pública de configurações e blocos publicados/visíveis.
 - api/.env.example e composer.json atualizados; documentação de setup em docs/SONI_DATABASE_SETUP.md.
-- **Implementação preparada, não executada contra o banco local do usuário**; banco e usuário precisam ser criados e migrações executadas localmente.
+- **GitHub Actions aprovado no commit ca9eab8:** migração, segunda execução idempotente, consulta PDO e testes de visibilidade/publicação dos cinco blocos. A correção em api/src/Database.php permite ler variáveis DB_* do ambiente do CI com getenv().
+- **Não executado contra o banco local do usuário**; banco e usuário precisam ser criados e migrações executadas localmente.
 - **Pendente:** editar conteúdo via painel e carregar dados dinamicamente no frontend React.
 
 
