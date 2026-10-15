@@ -26,6 +26,13 @@
 - [ ] Conferir erros de autenticação, desconexão e saída no navegador.
 - [ ] Definir rate limit e configurações finais de HTTPS/CORS antes de produção.
 
+## Nova decisão aprovada — site institucional editável
+- [x] Analisada como referência a implementação em `kriale-dot/mapa-percepcao-relacional`: editor por blocos com criação, alteração, remoção, ordem, visibilidade, título do site e upload de imagens.
+- [x] Registrado requisito definitivo de CMS institucional na SONI; documentação técnica em `docs/SONI_CMS_INSTITUCIONAL.md`.
+- [ ] Implementar CMS na API e MySQL, frontend público dinâmico e editor de blocos em `/admin/site`.
+- [ ] Validar fluxo admin → salvar/publicar → página pública refletindo mudanças.
+- [ ] Editor não vai alterar a paleta oficial, apenas conteúdo configurável.
+
 ## Ainda não desenvolvido
 - [ ] Interface real de gestão de conteúdo e CRUD.
 - [ ] Migrations e conexão MySQL.
@@ -35,6 +42,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Seguir docs/SONI_LOCAL_SETUP.md para validação no computador. Depois implementar banco, migrations e CRUD de categorias/testes.
+Seguir docs/SONI_LOCAL_SETUP.md para validação no computador. **Prioridade funcional após a validação: MySQL + CMS do site institucional editável (modelo Tânia adaptado)**. Depois seguir para CRUD de categorias/testes.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

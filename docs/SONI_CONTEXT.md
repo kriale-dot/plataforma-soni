@@ -4,7 +4,9 @@
 
 ## Definições confirmadas
 - Projeto: Plataforma SONI, dedicada à sonorização de igrejas.
-- Site institucional público.
+- Site institucional público **totalmente editável pelo administrador via editor de blocos**, tomando como referência o site institucional de `kriale-dot/mapa-percepcao-relacional` (plataforma Tânia).
+- O CMS institucional é requisito obrigatório, não funcionalidade opcional: adicionar, alterar, ocultar/mostrar, excluir e reordenar blocos; editar configurações do site; gerenciar imagens, vídeos, áudio, links e CTAs; visualização pública dinâmica.
+- Na SONI haverá **um site institucional global** e **uma conta de administrador configurada no `api/.env`** (sem vínculo a perfil profissional da Tânia).
 - Área pública "Teste seus Conhecimentos".
 - Enunciados e opções podem combinar **texto, imagem e áudio**.
 - Biblioteca pública de documentos em **PDF ou PNG**.
@@ -33,6 +35,12 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Testes devem ser interativos; não são PDFs preenchíveis.
 - Design responsivo, acessível por teclado, textos alternativos e controles de reprodução de áudio.
 
+## Planejamento técnico do editor institucional
+- Replicar o **conceito**, e não copiar cegamente os componentes/dados da Tânia: adaptar blocos `TESTES`, `DOCUMENTOS`, `VIDEOS` e `HERO` à SONI.
+- Conteúdo do site editável e persistido no MySQL; credenciais do administrador permanecem exclusivamente no `api/.env`.
+- Layout, estilos e paleta oficial continuam controlados pelo React/CSS, não pelo editor de conteúdo.
+- Ler `docs/SONI_CMS_INSTITUCIONAL.md` para arquitetura, contratos de API e critérios de aceite.
+
 ## Pendências funcionais
 - Login web do administrador, painel administrativo, CRUD de conteúdo, uploads, persistência e aplicação de questionários.
 - Definir política de tentativas, pontuação, relatórios e publicação.
@@ -40,6 +48,6 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 
 ## Regra obrigatória de continuidade
 1. Ler este arquivo, SONI_STATUS.md, SONI_VERSIONS.md e SONI_BACKLOG.md antes de programar.
-2. Não confundir propostas/documentação com recursos funcionais já entregues.
+2. Não confundir propostas/documentação com recursos funcionais já entregues. O site ainda é uma prévia estática: o CMS está especificado, não implementado.
 3. Ao concluir qualquer alteração, atualizar status e histórico de versões e informar próxima etapa.
 4. Registrar decisões novas neste documento; nunca versionar api/.env, tokens ou senhas.

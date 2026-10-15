@@ -8,6 +8,11 @@ SONI — Sonorização de Igrejas. Plataforma educacional com site institucional
 - Banco planejado: MySQL 8 (modelo preliminar em database/schema.sql).
 - Paleta oficial: **Harmonia Técnica**, com azul petróleo #153B4A, turquesa #2FA89C, areia #F3EBDD, âmbar #D8A24A e grafite #27333A.
 
+## Requisito definitivo — site institucional editável
+O site público da SONI **não será estático**: o administrador poderá montar e atualizar as seções via editor visual por blocos, no modelo da plataforma Tânia (`kriale-dot/mapa-percepcao-relacional`). Poderá editar títulos, textos, imagens, áudios, vídeos, links e chamadas para ação; incluir, ocultar, excluir e reordenar blocos. Haverá integração com as áreas de testes, documentos e vídeos.
+
+**Status:** este CMS está **especificado, mas ainda não implementado**. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
+
 ## Situação — v0.2.0
 Implementado no código: site institucional demonstrativo, tela /admin, cliente HTTP integrado à API Slim, checagem /api/health, login via /api/admin/login, autorização via /api/admin/me, logout em memória e proxy Vite /api.
 

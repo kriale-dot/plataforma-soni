@@ -1,5 +1,14 @@
 # SONI — Histórico de versões
 
+## Adendo de escopo — 2026-10-15 — CMS do site institucional (sem alteração da versão executável)
+- Requisito confirmado: site institucional da SONI **editável pelo administrador**, com editor de blocos semelhante ao de `mapa-percepcao-relacional` (plataforma Tânia).
+- Revisada implementação de referência: edição de blocos, título do site, mídia, visibilidade e reordenação.
+- Especificadas adaptações SONI: HERO, TESTES, DOCUMENTOS, VIDEOS, textos, imagens, áudio, vídeo e CTAs.
+- Adicionado `docs/SONI_CMS_INSTITUCIONAL.md` e atualizados CONTEXT, REQUIREMENTS, BACKLOG e STATUS.
+- **Nenhum editor CMS foi implementado neste adendo**; versão funcional permanece v0.2.0.
+- **Próxima entrega planejada:** modelo MySQL e API de conteúdo dinâmico, seguidos de editor React.
+
+
 ## v0.2.0 — 2026-10-15 — Integração e login administrativo
 - Página React /admin com formulário de login, estado da API, tratamento de erros e logout.
 - Cliente HTTP para comunicação com as rotas Slim /api/health, /api/admin/login e /api/admin/me.
