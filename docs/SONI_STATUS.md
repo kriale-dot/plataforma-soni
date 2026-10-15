@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.8.0 (Biblioteca de Documentos PDF/PNG)  
 **Etapa:** 5 — Biblioteca de Documentos digital  
-**Estado:** v0.7.1 aprovada e validada no Windows pelo responsável. v0.8.0 Biblioteca de Documentos implementada em código, aprovada no GitHub Actions 38807367006 (PHP, React e MariaDB), aguardando migração e validação local no Windows; migração 004 ainda não executada no Windows.
+**Estado:** v0.7.1 aprovada e validada no Windows pelo responsável. v0.8.0 Biblioteca de Documentos implementada em código, aprovada no GitHub Actions 38807367006 (PHP, React e MariaDB), migração 004 confirmada no Windows pelo responsável; validação do uso de PDF/PNG no navegador ainda pendente.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -94,7 +94,8 @@
 - [x] Auditoria e quarentena de mídias respeitam vínculos a documentos, inclusive rascunhos e ocultos; backup contempla arquivos PDF.
 - [x] Teste HTTP no CI inclui JWT, privacidade, PDF/PNG, publicação/ocultação, pesquisa, exclusão de metadados sem perda física.
 - [x] CI 38807367006 aprovado: build React, PHP, migrações 001–004, envio/consulta PDF/PNG, rascunho, pesquisa, JWT, ocultação, exclusão de cadastro preservando arquivo e rejeição de HTML renomeado para PDF.
-- [ ] Realizar migração 004 no Windows; testar uploads PDF/PNG no navegador.
+- [x] Migração 004_documents.sql concluída no Windows, segundo resultado enviado pelo responsável: 001–003 já aplicadas, 004 aplicada, «Migrações concluídas.»
+- [ ] Testar upload de PDF/PNG, prévia privada, publicação e pesquisa no navegador.
 - [ ] Definir paginação avançada, segurança de PDFs para produção, antivírus/CDN, categorias reordenáveis e teste de restauração isolada.
 
 ## Problema de comunicação local identificado em 2026-10-15
@@ -126,6 +127,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Conferir GitHub Actions v0.8.0. No Windows executar git pull e php bin/migrate.php para aplicar 004_documents.sql; reiniciar PHP/Vite, abrir /admin → Documentos e testar PDF/PNG publicado e documento rascunho. Em produção ainda faltam segurança adicional de PDFs, rate limiting, backup externo e teste de restauração.
+Conferir GitHub Actions v0.8.0. Migração 004 concluída no Windows. Reiniciar PHP/Vite, abrir /admin → Documentos e testar PDF/PNG publicado e documento rascunho. Em produção ainda faltam segurança adicional de PDFs, rate limiting, backup externo e teste de restauração.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

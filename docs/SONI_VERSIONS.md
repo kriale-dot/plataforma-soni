@@ -9,7 +9,7 @@
 - Leitura de mídia de documento rascunho apenas com JWT; arquivos publicados disponíveis para visualização em rota pública.
 - Auditoria de mídias considera referências de documentos, e rotina de backup inclui PDFs.
 - CI possui teste HTTP para upload PDF/PNG, permissões, filtros, publicação, ocultação e preservação de arquivos.
-- **GitHub Actions 38807367006 aprovado:** PHP, React, migrações e biblioteca PDF/PNG por API; extensão falsa `.pdf` (arquivo HTML) rejeitada. Ainda pendentes aplicação da migração 004 no Windows e testes visuais.
+- **GitHub Actions 38807367006 aprovado:** PHP, React, migrações e biblioteca PDF/PNG por API; extensão falsa `.pdf` (arquivo HTML) rejeitada. **Migração 004 confirmada no Windows** pelo responsável; pendentes testes visuais do editor e da biblioteca pública.
 - **Limitações:** catálogo retorna até 100 arquivos por consulta; sem paginador, verificação antivírus e política de moderação de PDFs avançada.
 
 
