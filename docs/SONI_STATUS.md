@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.4.0 (CMS textual e página pública dinâmica)  
 **Etapa:** 2 — CMS institucional: edição de texto, links, estado e ordem  
-**Estado:** React/Slim, login e rota GET /api/site confirmados localmente pelo responsável. Editor v0.4.0 aprovado no CI (API e build React), ainda pendente validação visual no Windows.
+**Estado:** React/Slim, login, rota GET /api/site e edição institucional v0.4.0 confirmados localmente pelo responsável. Fluxos de upload e preview ainda não implementados.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -36,7 +36,7 @@
 - [x] Código React de editor em /admin/site (sessão em memória), acesso a partir do painel /admin.
 - [x] Site público React agora renderiza os blocos publicados recebidos de GET /api/site.
 - [x] Teste HTTP integrado no CI: login, autorização, rejeição de URL perigosa, criação, publicação, ocultação, ordem, configurações e exclusão; aprovado na execução 38794375321.
-- [ ] Validar visualmente no Windows fluxo de edição e propagação de texto ao site após git pull e reiniciar os servidores.
+- [x] O responsável confirmou em 2026-10-15 que o acesso ao editor e o salvamento/visualização das alterações funcionaram no Windows (retorno: "tudo certo").
 - [ ] Implementar upload seguro de imagens, áudios e vídeos; visualização de rascunho antes da publicação; gestão de mídia; refinamento SEO/acessibilidade.
 
 ## Problema de comunicação local identificado em 2026-10-15
@@ -56,7 +56,7 @@
 - [x] Analisada como referência a implementação em `kriale-dot/mapa-percepcao-relacional`: editor por blocos com criação, alteração, remoção, ordem, visibilidade, título do site e upload de imagens.
 - [x] Registrado requisito definitivo de CMS institucional na SONI; documentação técnica em `docs/SONI_CMS_INSTITUCIONAL.md`.
 - [x] Implementada primeira versão do CMS na API e React em `/admin/site`, com edição textual, links e estados de publicação. Upload e prévia de rascunhos pendentes.
-- [ ] Validar fluxo admin → salvar/publicar → página pública refletindo mudanças.
+- [x] Fluxo de edição/salvamento/visualização pública validado pelo responsável em 2026-10-15; testes específicos de exclusão/ordem/ocultação no Windows não foram discriminados.
 - [ ] Editor não vai alterar a paleta oficial, apenas conteúdo configurável.
 
 ## Ainda não desenvolvido
@@ -68,6 +68,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-No Windows, git pull origin main, reiniciar PHP/Vite, abrir /admin e usar botão Editar site institucional. Alterar título de um bloco, salvar, abrir site público em outra aba e atualizar. Verificar ocultação, publicação e ordem. Após aprovação iniciar upload seguro de mídia e preview de rascunhos.
+Implementar upload seguro de mídia institucional no CMS (imagem primeiro, seguida de áudio/vídeo com limites, verificação MIME e armazenamento fora do webroot), vinculação ao bloco, exibição pública autorizada e pré-visualização de rascunhos. Manter o banco e conteúdo atual sem mudanças destrutivas.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

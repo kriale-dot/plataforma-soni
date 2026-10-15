@@ -1,5 +1,13 @@
 # SONI — Histórico de versões
 
+## Validação local — 2026-10-15 — Editor institucional v0.4.0 aprovado
+- Após baixar as alterações, o responsável confirmou que o editor institucional funcionou no Windows (resposta: "tudo certo").
+- Isso encerra a pendência de validação básica do editor e da visualização de alterações no site.
+- Não foi enviada comprovação individual de cada ação de ordem/visibilidade/exclusão; essas ações tiveram testes automatizados aprovados no GitHub.
+- Próxima fase: upload seguro de imagens, áudio e vídeo e pré-visualização de rascunhos, sem alterar identidade visual ou descartar conteúdos.
+
+
+
 ## v0.4.0 — 2026-10-15 — Primeiro editor institucional funcional
 - O responsável confirmou funcionamento de `GET /api/site` no MariaDB local (não informou saída detalhada dos scripts).
 - `api/src/SiteCms.php`: CRUD das configurações e dos blocos, validação de campos/links, ordenação transacional, rascunhos e visibilidade.
