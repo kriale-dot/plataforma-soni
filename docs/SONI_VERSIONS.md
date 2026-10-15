@@ -1,5 +1,18 @@
 # SONI — Histórico de versões
 
+## v0.3.0 — 2026-10-15 — Fundação MariaDB e CMS institucional
+- Responsável confirmou instalação/execução de MariaDB 11.4 e acesso ao cliente local.
+- api/src/Database.php: conexão PDO MySQL/MariaDB via DB_* do api/.env.
+- api/migrations/001_site_institucional.sql: tabelas site_media, site_settings e site_blocks, com 5 blocos iniciais de SONI.
+- api/bin/migrate.php: histórico/checksum para migrations idempotentes.
+- api/bin/db-check.php: verificação de conexão e contagem dos blocos públicos.
+- api/src/SiteRepository.php e GET /api/site: leitura pública de configurações e blocos publicados/visíveis.
+- api/.env.example e composer.json atualizados; documentação de setup em docs/SONI_DATABASE_SETUP.md.
+- **Implementação preparada, não executada contra o banco local do usuário**; banco e usuário precisam ser criados e migrações executadas localmente.
+- **Pendente:** editar conteúdo via painel e carregar dados dinamicamente no frontend React.
+
+
+
 ## Validação local — 2026-10-15 — Login administrativo aprovado
 - O responsável confirmou que o login no painel `/admin` passou a funcionar após configurar as credenciais no `api/.env`.
 - Isso valida o fluxo positivo React ↔ Slim com as credenciais locais; não implica que a proteção de produção, rate limiting, testes negativos ou logout estejam concluídos.

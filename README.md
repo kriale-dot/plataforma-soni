@@ -11,12 +11,16 @@ SONI — Sonorização de Igrejas. Plataforma educacional com site institucional
 ## Requisito definitivo — site institucional editável
 O site público da SONI **não será estático**: o administrador poderá montar e atualizar as seções via editor visual por blocos, no modelo da plataforma Tânia (`kriale-dot/mapa-percepcao-relacional`). Poderá editar títulos, textos, imagens, áudios, vídeos, links e chamadas para ação; incluir, ocultar, excluir e reordenar blocos. Haverá integração com as áreas de testes, documentos e vídeos.
 
-**Status:** este CMS está **especificado, mas ainda não implementado**. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
+**Status:** na v0.3.0 existe o modelo MariaDB e um endpoint público de leitura; editor e renderização dinâmica no React ainda não estão implementados. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
 
-## Situação — v0.2.0
-Implementado no código: site institucional demonstrativo, tela /admin, cliente HTTP integrado à API Slim, checagem /api/health, login via /api/admin/login, autorização via /api/admin/me, logout em memória e proxy Vite /api.
+## Situação — v0.3.0
+Implementado no código: site institucional demonstrativo, tela /admin, login da API, logout em memória, proxy Vite /api, conexão MariaDB PDO, migration do CMS e GET /api/site.
 
-**Ainda não validado no Windows do usuário.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
+**React/Slim e login já validados no Windows; migrações MariaDB ainda pendentes na máquina do usuário.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
+
+## MariaDB / CMS institucional
+
+O usuário confirmou MariaDB 11.4 localmente. Siga [docs/SONI_DATABASE_SETUP.md](docs/SONI_DATABASE_SETUP.md) para criar `plataforma_soni`, usuário próprio, DB_* no .env e aplicar migração inicial.
 
 ## Executar no Windows
 Consulte o guia detalhado: [Instalação e testes locais](docs/SONI_LOCAL_SETUP.md).

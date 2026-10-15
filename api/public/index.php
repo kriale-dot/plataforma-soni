@@ -35,7 +35,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.2.0']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.3.0']);
 });
 
 $app->post('/api/admin/login', static function (Request $request, ResponseInterface $response): ResponseInterface {

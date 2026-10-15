@@ -44,6 +44,55 @@ jobs:
           php -l src/AdminAuth.php
           php -l src/Http.php
           php -l tests/auth-smoke.php
+          php -l src/Database.php
+          php -l src/SiteRepository.php
+          php -l bin/migrate.php
+          php -l bin/db-check.php
       - name: Testar autenticação
         working-directory: api
         run: php tests/auth-smoke.php
+
+  database:
+    name: Migração MariaDB 11.4
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: ci_temporary_only
+          MARIADB_DATABASE: plataforma_soni
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=15
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: '3306'
+      DB_NAME: plataforma_soni
+      DB_USER: root
+      DB_PASSWORD: ci_temporary_only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_mysql
+          tools: composer:v2
+      - name: Instalar dependências
+        working-directory: api
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Aplicar migração
+        working-directory: api
+        run: php bin/migrate.php
+      - name: Verificar banco e dados publicados
+        working-directory: api
+        run: php bin/db-check.php
+      - name: Verificar idempotência
+        working-directory: api
+        run: php bin/migrate.php
+      - name: Verificar filtro de publicação
+        working-directory: api
+        run: php tests/site-smoke.php
