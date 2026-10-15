@@ -43,3 +43,7 @@ jobs:
           php -l public/index.php
           php -l src/AdminAuth.php
           php -l src/Http.php
+          php -l tests/auth-smoke.php
+      - name: Testar autenticação
+        working-directory: api
+        run: php tests/auth-smoke.php

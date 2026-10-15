@@ -3,35 +3,39 @@
 **Data:** 2026-10-15  
 **Versão:** 0.2.0  
 **Etapa:** 1 — Integração React/Slim e login administrativo  
-**Estado:** implementação publicada no GitHub; validação ponta a ponta com dependências instaladas pendente.
+**Estado:** código no GitHub; validações automáticas em CI; testes completos no Windows do responsável pendentes.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
 - [x] Página institucional React/Vite demonstrativa.
 - [x] Tela React /admin e link no rodapé do site.
-- [x] Cliente HTTP com tratamento de erro e sinalização da saúde da API.
+- [x] Cliente HTTP com tratamento de erro e indicação de estado da API.
 - [x] Login e consulta de autorização à API Slim (/api/admin/login e /api/admin/me).
-- [x] Token mantido somente na memória React; saída/logout.
+- [x] Token mantido somente na memória React, com logout.
 - [x] Proxy Vite /api na porta 8282.
 - [x] Configuração do administrador pelo arquivo api/.env, não versionado.
 - [x] Headers adicionais anti-cache e nosniff para a API.
-- [x] Instruções detalhadas de ambiente local e workflow de CI.
+- [x] Instruções de ambiente local e workflow GitHub Actions.
+- [x] Biblioteca firebase/php-jwt atualizada da versão 6 para ^7.2.1 para corrigir bloqueio por alerta de segurança.
+- [x] CI do commit 8612fb1: npm install/build e Composer install + PHP lint passaram.
+- [x] Testes de autenticação com credenciais fictícias adicionados ao CI (resultado da nova execução deve ser verificado).
 
 ## Validação pendente
-- [ ] composer install, npm install e execução simultânea no Windows do responsável.
-- [ ] Teste manual de login com email/senha reais e token validado.
-- [ ] Confirmar npm run build e execução do workflow GitHub Actions.
-- [ ] Confirmar regras de servidor, CORS e rate limiting para produção.
+- [ ] Conferir nova execução de CI com smoke test administrativo.
+- [ ] Executar composer install e npm install no Windows do responsável.
+- [ ] Executar navegação e login React → Slim, com credenciais reais apenas em api/.env local.
+- [ ] Conferir erros de autenticação, desconexão e saída no navegador.
+- [ ] Definir rate limit e configurações finais de HTTPS/CORS antes de produção.
 
 ## Ainda não desenvolvido
 - [ ] Interface real de gestão de conteúdo e CRUD.
 - [ ] Migrations e conexão MySQL.
 - [ ] Motor de provas, cadastro e aplicação com texto/imagem/áudio.
-- [ ] Biblioteca de PDF/PNG com upload seguro.
-- [ ] Biblioteca de vídeos via YouTube ou upload.
+- [ ] Biblioteca PDF/PNG com upload seguro.
+- [ ] Biblioteca de vídeos por YouTube e upload.
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Seguir docs/SONI_LOCAL_SETUP.md, validar os dois servidores localmente e testar login. Em seguida implementar banco e primeiros CRUDs.
+Seguir docs/SONI_LOCAL_SETUP.md para validação no computador. Depois implementar banco, migrations e CRUD de categorias/testes.
 
-Observação: verificação de publicação no GitHub não equivale a teste integrado no computador do usuário.
+**Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.
