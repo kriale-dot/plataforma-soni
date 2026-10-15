@@ -118,7 +118,7 @@ final class SiteCms
         $fields['media_url'] = self::url($fields['media_url'], 'media_url');
         $fields['button_url'] = self::url($fields['button_url'], 'button_url');
 
-        $mediaId = $input['media_id'] ?? $current['media_id'] ?? null;
+        $mediaId = array_key_exists('media_id', $input) ? $input['media_id'] : ($current['media_id'] ?? null);
         if ($mediaId === '' || $mediaId === 0 || $mediaId === '0') {
             $mediaId = null;
         }
