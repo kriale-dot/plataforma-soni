@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.5.0 (upload de mídias e prévia no editor)  
 **Etapa:** 2 — CMS institucional: gestão de mídias  
-**Estado:** v0.4.0 confirmada localmente pelo responsável; v0.5.0 implementada no código, aguardando testes automáticos e validação no Windows.
+**Estado:** v0.4.0 confirmada localmente pelo responsável; v0.5.0 aprovada em GitHub Actions (API, React e testes HTTP com MariaDB), aguardando validação de upload no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -41,7 +41,8 @@
 - [x] Mídias persistidas na tabela site_media já existente e associadas ao campo site_blocks.media_id, sem nova migração.
 - [x] Rota GET /api/site/media/{id} exige bloco publicado/visível; GET /api/admin/site/media/{id} é protegida por JWT e serve prévia de rascunho; suporte HTTP Range.
 - [x] Editor React com envio, seleção de mídias e pré-visualização particular de blocos.
-- [ ] Validar CI e upload manual no Windows; testar limites do php.ini e acesso aos arquivos.
+- [x] CI aprovado no commit a9ce7fe, execução 38797251656: upload PNG, JWT, leitura pública/privada, HTTP Range, publicação, ocultação e rejeição de extensões/tipos incompatíveis; compilação React e verificação PHP também aprovadas.
+- [ ] Validar upload manual no Windows; conferir limites do php.ini e acesso aos arquivos.
 - [ ] Implementar limpeza de mídias órfãs, backup, auditoria e ajustes SEO/acessibilidade.
 
 ## Problema de comunicação local identificado em 2026-10-15

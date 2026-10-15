@@ -7,7 +7,8 @@
 - Prévia de mídias não publicadas exige token JWT; leitura de arquivos implementa HTTP Range para áudio/vídeo.
 - Editor associa upload ao media_id e mostra prévia particular antes de salvar/publicar.
 - A tabela site_media e site_blocks.media_id já existiam na migração 001; nenhuma nova migração necessária.
-- GitHub Actions possui teste integrado de upload, validação, publicação e ocultação. Teste local no Windows pendente.
+- GitHub Actions possui teste integrado de upload, validação, publicação e ocultação. **Aprovado no commit a9ce7fe, execução 38797251656**, após correção de compatibilidade Slim PSR-7 no stream e substituição do PNG de teste.
+- Teste local no Windows ainda pendente.
 - Ainda pendentes: remoção/limpeza de arquivos órfãos, cotas, thumbnails, backup de mídia e segurança de produção.
 
 
