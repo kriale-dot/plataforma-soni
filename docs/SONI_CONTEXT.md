@@ -53,3 +53,8 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 2. Não confundir código testado em CI com aceitação final no Windows: o CMS textual/dinâmico foi implementado na v0.4.0, e a v0.5.0 adicionou upload e prévia do bloco (imagem/áudio/vídeo confirmados pelo responsável no Windows).
 3. Ao concluir qualquer alteração, atualizar status e histórico de versões e informar próxima etapa.
 4. Registrar decisões novas neste documento; nunca versionar api/.env, tokens ou senhas.
+
+## Devolutivas educacionais — decisão 2026-10-15
+- Devolutivas diferentes conforme percentual, editáveis individualmente em cada teste, com classificação, mensagem e recomendação opcional.
+- Faixas precisam cobrir 0,00–100,00% sem lacunas/sobreposições; resposta exibida só após finalizar; snapshot de texto é preservado em quiz_attempt_feedback.
+- Implementação no código v0.7.1; pendente validação local.

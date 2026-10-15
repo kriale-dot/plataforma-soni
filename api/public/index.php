@@ -15,6 +15,7 @@ use Soni\SiteRepository;
 use Soni\SiteCms;
 use Soni\SiteMedia;
 use Soni\QuizService;
+use Soni\QuizFeedback;
 use Psr\Http\Message\UploadedFileInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -41,7 +42,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.7.0']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.7.1']);
 });
 
 // Configurações e blocos públicos; não retornar rascunhos ou blocos ocultos.
@@ -222,6 +223,12 @@ $app->get('/api/admin/quizzes/{id:[0-9]+}', static function (Request $request, R
 $app->put('/api/admin/quizzes/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
     return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::updateQuiz($db, (int) $args['id'], (array) $request->getParsedBody()));
 });
+// Atualizar as faixas sem afetar o histórico das tentativas já finalizadas.
+$app->put('/api/admin/quizzes/{id:[0-9]+}/feedback-ranges', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        QuizFeedback::replace($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+
 $app->post('/api/admin/quizzes/{id:[0-9]+}/questions', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
     return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::saveQuestion($db, (int) $args['id'], null, (array) $request->getParsedBody()));
 });

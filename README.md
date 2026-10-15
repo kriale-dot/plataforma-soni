@@ -68,3 +68,7 @@ A v0.6.0 inclui backup verificável do MariaDB + mídias e auditoria conservador
 ## Teste seus Conhecimentos — v0.7.0
 
 A v0.7.0 inclui catálogo e aplicação em `/testes`, editor em `/admin/quizzes`, criação de categorias, testes e questões com texto, imagens e áudios. **É necessário executar `php bin/migrate.php` dentro de `api` após atualizar o código**, pois a migração `002_quizzes.sql` cria novas tabelas sem alterar as antigas. O resultado é corrigido somente após a finalização do teste. Veja `docs/SONI_QUIZZES.md`.
+
+### Devolutivas personalizadas — v0.7.1
+
+Após atualizar o projeto, execute `php bin/migrate.php` na pasta `api` para aplicar a migração `003_quiz_feedback.sql`. No editor de cada teste, configure **Devolutiva por percentual de acertos**; a mensagem só aparecerá após finalizar a tentativa. Consulte `docs/SONI_QUIZZES.md`.

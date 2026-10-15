@@ -121,9 +121,18 @@ final class QuizService
         self::ensureCategory($db, $categoryId);
         $title = self::text($body['title'] ?? null, 180, 'título do teste', true);
         $description = self::text($body['description'] ?? null, 1000, 'descrição');
-        $stmt = $db->prepare('INSERT INTO quizzes (category_id, title, description) VALUES (?, ?, ?)');
-        $stmt->execute([$categoryId, $title, $description]);
-        return self::adminDetail($db, (int) $db->lastInsertId());
+        $db->beginTransaction();
+        try {
+            $stmt = $db->prepare('INSERT INTO quizzes (category_id, title, description) VALUES (?, ?, ?)');
+            $stmt->execute([$categoryId, $title, $description]);
+            $id = (int) $db->lastInsertId();
+            QuizFeedback::defaults($db, $id);
+            $db->commit();
+        } catch (Throwable $err) {
+            if ($db->inTransaction()) $db->rollBack();
+            throw $err;
+        }
+        return self::adminDetail($db, $id);
     }
 
     private static function questionList(PDO $db, int $quizId, bool $includeAnswers): array
@@ -158,6 +167,7 @@ final class QuizService
     {
         $quiz = self::getQuiz($db, $id);
         $quiz['questions'] = self::questionList($db, $id, true);
+        $quiz['feedback_ranges'] = QuizFeedback::list($db, $id);
         $media = $db->query(
             'SELECT id, kind, original_name, mime_type, size_bytes FROM site_media ORDER BY id DESC LIMIT 250'
         )->fetchAll();
@@ -199,7 +209,10 @@ final class QuizService
             if (!in_array($status, ['DRAFT', 'PUBLISHED'], true)) {
                 throw new InvalidArgumentException('Estado de publicação inválido.');
             }
-            if ($status === 'PUBLISHED') self::validatePublish($db, $id);
+            if ($status === 'PUBLISHED') {
+                self::validatePublish($db, $id);
+                QuizFeedback::assertValid($db, $id);
+            }
             $stmt = $db->prepare(
                 'UPDATE quizzes SET title = ?, description = ?, category_id = ?, publication_status = ? WHERE id = ?'
             );
@@ -383,6 +396,7 @@ final class QuizService
             }
             $total = count($questions);
             $score = round(100 * $correct / $total, 2);
+            $performanceFeedback = QuizFeedback::forScore($db, $id, $score);
             $stmt = $db->prepare(
                 'INSERT INTO quiz_attempts (quiz_id, total_questions, correct_answers, score_percent) VALUES (?, ?, ?, ?)'
             );
@@ -394,6 +408,18 @@ final class QuizService
             foreach ($feedback as $entry) {
                 $stmt->execute([$attemptId, $entry['question_id'], $entry['selected_option_id'], (int) $entry['correct']]);
             }
+            // Congela a devolutiva efetivamente recebida. Edições futuras nas faixas
+            // não alteram o resultado histórico desta tentativa.
+            $stmt = $db->prepare(
+                'INSERT INTO quiz_attempt_feedback
+                 (attempt_id, label, feedback_text, study_recommendation, min_percent, max_percent)
+                 VALUES (?, ?, ?, ?, ?, ?)'
+            );
+            $stmt->execute([
+                $attemptId, $performanceFeedback['label'], $performanceFeedback['feedback_text'],
+                $performanceFeedback['study_recommendation'], $performanceFeedback['min_percent'],
+                $performanceFeedback['max_percent'],
+            ]);
             $db->commit();
         } catch (Throwable $err) {
             if ($db->inTransaction()) $db->rollBack();
@@ -404,6 +430,7 @@ final class QuizService
             'total' => $total,
             'correct' => $correct,
             'score_percent' => $score,
+            'performance_feedback' => $performanceFeedback,
             'feedback' => $feedback,
         ];
     }

@@ -168,3 +168,7 @@ Veja docs/SONI_MAINTENANCE.md. Na pasta api, execute `php bin/backup.php` para c
 ## 10. Testes interativos — v0.7.0
 
 Após `git pull origin main`, execute **dentro de `api`**: `php bin/migrate.php`. Deve retornar `Aplicada: 002_quizzes.sql`, mantendo a migration 001 como já aplicada. Reinicie PHP e Vite. Entre em http://localhost:5173/admin e clique em **Gerenciar testes**. Crie um teste em Fundamentos de Sonorização, adicione questões com 2 a 6 alternativas, marque uma correta e clique em Publicar teste. Aplique em http://localhost:5173/testes e confira a correção final. Nenhuma pergunta fictícia é publicada automaticamente.
+
+## 11. Devolutivas conforme porcentagem (v0.7.1)
+
+Depois de atualizar o repositório, execute `php bin/migrate.php` na pasta `api` (aplicará 002 e/ou 003 conforme seu histórico). Reinicie PHP e React. Em http://localhost:5173/admin, entre em Testes, selecione um teste e revise **Devolutiva por percentual de acertos**. Customize classificação e mensagens, clique **Salvar devolutivas**. Em /testes, conclua tentativas com desempenhos diferentes: somente após finalizar aparecerão classificação, texto e recomendação correspondentes. Não execute testes automatizados de CI no banco real.

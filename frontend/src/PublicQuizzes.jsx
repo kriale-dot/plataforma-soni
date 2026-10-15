@@ -120,6 +120,15 @@ function Play({ id }) {
           <span>AVALIAÇÃO CONCLUÍDA</span>
           <h2>{result.score_percent}% de acertos</h2>
           <p>Você acertou {result.correct} de {result.total} questões.</p>
+          {result.performance_feedback && <div className="quizPerformanceFeedback">
+            <span>SEU DESEMPENHO</span>
+            <h3>{result.performance_feedback.label}</h3>
+            <p>{result.performance_feedback.feedback_text}</p>
+            {result.performance_feedback.study_recommendation && <>
+              <strong>Recomendação para continuar aprendendo</strong>
+              <p>{result.performance_feedback.study_recommendation}</p>
+            </>}
+          </div>}
           <p>Confira abaixo o gabarito e as explicações de cada questão.</p>
           <a href="/testes">Escolher outro teste →</a>
         </section>}

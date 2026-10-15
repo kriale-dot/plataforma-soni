@@ -1,5 +1,18 @@
 # SONI — Histórico de versões
 
+## v0.7.1 — 2026-10-15 — Devolutivas por faixa de acertos
+- Cada teste possui faixas de desempenho (1 a 20), com mínimo/máximo, classificação, devolutiva textual e recomendação opcional.
+- Migração `003_quiz_feedback.sql`: tabelas `quiz_feedback_ranges` e `quiz_attempt_feedback`, sem alterar tentativas antigas; inicialização de cinco faixas para testes já existentes.
+- `QuizFeedback.php`: validação rigorosa de percentuais em centésimos (0,00–100,00%), sem lacunas nem sobreposições; padrões inseridos em novos testes.
+- `PUT /api/admin/quizzes/{id}/feedback-ranges`: operação autenticada JWT e transacional, permite editar faixas mesmo após tentativas sem alterar o histórico.
+- Correção do servidor escolhe a faixa correspondente à nota e devolve `performance_feedback` somente após finalizar.
+- Cada tentativa registra cópia da classificação, da mensagem e da recomendação que foram apresentadas.
+- Painel React permite criar, excluir e editar faixas e textos. Tela pública exibe classificação e recomendação junto ao resultado.
+- Teste automatizado HTTP inclui notas 0%, 50%, 100%, lacuna de 0,01%, sobreposição, proteção do endpoint e imutabilidade do histórico.
+- CI e validação manual no Windows pendentes nesta documentação.
+
+
+
 ## v0.7.0 — 2026-10-15 — Primeiro Teste seus Conhecimentos
 - Banco \`002_quizzes.sql\`: categorias, testes, enunciados, alternativas, resultados e respostas, com referência a imagem e áudio enviados no CMS.
 - \`QuizService.php\`: endpoints administrativos JWT, validação de publicação, criação/alteração/exclusão de questões e correção de testes.

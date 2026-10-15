@@ -28,6 +28,7 @@ function MediaSelect({ label, type, value, items, onChange }) {
 export default function QuizManager({ token, onUnauthorized }) {
   const [catalog, setCatalog] = useState(null);
   const [quiz, setQuiz] = useState(null);
+  const [feedbackRanges, setFeedbackRanges] = useState([]);
   const [meta, setMeta] = useState(null);
   const [question, setQuestion] = useState(null);
   const [questionId, setQuestionId] = useState(null);
@@ -73,6 +74,7 @@ export default function QuizManager({ token, onUnauthorized }) {
     try {
       const data = await apiRequest('/admin/quizzes/' + id, { token });
       setQuiz(data);
+      setFeedbackRanges((data.feedback_ranges ?? []).map((range) => ({ ...range })));
       setMeta({
         title: data.title, description: data.description ?? '',
         category_id: Number(data.category_id),
@@ -150,6 +152,59 @@ export default function QuizManager({ token, onUnauthorized }) {
       nextStatus === 'PUBLISHED' ? 'Teste publicado.' : 'Teste retirado da publicação.'
     );
     if (result) await openQuiz(quiz.id);
+  }
+
+
+  async function saveFeedbackRanges(event) {
+    event.preventDefault();
+    const saved = await execute(
+      () => apiRequest('/admin/quizzes/' + quiz.id + '/feedback-ranges', {
+        method: 'PUT', token, body: { ranges: feedbackRanges },
+      }),
+      'Faixas de devolutiva salvas. A classificação será aplicada às próximas tentativas.'
+    );
+    if (saved) {
+      setFeedbackRanges(saved);
+      setQuiz((current) => ({ ...current, feedback_ranges: saved }));
+    }
+  }
+
+  function updateRange(index, field, value) {
+    setFeedbackRanges((current) =>
+      current.map((range, i) => i === index ? { ...range, [field]: value } : range)
+    );
+  }
+
+  function addFeedbackRange() {
+    setFeedbackRanges((current) => {
+      if (current.length >= 20) return current;
+      if (current.length === 0) return [{
+        min_percent: '0.00', max_percent: '100.00', label: '', feedback_text: '', study_recommendation: '',
+      }];
+      const rows = current.map((range) => ({ ...range }));
+      const last = rows[rows.length - 1];
+      const min = Math.round(Number(last.min_percent) * 100);
+      const max = Math.round(Number(last.max_percent) * 100);
+      if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) return rows;
+      const mid = Math.floor((min + max) / 2);
+      last.max_percent = (mid / 100).toFixed(2);
+      rows.push({
+        min_percent: ((mid + 1) / 100).toFixed(2),
+        max_percent: (max / 100).toFixed(2),
+        label: '', feedback_text: '', study_recommendation: '',
+      });
+      return rows;
+    });
+  }
+
+  function removeFeedbackRange(index) {
+    setFeedbackRanges((current) => {
+      if (current.length <= 1) return current;
+      const rows = current.map((range) => ({ ...range }));
+      if (index === 0) rows[1].min_percent = rows[0].min_percent;
+      else rows[index - 1].max_percent = rows[index].max_percent;
+      return rows.filter((_, i) => i !== index);
+    });
   }
 
   async function saveQuestion(event) {
@@ -274,6 +329,59 @@ export default function QuizManager({ token, onUnauthorized }) {
               {quiz.publication_status === 'PUBLISHED' &&
                 <a href={'/testes/' + quiz.id} target="_blank" rel="noopener noreferrer">Abrir teste público ↗</a>}
             </div>
+          </form>
+
+
+          <form className="quizFeedbackForm" onSubmit={saveFeedbackRanges}>
+            <div className="quizAreaTitle">
+              <h3>Devolutiva por percentual de acertos</h3>
+              <button type="button" disabled={busy || feedbackRanges.length >= 20} onClick={addFeedbackRange}>+ Adicionar faixa</button>
+            </div>
+            <p className="quizNotice">Defina uma classificação, uma mensagem e uma recomendação para cada faixa. Os intervalos devem cobrir de 0,00% a 100,00%, sem lacunas nem sobreposições. Cada teste possui suas próprias devolutivas.</p>
+            {feedbackRanges.map((range, index) => (
+              <div className="quizFeedbackRange" key={range.id || 'nova-' + index}>
+                <div className="quizFeedbackRangeHead">
+                  <strong>Faixa {index + 1}</strong>
+                  <button type="button" disabled={busy || feedbackRanges.length <= 1}
+                    onClick={() => removeFeedbackRange(index)}>Remover faixa</button>
+                </div>
+                <div className="quizFeedbackPercent">
+                  <label className="quizField">
+                    <span>De (%)</span>
+                    <input type="number" min="0" max="100" step="0.01" required
+                      value={range.min_percent ?? ''} onChange={(event) => updateRange(index, 'min_percent', event.target.value)}/>
+                  </label>
+                  <label className="quizField">
+                    <span>Até (%)</span>
+                    <input type="number" min="0" max="100" step="0.01" required
+                      value={range.max_percent ?? ''} onChange={(event) => updateRange(index, 'max_percent', event.target.value)}/>
+                  </label>
+                </div>
+                <label className="quizField">
+                  <span>Classificação</span>
+                  <input type="text" required maxLength={120} placeholder="Ex.: Bom desempenho"
+                    value={range.label ?? ''} onChange={(event) => updateRange(index, 'label', event.target.value)}/>
+                </label>
+                <label className="quizField">
+                  <span>Texto da devolutiva</span>
+                  <textarea rows={3} required maxLength={3000}
+                    placeholder="Mensagem exibida ao participante após a correção"
+                    value={range.feedback_text ?? ''} onChange={(event) => updateRange(index, 'feedback_text', event.target.value)}/>
+                </label>
+                <label className="quizField">
+                  <span>Recomendação de estudo (opcional)</span>
+                  <textarea rows={2} maxLength={2000}
+                    placeholder="Ex.: Revise os conceitos e pratique com a equipe"
+                    value={range.study_recommendation ?? ''} onChange={(event) => updateRange(index, 'study_recommendation', event.target.value)}/>
+                </label>
+              </div>
+            ))}
+            <div className="quizActions">
+              <button type="submit" disabled={busy || !feedbackRanges.length}>
+                {busy ? 'Salvando...' : 'Salvar devolutivas'}
+              </button>
+            </div>
+            <p className="quizNotice">As alterações valem para as próximas tentativas. As devolutivas já recebidas ficam registradas como histórico.</p>
           </form>
 
           <div className="quizQuestionArea">

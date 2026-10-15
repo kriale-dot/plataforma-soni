@@ -81,3 +81,21 @@
 .quizOk{background:#EAF8F1;border:1px solid #AFDECD;color:#206447}
 @media(max-width:800px){.quizManagerLayout{grid-template-columns:1fr}.quizMediaPair{grid-template-columns:1fr}.quizPublicHeaderInner{gap:12px}.quizPublicBrand small{display:none}.quizPublicHeader nav{gap:10px}}
 @media(max-width:520px){.quizCatalog,.quizPlay{padding-top:32px;padding-bottom:50px}.quizPlayQuestion,.quizCatalogCard,.quizPlayIntro{padding:17px}.quizPublicHeaderInner{min-height:68px}}
+
+/* Faixas de desempenho editáveis; prévia e devolutiva pública. */
+.quizFeedbackForm{margin-top:30px;padding:20px;border:1px solid #BDDBD4;background:#F4FAF8;border-radius:12px;display:grid;gap:16px}
+.quizFeedbackForm h3{margin:4px 0}
+.quizFeedbackForm .quizAreaTitle button{font-size:12px}
+.quizFeedbackRange{padding:16px;background:white;border:1px solid #DAE8E7;border-radius:10px;display:grid;gap:12px}
+.quizFeedbackRangeHead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.quizFeedbackRangeHead strong{color:#153B4A;font-size:14px}
+.quizFeedbackRangeHead button{border:1px solid #D8B4A8;border-radius:7px;padding:8px 10px;color:#853E30;background:#fff;cursor:pointer}
+.quizFeedbackPercent{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quizFeedbackForm input,.quizFeedbackForm textarea{width:100%;min-width:0;padding:10px;border-radius:8px;border:1px solid #C7D8D8;font:inherit;font-size:14px;resize:vertical;color:#27333A;background:#fff}
+.quizFeedbackForm .quizActions{justify-content:flex-start}
+.quizPerformanceFeedback{margin:20px 0;padding:22px;border-radius:12px;background:#F3EBDD;color:#27333A}
+.quizPerformanceFeedback span{color:#17685F;font-size:11px;font-weight:800;letter-spacing:1.4px}
+.quizPerformanceFeedback h3{font:800 24px Manrope,sans-serif;color:#153B4A;margin:12px 0}
+.quizPerformanceFeedback p{color:#35474E;line-height:1.8}
+.quizPerformanceFeedback strong{font-size:13px;color:#153B4A}
+@media(max-width:540px){.quizFeedbackForm{padding:12px}.quizFeedbackRange{padding:12px}}

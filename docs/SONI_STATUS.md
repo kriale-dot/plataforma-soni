@@ -1,9 +1,9 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.7.0 (primeiro módulo de testes interativos)  
-**Etapa:** 4 — Teste seus Conhecimentos: categorias, questões e aplicação pública  
-**Estado:** v0.6.0 backup criado e verificado no Windows; auditoria sem órfãos aprovada pelo responsável. v0.7.0 implementada e aprovada no CI MariaDB/React/PHP (execução 38802753975), aguardando validação local no Windows.
+**Versão:** 0.7.1 (devolutivas por faixa de acertos)  
+**Etapa:** 4 — Teste seus Conhecimentos: devolutivas personalizadas  
+**Estado:** v0.7.0 aprovada em CI, pendente validação no Windows. v0.7.1 implementada no código; migração 003 e testes CI de faixas/devolutivas aguardando validação.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -70,6 +70,16 @@
 - [ ] Verificar CI da v0.7.0 e testar no Windows. Uma nova migração SQL precisa ser aplicada com \`php bin/migrate.php\`.
 - [ ] Para produção: rate limiting das tentativas anônimas, prevenção de abuso, controles de sessão, questões aleatórias, versões avançadas e relatórios de desempenho.
 
+## Devolutivas por faixas — v0.7.1
+- [x] Criada a migração 003_quiz_feedback.sql com faixas por teste e cópia histórica da devolutiva por tentativa; testes anteriores preservados.
+- [x] Novos testes recebem cinco faixas padrão; a migração oferece as mesmas faixas aos testes existentes, sem sobrepor personalizações.
+- [x] Endpoint JWT PUT /api/admin/quizzes/{id}/feedback-ranges com validação de cobertura 0–100%, exatos centésimos, sem lacunas ou sobreposições; salvamento transacional.
+- [x] O editor React permite ajustar porcentagens, classificação, mensagem e recomendação; adicionar/remover faixas.
+- [x] A resposta do POST de finalização contém performance_feedback com a faixa aplicada e registro persistente histórico em quiz_attempt_feedback.
+- [x] Página pública apresenta classificação, devolutiva e recomendação somente depois da correção.
+- [ ] Rodar testes de CI e validar no Windows com git pull, php bin/migrate.php e publicação de teste.
+- [ ] Cópia externa de backup e teste isolado de restauração ainda pendentes.
+
 ## Problema de comunicação local identificado em 2026-10-15
 - [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
 - [x] Teste via `127.0.0.1:8282` apresentou erro (informado pelo responsável).
@@ -99,6 +109,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Verificar pipeline GitHub da v0.7.0. No Windows atualizar com git pull, executar `php bin/migrate.php` na pasta api, reiniciar PHP/Vite, acessar /admin e criar um teste em Gerenciar testes; publicar e responder em /testes. Manter backup v0.6.0, copiar para destino externo e não executar quarentena.
+Validar CI v0.7.1. No Windows git pull, php bin/migrate.php (migrações 002/003 conforme estado local), reiniciar PHP/Vite. Editar devolutivas na área administrativa, concluir testes com notas diferentes e verificar a classificação. Não executar script de testes do CI na base real.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.
