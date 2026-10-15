@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.8.0 (Biblioteca de Documentos PDF/PNG)  
 **Etapa:** 5 — Biblioteca de Documentos digital  
-**Estado:** v0.7.1 aprovada e validada no Windows pelo responsável. v0.8.0 Biblioteca de Documentos implementada em código, aprovada no GitHub Actions 38807140842 (PHP, React e MariaDB), aguardando teste local; migração 004 ainda não executada no Windows.
+**Estado:** v0.7.1 aprovada e validada no Windows pelo responsável. v0.8.0 Biblioteca de Documentos implementada em código, aprovada no GitHub Actions 38807367006 (PHP, React e MariaDB), aguardando migração e validação local no Windows; migração 004 ainda não executada no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -93,7 +93,7 @@
 - [x] Frontend /documentos e /documentos/{id}: catálogo com pesquisa e leitor de PDF ou PNG.
 - [x] Auditoria e quarentena de mídias respeitam vínculos a documentos, inclusive rascunhos e ocultos; backup contempla arquivos PDF.
 - [x] Teste HTTP no CI inclui JWT, privacidade, PDF/PNG, publicação/ocultação, pesquisa, exclusão de metadados sem perda física.
-- [x] CI 38807140842 aprovado: build React, PHP, migrações 001–004, envio/consulta PDF/PNG, rascunho, pesquisa, JWT, ocultação, exclusão de cadastro preservando arquivo.
+- [x] CI 38807367006 aprovado: build React, PHP, migrações 001–004, envio/consulta PDF/PNG, rascunho, pesquisa, JWT, ocultação, exclusão de cadastro preservando arquivo e rejeição de HTML renomeado para PDF.
 - [ ] Realizar migração 004 no Windows; testar uploads PDF/PNG no navegador.
 - [ ] Definir paginação avançada, segurança de PDFs para produção, antivírus/CDN, categorias reordenáveis e teste de restauração isolada.
 
