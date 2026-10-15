@@ -26,6 +26,7 @@ final class SiteMedia
         'ogg' => ['AUDIO', 'audio/ogg', 15 * 1024 * 1024],
         'mp4' => ['VIDEO', 'video/mp4', 32 * 1024 * 1024],
         'webm' => ['VIDEO', 'video/webm', 32 * 1024 * 1024],
+        'pdf' => ['DOCUMENT', 'application/pdf', 20 * 1024 * 1024],
     ];
 
     private static function directory(): string
@@ -82,6 +83,16 @@ final class SiteMedia
         ];
         if (!in_array($actualMime, $mimeAliases[$expectedMime] ?? [$expectedMime], true)) {
             throw new InvalidArgumentException('O conteúdo do arquivo não corresponde ao formato indicado.');
+        }
+
+        if ($kind === 'DOCUMENT') {
+            // PDF sem dados executáveis no webroot. Formato verificado pelo MIME e cabeçalho.
+            $fp = fopen($temp, 'rb');
+            $signature = $fp === false ? '' : fread($fp, 5);
+            if (is_resource($fp)) fclose($fp);
+            if ($signature !== '%PDF-') {
+                throw new InvalidArgumentException('Cabeçalho de PDF inválido.');
+            }
         }
 
         if ($kind === 'IMAGE') {
@@ -152,6 +163,9 @@ final class SiteMedia
                     JOIN quizzes q ON q.id = qq.quiz_id
                     WHERE q.publication_status = 'PUBLISHED'
                     AND (qo.image_media_id = m.id OR qo.audio_media_id = m.id)
+                ) OR EXISTS (
+                    SELECT 1 FROM documents d WHERE d.media_id = m.id
+                    AND d.publication_status = 'PUBLISHED' AND d.is_visible = 1
                 )
             )";
         }
@@ -164,7 +178,7 @@ final class SiteMedia
 
         $relative = $record['storage_path'];
         if (!is_string($relative) ||
-            !preg_match('~^[a-f0-9]{2}/[a-f0-9]{32}\.(jpg|jpeg|png|webp|gif|mp3|wav|ogg|mp4|webm)$~D', $relative)) {
+            !preg_match('~^[a-f0-9]{2}/[a-f0-9]{32}\.(jpg|jpeg|png|webp|gif|mp3|wav|ogg|mp4|webm|pdf)$~D', $relative)) {
             throw new RuntimeException('Caminho de mídia inválido.');
         }
         $path = self::directory() . '/' . $relative;
@@ -220,6 +234,9 @@ final class SiteMedia
             ->withHeader('Content-Length', (string) ($end - $start + 1))
             ->withHeader('X-Content-Type-Options', 'nosniff')
             ->withHeader('Cache-Control', $admin ? 'private, no-store' : 'public, max-age=300');
+        if ($mime === 'application/pdf') {
+            $result = $result->withHeader('X-Frame-Options', 'SAMEORIGIN');
+        }
         if ($status === 206) {
             $result = $result->withHeader('Content-Range', "bytes {$start}-{$end}/{$size}");
         }

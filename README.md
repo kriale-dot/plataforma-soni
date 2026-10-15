@@ -72,3 +72,7 @@ A v0.7.0 inclui catálogo e aplicação em `/testes`, editor em `/admin/quizzes`
 ### Devolutivas personalizadas — v0.7.1
 
 Após atualizar o projeto, execute `php bin/migrate.php` na pasta `api` para aplicar a migração `003_quiz_feedback.sql`. No editor de cada teste, configure **Devolutiva por percentual de acertos**; a mensagem só aparecerá após finalizar a tentativa. Consulte `docs/SONI_QUIZZES.md`.
+
+### Biblioteca de Documentos — v0.8.0
+
+PDFs e imagens PNG com categorias, pesquisa e visualização pública em `/documentos`; cadastro e publicação por JWT em `/admin/documents`. A migração `004_documents.sql` é necessária: execute `php bin/migrate.php` na pasta `api` após atualizar o repositório. Limites internos: 20 MiB para PDF e 6 MiB para PNG. A publicação controla o acesso público à mídia; o upload sozinho não publica o arquivo.

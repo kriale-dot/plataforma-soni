@@ -172,3 +172,18 @@ Após `git pull origin main`, execute **dentro de `api`**: `php bin/migrate.php`
 ## 11. Devolutivas conforme porcentagem (v0.7.1)
 
 Depois de atualizar o repositório, execute `php bin/migrate.php` na pasta `api` (aplicará 002 e/ou 003 conforme seu histórico). Reinicie PHP e React. Em http://localhost:5173/admin, entre em Testes, selecione um teste e revise **Devolutiva por percentual de acertos**. Customize classificação e mensagens, clique **Salvar devolutivas**. Em /testes, conclua tentativas com desempenhos diferentes: somente após finalizar aparecerão classificação, texto e recomendação correspondentes. Não execute testes automatizados de CI no banco real.
+
+
+## 12. Biblioteca de Documentos (v0.8.0)
+
+1. Faça uma cópia de segurança atualizada, incluindo MariaDB e \`api/storage/site_media\`. **Copie-a para outro disco.**
+2. Na raiz do repositório: \`git pull origin main\`.
+3. Na pasta \`api\`: \`php bin/migrate.php\`. A migração \`004_documents.sql\` adiciona categorias e documentos sem apagar dados anteriores.
+4. Confirme os limites de upload para PDF (20 MiB): \`php --ini\`. Se quiser usar PDFs até esse tamanho, em \`php.ini\` defina \`upload_max_filesize=22M\`, \`post_max_size=26M\`; reinicie a API.
+5. Reinicie PHP e Vite. Acesse \`http://localhost:5173/admin\` e clique em **Documentos**.
+6. Crie categorias, envie um PDF pequeno, preencha título e descrição, salve em rascunho e confira a prévia privada.
+7. Marque como publicado e visível, salve; abra \`http://localhost:5173/documentos\` e pesquise o título. Abra o leitor do arquivo.
+8. Teste um PNG e o estado oculto/rascunho. A rota \`/api/site/media/{id}\` deverá negar arquivo sem publicação.
+9. Exclusão de cadastro não apaga os bytes originais; a auditoria só pode tratar órfãos antigos após backup recente.
+
+Os arquivos de documentos devem ser fontes confiáveis. A validação MIME e de cabeçalho não substitui análise antivírus, moderação nem políticas de download para produção. O leitor PDF depende do navegador.

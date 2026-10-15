@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import SiteEditor from './SiteEditor.jsx';
 import QuizManager from './QuizManager.jsx';
+import DocumentManager from './DocumentManager.jsx';
 import { apiRequest } from './lib/api.js';
 import './admin.css';
 
@@ -42,6 +43,7 @@ export default function AdminPage() {
       setPassword('');
       if (window.location.pathname === '/admin/site') setView('site');
       if (window.location.pathname === '/admin/quizzes') setView('quizzes');
+      if (window.location.pathname === '/admin/documents') setView('documents');
     } catch (err) {
       if (err.status === 503) setError('O administrador ainda não foi configurado no arquivo api/.env.');
       else if (err.status === 401) setError('E-mail ou senha inválidos.');
@@ -56,7 +58,7 @@ export default function AdminPage() {
     setPassword('');
     setError('');
     setView('dashboard');
-    if (window.location.pathname === '/admin/site' || window.location.pathname === '/admin/quizzes') window.history.replaceState(null, '', '/admin');
+    if (window.location.pathname === '/admin/site' || window.location.pathname === '/admin/quizzes' || window.location.pathname === '/admin/documents') window.history.replaceState(null, '', '/admin');
   }, []);
 
   function openEditor() {
@@ -67,6 +69,11 @@ export default function AdminPage() {
   function openQuizzes() {
     setView('quizzes');
     window.history.pushState(null, '', '/admin/quizzes');
+  }
+
+  function openDocuments() {
+    setView('documents');
+    window.history.pushState(null, '', '/admin/documents');
   }
 
   function backToDashboard() {
@@ -90,7 +97,7 @@ export default function AdminPage() {
         <div className="adminContainer">
           <div className="adminIntro">
             <span className="adminEyebrow">PAINEL DE GESTÃO</span>
-            <h1>{token ? (view === 'site' ? 'Conteúdo do site' : view === 'quizzes' ? 'Gerenciar testes' : 'Bem-vindo ao painel.') : 'Acesso administrativo'}</h1>
+            <h1>{token ? (view === 'site' ? 'Conteúdo do site' : view === 'quizzes' ? 'Gerenciar testes' : view === 'documents' ? 'Biblioteca de Documentos' : 'Bem-vindo ao painel.') : 'Acesso administrativo'}</h1>
             <p>{token ? 'O administrador está autenticado na API SONI.' : 'Entre com as credenciais configuradas no servidor. Nenhuma senha é armazenada no navegador.'}</p>
           </div>
 
@@ -100,7 +107,7 @@ export default function AdminPage() {
               <button type="button" onClick={logout}>Sair da administração</button>
             </div>
           )}
-          {token && view === 'site' ? <SiteEditor token={token} onUnauthorized={logout} /> : token && view === 'quizzes' ? <QuizManager token={token} onUnauthorized={logout} /> : (
+          {token && view === 'site' ? <SiteEditor token={token} onUnauthorized={logout} /> : token && view === 'quizzes' ? <QuizManager token={token} onUnauthorized={logout} /> : token && view === 'documents' ? <DocumentManager token={token} onUnauthorized={logout} /> : (
           <section className="adminPanel" aria-label="Autenticação do administrador">
             <div className="adminPanelHead">
               <strong>{token ? 'Sessão autenticada' : 'Entrar na plataforma'}</strong>
@@ -118,7 +125,7 @@ export default function AdminPage() {
                 <button type="button" className="adminEditorStart" onClick={openEditor}>Editar site institucional →</button>
                 <div className="adminModuleList">
                   <button type="button" onClick={openQuizzes}>Testes <small>Gerenciar categorias e questões →</small></button>
-                  <span>Documentos <small>Em desenvolvimento</small></span>
+                  <button type="button" onClick={openDocuments}>Documentos <small>Gerenciar biblioteca PDF e PNG →</small></button>
                   <span>Vídeos <small>Em desenvolvimento</small></span>
                 </div>
                 <button type="button" className="adminSecondaryButton" onClick={logout}>Sair da administração</button>
@@ -140,7 +147,7 @@ export default function AdminPage() {
             )}
           </section>
           )}
-          <p className="adminFootnote">Plataforma SONI · v0.7.0 · Identidade Harmonia Técnica</p>
+          <p className="adminFootnote">Plataforma SONI · v0.8.0 · Identidade Harmonia Técnica</p>
         </div>
       </main>
     </div>

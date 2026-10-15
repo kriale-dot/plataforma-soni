@@ -192,7 +192,7 @@ final class SiteMaintenance
                 if ($file->isLink()) throw new RuntimeException('Link simbólico encontrado na pasta de mídia.');
                 if (!$file->isFile()) continue;
                 $relative = str_replace('\\', '/', substr($file->getPathname(), strlen($source) + 1));
-                if (!preg_match('~^[a-f0-9]{2}/[a-f0-9]{32}\.(jpg|jpeg|png|webp|gif|mp3|wav|ogg|mp4|webm)$~D', $relative)) {
+                if (!preg_match('~^[a-f0-9]{2}/[a-f0-9]{32}\.(jpg|jpeg|png|webp|gif|mp3|wav|ogg|mp4|webm|pdf)$~D', $relative)) {
                     throw new RuntimeException('Arquivo com caminho inesperado em site_media: ' . $relative);
                 }
                 $target = $pending . '/media/' . $relative;
@@ -235,6 +235,7 @@ final class SiteMaintenance
                   AND NOT EXISTS (
                       SELECT 1 FROM quiz_options qo WHERE qo.image_media_id = m.id OR qo.audio_media_id = m.id
                   )
+                  AND NOT EXISTS (SELECT 1 FROM documents d WHERE d.media_id = m.id)
                   ORDER BY m.created_at ASC, m.id ASC LIMIT {$limit}";
         return $db->query($query)->fetchAll();
     }
@@ -268,16 +269,17 @@ final class SiteMaintenance
                     'SELECT (EXISTS(SELECT 1 FROM site_blocks WHERE media_id = ?) OR
                              EXISTS(SELECT 1 FROM site_settings WHERE logo_media_id = ?) OR
                              EXISTS(SELECT 1 FROM quiz_questions WHERE image_media_id = ? OR audio_media_id = ?) OR
-                             EXISTS(SELECT 1 FROM quiz_options WHERE image_media_id = ? OR audio_media_id = ?))'
+                             EXISTS(SELECT 1 FROM quiz_options WHERE image_media_id = ? OR audio_media_id = ?) OR
+                             EXISTS(SELECT 1 FROM documents WHERE media_id = ?))'
                 );
-                $linked->execute([$id, $id, $id, $id, $id, $id]);
+                $linked->execute([$id, $id, $id, $id, $id, $id, $id]);
                 if ((int) $linked->fetchColumn() !== 0 ||
                     strtotime($record['created_at']) >= time() - $days * 86400) {
                     $db->rollBack();
                     continue;
                 }
                 $relative = (string) $record['storage_path'];
-                if (!preg_match('~^[a-f0-9]{2}/[a-f0-9]{32}\.(jpg|jpeg|png|webp|gif|mp3|wav|ogg|mp4|webm)$~D', $relative)) {
+                if (!preg_match('~^[a-f0-9]{2}/[a-f0-9]{32}\.(jpg|jpeg|png|webp|gif|mp3|wav|ogg|mp4|webm|pdf)$~D', $relative)) {
                     throw new RuntimeException('Caminho de mídia suspeito; operação interrompida.');
                 }
                 if (!isset($manifest['files']['media/' . $relative])) {

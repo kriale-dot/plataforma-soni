@@ -16,6 +16,7 @@ use Soni\SiteCms;
 use Soni\SiteMedia;
 use Soni\QuizService;
 use Soni\QuizFeedback;
+use Soni\DocumentService;
 use Psr\Http\Message\UploadedFileInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -42,7 +43,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.7.1']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.8.0']);
 });
 
 // Configurações e blocos públicos; não retornar rascunhos ou blocos ocultos.
@@ -237,6 +238,46 @@ $app->put('/api/admin/quizzes/{id:[0-9]+}/questions/{questionId:[0-9]+}', static
 });
 $app->delete('/api/admin/quizzes/{id:[0-9]+}/questions/{questionId:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
     return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::deleteQuestion($db, (int) $args['id'], (int) $args['questionId']));
+});
+
+// Biblioteca pública: catálogo e consulta de documentos publicados (PDF/PNG).
+$app->get('/api/documents', static function (Request $request, ResponseInterface $response): ResponseInterface {
+    try {
+        return Http::json($response, DocumentService::publicList(Database::connect(), $request->getQueryParams()));
+    } catch (InvalidArgumentException $error) {
+        return Http::json($response, ['error' => $error->getMessage()], 422);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Biblioteca de documentos temporariamente indisponível.'], 503);
+    }
+});
+$app->get('/api/documents/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args): ResponseInterface {
+    try {
+        return Http::json($response, DocumentService::publicDetail(Database::connect(), (int) $args['id']));
+    } catch (InvalidArgumentException) {
+        return Http::json($response, ['error' => 'Documento não encontrado ou não publicado.'], 404);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Documento temporariamente indisponível.'], 503);
+    }
+});
+
+// Gestão com JWT — permite guardar rascunhos e ocultar documentos.
+$app->get('/api/admin/documents', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => DocumentService::adminList($db));
+});
+$app->post('/api/admin/document-categories', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => DocumentService::saveCategory($db, null, (array) $request->getParsedBody()));
+});
+$app->put('/api/admin/document-categories/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => DocumentService::saveCategory($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+$app->post('/api/admin/documents', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => DocumentService::create($db, (array) $request->getParsedBody()));
+});
+$app->put('/api/admin/documents/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => DocumentService::update($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+$app->delete('/api/admin/documents/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => DocumentService::delete($db, (int) $args['id']));
 });
 
 $app->options('/{routes:.+}', static fn (Request $request, ResponseInterface $response): ResponseInterface => $response);

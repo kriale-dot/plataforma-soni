@@ -68,3 +68,8 @@ Para restaurar de uma quarentena, use a pasta de backup correspondente e os regi
 - Arquivos são copiados enquanto o SQL é exportado; mudanças simultâneas podem gerar diferenças. Faça cópias em período sem edições.
 - Não há agendamento automático, cópia remota, rotatividade, restauração automatizada nem proteção contra perda do dispositivo ainda.
 - **Próximo passo:** realizar backup real com verificação local e teste de restauração isolada.
+
+## Backups da Biblioteca de Documentos (v0.8.0)
+- O script `bin/backup.php` inclui os arquivos PDF em `api/storage/site_media` e o SQL das tabelas de documentos.
+- A auditoria não trata como órfão nenhum arquivo vinculado a documento, inclusive rascunho ou oculto.
+- Refaça o backup após importar documentos; o snapshot anterior não contém os novos materiais.

@@ -1,5 +1,19 @@
 # SONI — Histórico de versões
 
+## v0.8.0 — 2026-10-15 — Biblioteca de Documentos (PDF/PNG)
+- Migração `004_documents.sql`: `document_categories`, `documents`, e enum DOCUMENT na tabela `site_media` para arquivos PDF. Dados anteriores preservados.
+- Upload de PDF até 20 MiB, com MIME real e assinatura `%PDF-`; PNG até 6 MiB usando validação existente.
+- Painel autenticado `/admin/documents`: categorias, cadastro e edição, publicação e visibilidade, exclusão de metadados sem apagar arquivos.
+- API privada JWT `/api/admin/documents` e `/api/admin/document-categories`; API pública `GET /api/documents` (filtros `q` e `category`) e `GET /api/documents/{id}`.
+- Biblioteca pública `/documentos`, leitor `/documentos/{id}`, suporte nativo do navegador a PDF ou PNG.
+- Leitura de mídia de documento rascunho apenas com JWT; arquivos publicados disponíveis para visualização em rota pública.
+- Auditoria de mídias considera referências de documentos, e rotina de backup inclui PDFs.
+- CI possui teste HTTP para upload PDF/PNG, permissões, filtros, publicação, ocultação e preservação de arquivos.
+- **Pendente nesta etapa:** aprovação CI e aplicação da migração 004 no Windows, testes visuais.
+- **Limitações:** catálogo retorna até 100 arquivos por consulta; sem paginador, verificação antivírus e política de moderação de PDFs avançada.
+
+
+
 ## v0.7.1 — 2026-10-15 — Devolutivas por faixa de acertos
 - Cada teste possui faixas de desempenho (1 a 20), com mínimo/máximo, classificação, devolutiva textual e recomendação opcional.
 - Migração `003_quiz_feedback.sql`: tabelas `quiz_feedback_ranges` e `quiz_attempt_feedback`, sem alterar tentativas antigas; inicialização de cinco faixas para testes já existentes.

@@ -58,3 +58,8 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Devolutivas diferentes conforme percentual, editáveis individualmente em cada teste, com classificação, mensagem e recomendação opcional.
 - Faixas precisam cobrir 0,00–100,00% sem lacunas/sobreposições; resposta exibida só após finalizar; snapshot de texto é preservado em quiz_attempt_feedback.
 - Implementação no código v0.7.1; pendente validação local.
+
+## Documentos — v0.8.0 (2026-10-15)
+- Biblioteca PDF/PNG com categorias e busca, publicação/rascunho, frontend /admin/documents e /documentos.
+- Mídias na mesma pasta privada, com novo enum DOCUMENT para PDF e tipo IMAGE para PNG, associadas ao cadastro em documents.
+- Alterações mantêm CMS e quizzes funcionais; no Windows a migração 004 é necessária e ainda não confirmada.

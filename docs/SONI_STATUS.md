@@ -1,9 +1,9 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.7.1 (devolutivas por faixa de acertos)  
-**Etapa:** 4 — Teste seus Conhecimentos: devolutivas personalizadas  
-**Estado:** v0.7.1 implementada, migrações 002/003 aplicadas e editor de devolutivas validado no Windows pelo responsável («Tudo ok»); testes automatizados de pontuação/faixas aprovados no GitHub Actions 38804274629. A confirmação não discrimina o resultado individual de cada nota simulada no navegador.
+**Versão:** 0.8.0 (Biblioteca de Documentos PDF/PNG)  
+**Etapa:** 5 — Biblioteca de Documentos digital  
+**Estado:** v0.7.1 aprovada e validada no Windows pelo responsável. v0.8.0 Biblioteca de Documentos implementada em código, aguardando CI e teste local; migração 004 ainda não executada no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -83,6 +83,19 @@
 - [ ] Não foi recebido relatório separado para cada resultado de nota 0%, 50% e 100% no Windows; esses casos passaram nos testes automáticos.
 - [ ] Cópia externa de backup e teste isolado de restauração ainda pendentes.
 
+## Biblioteca de Documentos — v0.8.0
+- [x] Migração 004_documents.sql: categoria e cadastro de documentos associados à mídia, além do tipo DOCUMENT para PDF.
+- [x] Upload PDF até 20 MiB com verificação de extensão, MIME real e cabeçalho; PNG até 6 MiB mantém as validações existentes.
+- [x] API administrativa JWT: listar/criar/editar/apagar cadastros, criar e editar categorias; exclusão preserva arquivos físicos.
+- [x] API pública: catálogo filtrado por pesquisa/categoria e consulta individual, com acesso somente a documentos publicados e visíveis.
+- [x] Endpoint de mídias permite acesso público a PDFs/PNGs apenas quando associados a cadastro publicado/visível.
+- [x] Frontend /admin/documents: upload, categorias, edição e prévia privada, status/visibilidade.
+- [x] Frontend /documentos e /documentos/{id}: catálogo com pesquisa e leitor de PDF ou PNG.
+- [x] Auditoria e quarentena de mídias respeitam vínculos a documentos, inclusive rascunhos e ocultos; backup contempla arquivos PDF.
+- [x] Teste HTTP no CI inclui JWT, privacidade, PDF/PNG, publicação/ocultação, pesquisa, exclusão de metadados sem perda física.
+- [ ] Validar CI e realizar migração 004 no Windows; testar uploads PDF/PNG no navegador.
+- [ ] Definir paginação avançada, segurança de PDFs para produção, antivírus/CDN, categorias reordenáveis e teste de restauração isolada.
+
 ## Problema de comunicação local identificado em 2026-10-15
 - [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
 - [x] Teste via `127.0.0.1:8282` apresentou erro (informado pelo responsável).
@@ -112,6 +125,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Iniciar o módulo F5 — Biblioteca de Documentos (PDF/PNG), incluindo upload seguro, catálogo público, organização por categorias e visualização. Antes do deploy, tratar rate limiting das tentativas de quizzes, segurança, restauração isolada e backup externo. Não executar scripts de teste CI em banco real.
+Conferir GitHub Actions v0.8.0. No Windows executar git pull e php bin/migrate.php para aplicar 004_documents.sql; reiniciar PHP/Vite, abrir /admin → Documentos e testar PDF/PNG publicado e documento rascunho. Em produção ainda faltam segurança adicional de PDFs, rate limiting, backup externo e teste de restauração.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.
