@@ -26,7 +26,9 @@
 - [x] Migração numerada 001_site_institucional.sql para site_settings, site_blocks e site_media; seed inicial de 5 blocos.
 - [x] Script php bin/migrate.php com histórico schema_migrations e checksum.
 - [x] Script php bin/db-check.php para testar conexão e conteúdo sem expor senhas.
-- [x] Endpoint público GET /api/site para recuperar somente blocos visíveis/publicados do banco.
+- [x] Endpoint público GET /api/site para recuperar somente blocos visíveis/publicados do banco; corrigida omissão da rota no index.php em 2026-10-15, após erro HTTP 405 informado pelo responsável.
+- [x] GET /favicon.ico responde 204, evitando erro 405 no console do navegador.
+- [ ] Validar integração HTTP da rota GET /api/site no GitHub Actions após a correção.
 - [x] GitHub Actions executou a migração 001 em MariaDB 11.4 temporário, repetiu a migração sem duplicar registros e aprovou o filtro de rascunhos/ocultos (CI do commit ca9eab8).
 - [ ] Criar banco plataforma_soni e usuário soni_app no MariaDB local, configurar api/.env e executar migração.
 - [ ] Verificar php bin/db-check.php e GET /api/site no navegador do responsável.
@@ -61,6 +63,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Seguir docs/SONI_DATABASE_SETUP.md: criar banco plataforma_soni e usuário dedicado, configurar DB_* sem sobrescrever as credenciais do admin, executar php bin/migrate.php e php bin/db-check.php. Depois iniciar CRUD CMS e renderização dinâmica no React.
+Atualizar com git pull, conferir `php bin/db-check.php` e abrir GET /api/site no navegador após reiniciar a API. Se a migração local ainda não tiver sido aplicada, seguir docs/SONI_DATABASE_SETUP.md. Depois iniciar CRUD CMS e renderização dinâmica no React.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

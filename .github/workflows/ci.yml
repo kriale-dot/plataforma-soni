@@ -96,3 +96,18 @@ jobs:
       - name: Verificar filtro de publicação
         working-directory: api
         run: php tests/site-smoke.php
+      - name: Testar HTTP GET /api/site e favicon
+        working-directory: api
+        run: |
+          php -S 127.0.0.1:8282 -t public public/index.php > /tmp/soni-php.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" || true' EXIT
+          for i in $(seq 1 10); do
+            if curl -fsS http://127.0.0.1:8282/api/health >/dev/null 2>&1; then
+              break
+            fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:8282/api/site -o /tmp/soni-site.json
+          php -r '$data=json_decode(file_get_contents("/tmp/soni-site.json"),true); if (!is_array($data) || count($data["blocks"]??[])!==5 || ($data["settings"]["site_title"]??"")!=="SONI | Sonorização de Igrejas") { fwrite(STDERR,"Conteudo publico inesperado\n"); exit(1); } echo "GET /api/site OK\n";'
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8282/favicon.ico)" = 204

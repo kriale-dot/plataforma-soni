@@ -76,7 +76,7 @@ A repetição de php bin/migrate.php deverá retornar "Já aplicada" sem duplica
 Reinicie o servidor PHP se alterou variáveis no api/.env. Acesse:
 - http://localhost:8282/api/site
 
-A resposta deverá conter "settings" e cinco blocos "blocks". Esta é apenas a primeira rota pública da API: o site React ainda não utiliza esses registros, e o painel CMS editável ainda não está construído.
+A resposta deverá conter "settings" e cinco blocos "blocks". Se surgir erro 405 "Method Not Allowed", confira se o `git pull origin main` trouxe a correção de `api/public/index.php` e reinicie o PHP; havia uma omissão dessa rota corrigida em 15/10/2026. Esta é apenas a primeira rota pública da API: o site React ainda não utiliza esses registros, e o painel CMS editável ainda não está construído.
 
 ## Erros comuns
 - Could not find driver: instalar/habilitar pdo_mysql no PHP em uso.

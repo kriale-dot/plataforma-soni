@@ -10,6 +10,8 @@ use Slim\Factory\AppFactory;
 use Slim\Psr7\Response;
 use Soni\AdminAuth;
 use Soni\Http;
+use Soni\Database;
+use Soni\SiteRepository;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
@@ -36,6 +38,20 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
     return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.3.0']);
+});
+
+// Configurações e blocos públicos; não retornar rascunhos ou blocos ocultos.
+$app->get('/api/site', static function (Request $request, ResponseInterface $response): ResponseInterface {
+    try {
+        return Http::json($response, SiteRepository::readPublic(Database::connect()));
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Site institucional temporariamente indisponível.'], 503);
+    }
+});
+
+// Alguns navegadores buscam este ícone automaticamente.
+$app->get('/favicon.ico', static function (Request $request, ResponseInterface $response): ResponseInterface {
+    return $response->withStatus(204);
 });
 
 $app->post('/api/admin/login', static function (Request $request, ResponseInterface $response): ResponseInterface {
