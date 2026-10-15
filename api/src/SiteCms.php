@@ -65,11 +65,15 @@ final class SiteCms
                     contact_email, contact_phone FROM site_settings WHERE id = 1'
         )->fetch();
         $blocks = $pdo->query(
-            'SELECT id, type, title, subtitle, body_text, media_url, alt_text,
+            'SELECT id, type, title, subtitle, body_text, media_url, media_id, alt_text,
                     button_label, button_url, sort_order, is_visible, publication_status
              FROM site_blocks ORDER BY sort_order, id'
         )->fetchAll();
-        return ['settings' => $settings ?: [], 'blocks' => $blocks];
+        $media = $pdo->query(
+            'SELECT id, kind, original_name, mime_type, size_bytes, created_at
+             FROM site_media ORDER BY id DESC LIMIT 100'
+        )->fetchAll();
+        return ['settings' => $settings ?: [], 'blocks' => $blocks, 'media' => $media];
     }
 
     public static function saveSettings(PDO $pdo, array $input): array
@@ -101,7 +105,7 @@ final class SiteCms
         return self::readAdmin($pdo)['settings'];
     }
 
-    private static function fields(array $input, ?array $current = null): array
+    private static function fields(PDO $pdo, array $input, ?array $current = null): array
     {
         $type = $input['type'] ?? $current['type'] ?? 'TEXTO';
         if (!is_string($type) || !in_array($type, self::TYPES, true)) {
@@ -113,6 +117,29 @@ final class SiteCms
         }
         $fields['media_url'] = self::url($fields['media_url'], 'media_url');
         $fields['button_url'] = self::url($fields['button_url'], 'button_url');
+
+        $mediaId = $input['media_id'] ?? $current['media_id'] ?? null;
+        if ($mediaId === '' || $mediaId === 0 || $mediaId === '0') {
+            $mediaId = null;
+        }
+        if ($mediaId !== null) {
+            if ((!is_int($mediaId) && !is_string($mediaId)) ||
+                !preg_match('/^[1-9][0-9]*$/D', (string) $mediaId)) {
+                throw new InvalidArgumentException('Identificador de mídia inválido.');
+            }
+            $allowedKind = match ($type) {
+                'HERO', 'IMAGEM', 'TEXTO_IMAGEM' => 'IMAGE',
+                'AUDIO' => 'AUDIO',
+                'VIDEO' => 'VIDEO',
+                default => null,
+            };
+            $stmt = $pdo->prepare('SELECT kind FROM site_media WHERE id = ?');
+            $stmt->execute([(int) $mediaId]);
+            if ($allowedKind === null || $stmt->fetchColumn() !== $allowedKind) {
+                throw new InvalidArgumentException('A mídia selecionada não é compatível com o tipo de bloco.');
+            }
+        }
+        $fields['media_id'] = $mediaId === null ? null : (int) $mediaId;
 
         $visibility = $input['is_visible'] ?? $current['is_visible'] ?? 1;
         if (!in_array($visibility, [true, false, 1, 0, '1', '0'], true)) {
@@ -129,7 +156,7 @@ final class SiteCms
 
     public static function create(PDO $pdo, array $input): array
     {
-        $data = self::fields($input);
+        $data = self::fields($pdo, $input);
         $order = (int) $pdo->query('SELECT COALESCE(MAX(sort_order), 0) + 10 FROM site_blocks')->fetchColumn();
         $data['sort_order'] = $order;
         $names = array_keys($data);
@@ -142,7 +169,7 @@ final class SiteCms
     public static function getBlock(PDO $pdo, int $id): array
     {
         $stmt = $pdo->prepare(
-            'SELECT id, type, title, subtitle, body_text, media_url, alt_text,
+            'SELECT id, type, title, subtitle, body_text, media_url, media_id, alt_text,
                     button_label, button_url, sort_order, is_visible, publication_status
              FROM site_blocks WHERE id = ?'
         );
@@ -157,7 +184,7 @@ final class SiteCms
     public static function update(PDO $pdo, int $id, array $input): array
     {
         $current = self::getBlock($pdo, $id);
-        $data = self::fields($input, $current);
+        $data = self::fields($pdo, $input, $current);
         $changes = [];
         foreach (array_keys($data) as $name) {
             $changes[] = "{$name} = :{$name}";

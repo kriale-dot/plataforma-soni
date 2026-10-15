@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiRequest } from './lib/api.js';
+import { apiRequest, apiUploadFile, apiMediaBlob } from './lib/api.js';
 import './site-editor.css';
 
 const blockTypes = [
@@ -9,12 +9,73 @@ const blockTypes = [
   ['TESTES', 'Testes'], ['DOCUMENTOS', 'Documentos'], ['VIDEOS', 'Biblioteca de vídeos'],
 ];
 const defaultBlock = {
-  type: 'TEXTO', title: '', subtitle: '', body_text: '', media_url: '',
+  type: 'TEXTO', title: '', subtitle: '', body_text: '', media_url: '', media_id: null,
   alt_text: '', button_label: '', button_url: '', is_visible: 1, publication_status: 'DRAFT',
 };
 const messageFor = (err) => err?.status === 401
   ? 'Sua sessão expirou. Faça login novamente.'
   : err?.message || 'Não foi possível salvar a alteração.';
+
+
+const mediaKindForBlock = (type) => {
+  if (['HERO', 'IMAGEM', 'TEXTO_IMAGEM'].includes(type)) return 'IMAGE';
+  if (type === 'AUDIO') return 'AUDIO';
+  if (type === 'VIDEO') return 'VIDEO';
+  return null;
+};
+
+const acceptForKind = (kind) => {
+  if (kind === 'IMAGE') return '.jpg,.jpeg,.png,.webp,.gif';
+  if (kind === 'AUDIO') return '.mp3,.wav,.ogg';
+  return '.mp4,.webm';
+};
+const maxForKind = (kind) => kind === 'IMAGE' ? 6 * 1024 * 1024 : kind === 'AUDIO' ? 15 * 1024 * 1024 : 32 * 1024 * 1024;
+
+function BlockPreview({ block, media, token }) {
+  const [source, setSource] = useState('');
+  const [error, setError] = useState('');
+  const kind = mediaKindForBlock(block.type);
+  const chosen = media.find((entry) => Number(entry.id) === Number(block.media_id)) ?? null;
+
+  useEffect(() => {
+    if (!chosen) {
+      setSource('');
+      setError('');
+      return;
+    }
+    const controller = new AbortController();
+    let objectUrl = null;
+    apiMediaBlob(chosen.id, token, controller.signal)
+      .then((blob) => {
+        if (controller.signal.aborted) return;
+        objectUrl = URL.createObjectURL(blob);
+        setSource(objectUrl);
+        setError('');
+      })
+      .catch((err) => { if (err.name !== 'AbortError') setError('A prévia da mídia não pôde ser carregada.'); });
+    return () => {
+      controller.abort();
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [chosen?.id, token]);
+
+  const mediaUrl = chosen ? source : block.media_url;
+  return (
+    <div className="siteBlockPreview" aria-label="Pré-visualização privada do bloco">
+      <div className="sitePreviewLabel">PRÉVIA PARTICULAR · alterações ainda não publicadas</div>
+      <small>{block.subtitle}</small>
+      <h3>{block.title || 'Título do bloco'}</h3>
+      <p>{block.body_text || 'O texto aparecerá aqui.'}</p>
+      {kind === 'IMAGE' && mediaUrl && <img src={mediaUrl} alt={block.alt_text || ''} />}
+      {kind === 'AUDIO' && mediaUrl && <audio controls preload="none" src={mediaUrl}/>}
+      {kind === 'VIDEO' && mediaUrl && (mediaUrl.startsWith('blob:') || mediaUrl.startsWith('/api/') || /\.(mp4|webm)(\?|#|$)/i.test(mediaUrl)
+        ? <video controls preload="metadata" src={mediaUrl}/>
+        : <p>Vídeo externo: <a href={mediaUrl} target="_blank" rel="noopener noreferrer">Abrir vídeo ↗</a></p>)}
+      {error && <p role="alert">{error}</p>}
+      {block.button_label && <span className="sitePreviewButton">{block.button_label}</span>}
+    </div>
+  );
+}
 
 export default function SiteEditor({ token, onUnauthorized }) {
   const [data, setData] = useState(null);
@@ -26,6 +87,7 @@ export default function SiteEditor({ token, onUnauthorized }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -59,6 +121,7 @@ export default function SiteEditor({ token, onUnauthorized }) {
     if (busy) return;
     setSelected(block.id);
     setEditing({ ...block });
+    setPreviewOpen(false);
     setError('');
     setSuccess('');
   }
@@ -68,6 +131,7 @@ export default function SiteEditor({ token, onUnauthorized }) {
     setTab('blocks');
     setSelected('new');
     setEditing({ ...defaultBlock });
+    setPreviewOpen(false);
     setError('');
     setSuccess('');
   }
@@ -80,6 +144,34 @@ export default function SiteEditor({ token, onUnauthorized }) {
       const response = await action();
       await refresh(typeof selectedId === 'function' ? selectedId(response) : selectedId);
       setSuccess(message);
+    } catch (err) {
+      setError(messageFor(err));
+      if (err.status === 401) onUnauthorized();
+    } finally {
+      setBusy(false);
+    }
+  }
+
+
+  async function uploadMedia(event) {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+    if (!file || !editing || busy) return;
+    const kind = mediaKindForBlock(editing.type);
+    if (!kind) return;
+    if (file.size > maxForKind(kind)) {
+      setError('Arquivo muito grande para este tipo de mídia.');
+      return;
+    }
+    setBusy(true);
+    setError('');
+    setSuccess('');
+    try {
+      const uploaded = await apiUploadFile('/admin/site/media', file, token);
+      setData((current) => ({ ...current, media: [uploaded, ...(current?.media ?? [])] }));
+      setEditing((current) => ({ ...current, media_id: uploaded.id, media_url: '' }));
+      setPreviewOpen(true);
+      setSuccess('Arquivo enviado com sucesso. Clique em Salvar bloco para vincular a mídia.');
     } catch (err) {
       setError(messageFor(err));
       if (err.status === 401) onUnauthorized();
@@ -148,6 +240,7 @@ export default function SiteEditor({ token, onUnauthorized }) {
   }
 
   const blocks = data?.blocks ?? [];
+  const media = data?.media ?? [];
   const published = blocks.filter((block) => block.publication_status === 'PUBLISHED' && Number(block.is_visible) === 1);
 
   return (
@@ -216,7 +309,7 @@ export default function SiteEditor({ token, onUnauthorized }) {
                 <div className="siteEditorFields">
                   <label>
                     <span>Tipo de bloco</span>
-                    <select value={editing.type} onChange={(event) => setEditing({ ...editing, type: event.target.value })}>
+                    <select value={editing.type} onChange={(event) => setEditing({ ...editing, type: event.target.value, media_id: null })}>
                       {blockTypes.map(([type, label]) => <option key={type} value={type}>{label}</option>)}
                     </select>
                   </label>
@@ -234,8 +327,27 @@ export default function SiteEditor({ token, onUnauthorized }) {
                   </label>
                   <label className="wide">
                     <span>URL da mídia (HTTPS ou caminho interno)</span>
-                    <input value={editing.media_url ?? ''} maxLength={1000} placeholder="https://... (upload será disponibilizado depois)" onChange={(event) => setEditing({ ...editing, media_url: event.target.value })} />
+                    <input value={editing.media_url ?? ''} maxLength={1000} placeholder="https://... (alternativa ao upload)" onChange={(event) => setEditing({ ...editing, media_url: event.target.value })} />
                   </label>
+
+                  {mediaKindForBlock(editing.type) && (
+                    <div className="siteMediaPicker wide">
+                      <label>
+                        <span>Mídia enviada ao servidor</span>
+                        <select value={editing.media_id ?? ''} onChange={(event) => setEditing({ ...editing, media_id: event.target.value ? Number(event.target.value) : null })}>
+                          <option value="">Nenhuma — usar URL externa se informada</option>
+                          {media.filter((item) => item.kind === mediaKindForBlock(editing.type)).map((item) => (
+                            <option value={item.id} key={item.id}>{item.original_name} ({(Number(item.size_bytes) / 1048576).toFixed(1)} MB)</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label>
+                        <span>Enviar novo arquivo ({mediaKindForBlock(editing.type) === 'IMAGE' ? 'até 6 MB' : mediaKindForBlock(editing.type) === 'AUDIO' ? 'até 15 MB' : 'até 32 MB'})</span>
+                        <input aria-label="Selecionar arquivo de mídia" type="file" disabled={busy} accept={acceptForKind(mediaKindForBlock(editing.type))} onChange={uploadMedia}/>
+                      </label>
+                      <small>Arquivos ficam fora da pasta pública. Faça upload, verifique a prévia e salve o bloco.</small>
+                    </div>
+                  )}
                   <label className="wide">
                     <span>Descrição da imagem (acessibilidade)</span>
                     <input value={editing.alt_text ?? ''} maxLength={350} onChange={(event) => setEditing({ ...editing, alt_text: event.target.value })} />
@@ -262,6 +374,7 @@ export default function SiteEditor({ token, onUnauthorized }) {
                 </div>
                 <div className="siteEditorFormActions">
                   <button type="submit" className="siteEditorSave" disabled={busy}>{busy ? 'Salvando...' : 'Salvar bloco'}</button>
+                  <button type="button" disabled={busy} onClick={() => setPreviewOpen((value) => !value)}>{previewOpen ? 'Ocultar prévia' : 'Pré-visualizar'}</button>
                   {selected !== 'new' && (
                     <>
                       <button type="button" disabled={busy} onClick={() => changeVisibility(editing)}>{Number(editing.is_visible) ? 'Ocultar' : 'Mostrar'}</button>
@@ -274,10 +387,11 @@ export default function SiteEditor({ token, onUnauthorized }) {
                 </div>
               </form>
             )}
+            {editing && previewOpen && <BlockPreview block={editing} media={media} token={token}/>}
           </div>
         </div>
       )}
-      <p className="siteEditorHint">Mídia: nesta fase é possível usar URLs HTTPS. Upload de arquivos e pré-visualização de rascunhos serão adicionados posteriormente.</p>
+      <p className="siteEditorHint">Prévia é particular e não publica alterações. Para atualizar o site, salve e publique o bloco. Formatos: JPG, PNG, WebP, GIF; MP3, WAV, OGG; MP4 e WebM.</p>
     </section>
   );
 }

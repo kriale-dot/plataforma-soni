@@ -47,6 +47,8 @@ jobs:
           php -l src/Database.php
           php -l src/SiteRepository.php
           php -l src/SiteCms.php
+          php -l src/SiteMedia.php
+          php -l tests/site-media-http-smoke.php
           php -l tests/site-cms-http-smoke.php
           php -l bin/migrate.php
           php -l bin/db-check.php
@@ -127,3 +129,4 @@ jobs:
             sleep 1
           done
           php tests/site-cms-http-smoke.php
+          php tests/site-media-http-smoke.php

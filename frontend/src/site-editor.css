@@ -33,3 +33,15 @@
 .siteEditorHint{font-size:12px;color:#68777B;line-height:1.7;margin-top:20px}
 @media(max-width:800px){.siteEditorColumns{grid-template-columns:1fr}.siteEditorTop{flex-direction:column;align-items:flex-start}}
 @media(max-width:540px){.siteEditorFields,.siteEditorSettings{grid-template-columns:1fr}.siteEditorFormActions .siteEditorDanger{margin-left:0}}
+
+.siteMediaPicker{grid-column:1/-1;border:1px dashed #A5C9C2;background:#F7FBFA;border-radius:10px;padding:16px;display:grid;gap:13px}
+.siteMediaPicker small{color:#56716E;font-size:12px;line-height:1.6}
+.siteMediaPicker input[type=file]{background:#fff}
+.siteBlockPreview{margin-top:20px;padding:25px;border:1px solid #AECBC5;border-radius:14px;background:linear-gradient(135deg,#F4F8F8,#FFF)}
+.siteBlockPreview h3{font-size:23px;color:#153B4A;margin:12px 0}
+.siteBlockPreview small{font-weight:700;color:#137B72}
+.siteBlockPreview p{line-height:1.7;color:#495E67;white-space:pre-line}
+.siteBlockPreview img,.siteBlockPreview video{width:100%;max-height:380px;object-fit:contain;border-radius:9px;background:#EAF0F0;margin-top:15px}
+.siteBlockPreview audio{width:100%;margin-top:15px}
+.sitePreviewLabel{font-size:10px;letter-spacing:1.4px;font-weight:800;color:#137B72}
+.sitePreviewButton{display:inline-block;background:#D8A24A;color:#27333A;padding:11px 15px;border-radius:8px;margin-top:14px;font-size:13px;font-weight:800}

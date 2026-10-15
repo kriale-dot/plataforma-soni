@@ -11,12 +11,12 @@ SONI — Sonorização de Igrejas. Plataforma educacional com site institucional
 ## Requisito definitivo — site institucional editável
 O site público da SONI **não será estático**: o administrador poderá montar e atualizar as seções via editor visual por blocos, no modelo da plataforma Tânia (`kriale-dot/mapa-percepcao-relacional`). Poderá editar títulos, textos, imagens, áudios, vídeos, links e chamadas para ação; incluir, ocultar, excluir e reordenar blocos. Haverá integração com as áreas de testes, documentos e vídeos.
 
-**Status:** v0.4.0 tem editor textual em /admin/site com CRUD JWT, publicação, visibilidade e ordem, e página pública dinâmica. Uploads e preview de rascunhos ainda pendentes. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
+**Status:** v0.5.0 adiciona upload de imagens/áudio/vídeo com prévia particular do bloco. CMS textual da v0.4.0 e site dinâmico permanecem; validação v0.5 no Windows pendente. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
 
-## Situação — v0.4.0
-Implementado no código: site institucional dinâmico por blocos, tela /admin, editor /admin/site após login, rotas privadas JWT para CRUD e ordem, proxy Vite /api, conexão MariaDB PDO e migration do CMS.
+## Situação — v0.5.0
+Implementado no código: site institucional dinâmico por blocos, tela /admin, editor /admin/site após login, rotas privadas JWT para CRUD e ordem, proxy Vite /api, conexão MariaDB PDO, upload de mídia autenticado e migration do CMS.
 
-**React/Slim, login e API pública MariaDB validados no Windows. Editor visual v0.4.0 aprovado no CI; validação manual do editor ainda pendente.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
+**React/Slim, login e API pública MariaDB validados no Windows. Editor v0.4.0 aprovado no CI e validado no Windows; novo upload v0.5.0 precisa de verificação local.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
 
 ## MariaDB / CMS institucional
 

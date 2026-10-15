@@ -1,5 +1,17 @@
 # SONI — Histórico de versões
 
+## v0.5.0 — 2026-10-15 — Upload de mídias e prévia institucional
+- Upload autenticado com verificação conjunta da extensão e MIME real, tamanho e dimensões de imagem.
+- Tipos: JPG/JPEG/PNG/WebP/GIF até 6 MiB; MP3/WAV/OGG até 15 MiB; MP4/WebM até 32 MiB.
+- Arquivos em api/storage/site_media fora do webroot com nomes aleatórios; acesso público apenas para blocos visíveis e publicados.
+- Prévia de mídias não publicadas exige token JWT; leitura de arquivos implementa HTTP Range para áudio/vídeo.
+- Editor associa upload ao media_id e mostra prévia particular antes de salvar/publicar.
+- A tabela site_media e site_blocks.media_id já existiam na migração 001; nenhuma nova migração necessária.
+- GitHub Actions possui teste integrado de upload, validação, publicação e ocultação. Teste local no Windows pendente.
+- Ainda pendentes: remoção/limpeza de arquivos órfãos, cotas, thumbnails, backup de mídia e segurança de produção.
+
+
+
 ## Validação local — 2026-10-15 — Editor institucional v0.4.0 aprovado
 - Após baixar as alterações, o responsável confirmou que o editor institucional funcionou no Windows (resposta: "tudo certo").
 - Isso encerra a pendência de validação básica do editor e da visualização de alterações no site.

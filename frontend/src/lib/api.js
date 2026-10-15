@@ -36,3 +36,44 @@ export async function apiRequest(path, { method = 'GET', body, token, signal } =
   }
   return data;
 }
+
+
+export async function apiUploadFile(path, file, token) {
+  const form = new FormData();
+  form.append('file', file);
+  let response;
+  try {
+    response = await fetch(apiBase + path, {
+      method: 'POST',
+      headers: { Accept: 'application/json', Authorization: 'Bearer ' + token },
+      body: form,
+      credentials: 'omit',
+      cache: 'no-store',
+    });
+  } catch {
+    throw new ApiError('Falha na conexão durante o envio.');
+  }
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new ApiError(data.error || 'Falha no upload.', response.status);
+  return data;
+}
+
+export async function apiMediaBlob(id, token, signal) {
+  let response;
+  try {
+    response = await fetch(apiBase + '/admin/site/media/' + Number(id), {
+      headers: { Authorization: 'Bearer ' + token },
+      credentials: 'omit',
+      cache: 'no-store',
+      signal,
+    });
+  } catch (error) {
+    if (error.name === 'AbortError') throw error;
+    throw new ApiError('Não foi possível carregar a mídia.');
+  }
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw new ApiError(data.error || 'Mídia indisponível.', response.status);
+  }
+  return response.blob();
+}

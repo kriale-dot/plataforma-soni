@@ -1,9 +1,9 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.4.0 (CMS textual e página pública dinâmica)  
-**Etapa:** 2 — CMS institucional: edição de texto, links, estado e ordem  
-**Estado:** React/Slim, login, rota GET /api/site e edição institucional v0.4.0 confirmados localmente pelo responsável. Fluxos de upload e preview ainda não implementados.
+**Versão:** 0.5.0 (upload de mídias e prévia no editor)  
+**Etapa:** 2 — CMS institucional: gestão de mídias  
+**Estado:** v0.4.0 confirmada localmente pelo responsável; v0.5.0 implementada no código, aguardando testes automáticos e validação no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -37,7 +37,12 @@
 - [x] Site público React agora renderiza os blocos publicados recebidos de GET /api/site.
 - [x] Teste HTTP integrado no CI: login, autorização, rejeição de URL perigosa, criação, publicação, ocultação, ordem, configurações e exclusão; aprovado na execução 38794375321.
 - [x] O responsável confirmou em 2026-10-15 que o acesso ao editor e o salvamento/visualização das alterações funcionaram no Windows (retorno: "tudo certo").
-- [ ] Implementar upload seguro de imagens, áudios e vídeos; visualização de rascunho antes da publicação; gestão de mídia; refinamento SEO/acessibilidade.
+- [x] Código v0.5.0: upload autenticado de imagens (JPG/PNG/WebP/GIF), áudio (MP3/WAV/OGG) e vídeo (MP4/WebM), limites e inspeção MIME real, armazenamento em api/storage/site_media (fora de api/public).
+- [x] Mídias persistidas na tabela site_media já existente e associadas ao campo site_blocks.media_id, sem nova migração.
+- [x] Rota GET /api/site/media/{id} exige bloco publicado/visível; GET /api/admin/site/media/{id} é protegida por JWT e serve prévia de rascunho; suporte HTTP Range.
+- [x] Editor React com envio, seleção de mídias e pré-visualização particular de blocos.
+- [ ] Validar CI e upload manual no Windows; testar limites do php.ini e acesso aos arquivos.
+- [ ] Implementar limpeza de mídias órfãs, backup, auditoria e ajustes SEO/acessibilidade.
 
 ## Problema de comunicação local identificado em 2026-10-15
 - [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
@@ -68,6 +73,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Implementar upload seguro de mídia institucional no CMS (imagem primeiro, seguida de áudio/vídeo com limites, verificação MIME e armazenamento fora do webroot), vinculação ao bloco, exibição pública autorizada e pré-visualização de rascunhos. Manter o banco e conteúdo atual sem mudanças destrutivas.
+Validar v0.5.0 no GitHub Actions. No Windows, git pull, conferir extensões PHP fileinfo e upload_max_filesize/post_max_size, reiniciar PHP/Vite, testar upload de PNG em bloco IMAGEM em rascunho, ver prévia particular, salvar/publicar e verificar exibição pública. Depois testar áudio/vídeo e implementar limpeza segura de mídias órfãs.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

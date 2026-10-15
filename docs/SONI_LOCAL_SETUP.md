@@ -142,3 +142,21 @@ No computador do responsável (15/10/2026), o primeiro retornou HTTP 200 e o seg
 7. O editor fica em `/admin/site`, mas o JWT é mantido na memória: recarregar a página exigirá novo login.
 
 Limitações conhecidas da v0.4.0: os arquivos de mídia ainda não possuem upload; é possível referenciar URLs HTTPS válidas. Preview de rascunhos não implementado. Não digite scripts HTML ou URLs `javascript:` (a API rejeita links inseguros).
+
+## 8. Upload de mídias do site (v0.5.0)
+- Atualize com git pull origin main na pasta do projeto. Reinicie API e Vite. Não sobrescreva api/.env.
+- Confira extensões habilitadas com: php -m | findstr /I "fileinfo pdo_mysql"
+- Confira php.ini usando php --ini. Para vídeos de até 32 MiB, no php.ini do PHP CLI e somente no desenvolvimento, ajuste:
+~~~ini
+file_uploads=On
+upload_max_filesize=36M
+post_max_size=40M
+~~~
+- Reinicie composer start para aplicar os limites. A API ainda restringe imagens a 6 MiB, áudios a 15 MiB e vídeos a 32 MiB.
+- Abra http://localhost:5173/admin, faça login, entre em Editar site institucional e selecione um bloco HERO/IMAGEM/TEXTO_IMAGEM (imagem), AUDIO (áudio) ou VIDEO (vídeo).
+- Em Enviar novo arquivo, selecione a mídia. Aguarde o retorno de sucesso, clique em Pré-visualizar (se necessário), depois clique em Salvar bloco.
+- Para disponibilizar no site público, marque o bloco como Publicado e Visível e salve. Faça refresh da homepage.
+- Mídias de rascunhos não ficam disponíveis no endereço público; a prévia do editor exige token JWT.
+- Pasta de mídia: api/storage/site_media fora de api/public. Garanta permissões e inclua em backups junto do MariaDB.
+- Não há migração nova: site_media e site_blocks.media_id já estão na migração 001.
+- Vídeos longos: prefira YouTube/HTTPS por enquanto; uploads fragmentados e CDN serão avaliados futuramente.

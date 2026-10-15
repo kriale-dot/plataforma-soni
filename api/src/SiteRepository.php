@@ -16,11 +16,14 @@ final class SiteRepository
         )->fetch();
 
         $blocks = $pdo->query(
-            "SELECT id, type, title, subtitle, body_text, media_url,
-                    alt_text, button_label, button_url, sort_order
-             FROM site_blocks
-             WHERE publication_status = 'PUBLISHED' AND is_visible = 1
-             ORDER BY sort_order ASC, id ASC"
+            "SELECT b.id, b.type, b.title, b.subtitle, b.body_text, b.media_id,
+                    CASE WHEN b.media_id IS NOT NULL
+                         THEN CONCAT('/api/site/media/', b.media_id)
+                         ELSE b.media_url END AS media_url,
+                    b.alt_text, b.button_label, b.button_url, b.sort_order
+             FROM site_blocks b
+             WHERE b.publication_status = 'PUBLISHED' AND b.is_visible = 1
+             ORDER BY b.sort_order ASC, b.id ASC"
         )->fetchAll();
 
         return [

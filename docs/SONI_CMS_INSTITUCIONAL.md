@@ -1,6 +1,6 @@
 # SONI — CMS do site institucional editável
 
-**Decisão confirmada em 2026-10-15. Status: v0.4.0 inclui editor de blocos textuais, publicação, ordenação e site React dinâmico. Uploads e prévia de rascunhos continuam pendentes.**
+**Decisão confirmada em 2026-10-15. Status: v0.5.0 adiciona uploads autenticados e prévia do bloco, além do editor textual da v0.4.0. Verificação local v0.5 pendente.**
 **Referência analisada:** [mapa-percepcao-relacional](https://github.com/kriale-dot/mapa-percepcao-relacional), incluindo `ProfessionalSiteEditor.jsx`, `PublicInstitutionalSite.jsx`, `SiteController.php` e migration `009_site_institucional.sql`.
 
 ## Objetivo
@@ -122,3 +122,13 @@ Rotas são propostas; contratos exatos, resposta e padronização serão finaliz
 - Criar/alterar/excluir/reordenar blocos; publicar/retirar de publicação; ocultar/mostrar; editar configurações gerais e links HTTPS/internos.
 - Rotas mutáveis exigem JWT; testes HTTP e MariaDB aprovados no CI `38794375321`.
 - **Ainda pendentes:** upload real com inspeção MIME, relacionar site_media, preview de rascunho, SEO e auditoria mais completos e teste manual no Windows.
+
+## Implementação de mídias na v0.5.0
+- POST /api/admin/site/media: multipart/form-data campo file com JWT. Retorna ID da mídia enviada.
+- GET /api/admin/site/media/{id}: mídia privada com JWT para prévia, inclusive em rascunho.
+- GET /api/site/media/{id}: mídia apenas de bloco publicado e visível; para mídias ocultas responde 404.
+- Tabela site_media da migração 001 e coluna site_blocks.media_id são reaproveitadas, sem alteração SQL.
+- Arquivos são gravados fora da pasta pública em api/storage/site_media, com caminhos aleatórios.
+- Aceitos JPG/PNG/WebP/GIF (até 6 MiB), MP3/WAV/OGG (até 15 MiB) e MP4/WebM (até 32 MiB).
+- É necessário salvar o bloco e publicar após o upload; fazer upload não publica automaticamente.
+- Ainda pendentes: remoção de arquivos órfãos, quotas, processamento/otimização de vídeos, backups e auditoria.
