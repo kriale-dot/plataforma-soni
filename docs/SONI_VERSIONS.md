@@ -1,5 +1,13 @@
 # SONI — Histórico de versões
 
+## Ajuste de ambiente — 2026-10-15 — Proxy Vite no Windows (v0.2.0)
+- Diagnóstico: API Slim confirmou HTTP 200 em `http://localhost:8282/api/health`, mas apresentou erro de conexão via `http://127.0.0.1:8282/api/health`.
+- Alterado `frontend/vite.config.js` para fazer proxy do `/api` para `http://localhost:8282` em vez do IPv4 explícito. Evita desencontro com a interface usada pelo PHP no computador do responsável.
+- Atualizadas instruções locais e status. **A correção ainda precisa de reteste no navegador após reiniciar o Vite.**
+- Mantido o número v0.2.0: correção de configuração, sem nova funcionalidade.
+
+
+
 ## Adendo de escopo — 2026-10-15 — CMS do site institucional (sem alteração da versão executável)
 - Requisito confirmado: site institucional da SONI **editável pelo administrador**, com editor de blocos semelhante ao de `mapa-percepcao-relacional` (plataforma Tânia).
 - Revisada implementação de referência: edição de blocos, título do site, mídia, visibilidade e reordenação.

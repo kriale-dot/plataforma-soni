@@ -114,7 +114,17 @@ php -l src/AdminAuth.php
 php -l src/Http.php
 ~~~
 
-## 5. Problemas conhecidos
+## 5. Conexão `localhost` x `127.0.0.1` no Windows
+Se a tela administrativa mostrar `API: indisponível` e o navegador relatar erro 500 em `/api/health`, compare os testes:
+
+~~~powershell
+curl.exe -i http://localhost:8282/api/health
+curl.exe -i http://127.0.0.1:8282/api/health
+~~~
+
+No computador do responsável (15/10/2026), o primeiro retornou HTTP 200 e o segundo falhou. O proxy Vite foi atualizado para `http://localhost:8282` para acompanhar o endereço que atende a API. Após atualizar com `git pull origin main`, **pare e reinicie** o processo `npm run dev` e recarregue `/admin`. Mantenha o servidor PHP aberto. Se não resolver, inspecione a saída do terminal Vite e o erro de rede, sem enviar credenciais.
+
+## 6. Problemas conhecidos
 - API indisponível: verificar se o terminal com composer start está aberto.
 - HTTP 503 no login: configurar corretamente todas as variáveis em api/.env.
 - HTTP 401: credenciais não conferem.

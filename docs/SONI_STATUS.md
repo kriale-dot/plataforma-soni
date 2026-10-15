@@ -12,13 +12,20 @@
 - [x] Cliente HTTP com tratamento de erro e indicação de estado da API.
 - [x] Login e consulta de autorização à API Slim (/api/admin/login e /api/admin/me).
 - [x] Token mantido somente na memória React, com logout.
-- [x] Proxy Vite /api na porta 8282.
+- [x] Proxy Vite /api na porta 8282; ajustado para `http://localhost:8282` após diagnóstico de resolução de endereço no Windows.
 - [x] Configuração do administrador pelo arquivo api/.env, não versionado.
 - [x] Headers adicionais anti-cache e nosniff para a API.
 - [x] Instruções de ambiente local e workflow GitHub Actions.
 - [x] Biblioteca firebase/php-jwt atualizada da versão 6 para ^7.2.1 para corrigir bloqueio por alerta de segurança.
 - [x] CI do commit 8612fb1: npm install/build e Composer install + PHP lint passaram.
 - [x] Testes de autenticação com credenciais fictícias executados com sucesso no CI em 27ad41d (login correto, credenciais inválidas e token adulterado).
+
+## Problema de comunicação local identificado em 2026-10-15
+- [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
+- [x] Teste via `127.0.0.1:8282` apresentou erro (informado pelo responsável).
+- [x] O Vite estava configurado para encaminhar `/api` à interface IPv4 `127.0.0.1`, onde não foi possível estabelecer conexão.
+- [x] Atualizado `frontend/vite.config.js` para usar o endereço `localhost:8282`, consistente com a API acessível.
+- [ ] Pendente teste local depois de `git pull` e reiniciar o Vite; confirmar indicador `API: conectada` na página `/admin`.
 
 ## Validação pendente
 - [ ] Executar composer install e npm install no Windows do responsável.
