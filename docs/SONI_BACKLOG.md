@@ -6,7 +6,7 @@
 4. **F3 — Admin e MariaDB [primeira versão entregue na v0.7]:** migration 002, categorias e gerenciamento básico de questionários pelo painel. CI 38802753975 aprovado; migração 002 aplicada no Windows; permanecem reforços de segurança.
 5. **F4 — Testes interativos [devolutivas implementadas no código v0.7.1]:** questões e alternativas com texto/imagem/áudio, publicação, aplicação, tentativas, resultados e mensagens por intervalo de acertos editáveis por teste. CI MariaDB/React/PHP aprovado na execução 38804274629; migração 003 aplicada e validação geral do editor confirmada no Windows («Tudo ok»); seguem rate limit e funcionalidades avançadas.
 6. **F5 — Documentos [primeira versão implementada v0.8.0]:** upload autenticado de PDF/PNG, categorias, busca, visualização, publicação e rascunhos; CI 38807367006 aprovado, migração 004 concluída no Windows; pendentes validação visual e funcional da biblioteca. Pendentes paginação, revisão de segurança e recursos avançados.
-7. **F6 — Vídeos [primeira versão implementada v0.9.0]:** YouTube (links HTTPS validados), MP4/WebM (até 32 MiB), categorias, pesquisa, publicação, visualização e painel admin. Aguardando CI e testes locais. Pendentes paginação, arquivos maiores e recursos avançados.
+7. **F6 — Vídeos [primeira versão implementada v0.9.0]:** YouTube (links HTTPS validados), MP4/WebM (até 32 MiB), categorias, pesquisa, publicação, visualização e painel admin. CI 38817558203 aprovado, aguardando migração 005 e testes locais. Pendentes paginação, arquivos maiores e recursos avançados.
 8. **F7 — Qualidade [planejado]:** testes E2E, segurança de uploads e login, acessibilidade e backups.
 9. **F8 — Deploy [planejado]:** hospedagem, HTTPS, CORS, jobs e monitoramento.
 

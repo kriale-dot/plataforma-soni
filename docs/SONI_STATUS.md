@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.9.0 (Biblioteca de Vídeos YouTube/MP4/WebM)  
 **Etapa:** 6 — Biblioteca de Vídeos  
-**Estado:** v0.8.0 com migração 004 aplicada no Windows, uso visual de PDF/PNG ainda pendente de confirmação. Repositório local/remoto sincronizado no commit 0841ebe. v0.9.0 Biblioteca de Vídeos implementada em código, aguardando validação automática e local.
+**Estado:** v0.8.0 com migração 004 aplicada no Windows, uso visual de PDF/PNG ainda pendente de confirmação. Repositório local/remoto sincronizado no commit 0841ebe. v0.9.0 Biblioteca de Vídeos implementada e aprovada no GitHub Actions 38817558203 (React, PHP, MariaDB 11.4 e testes HTTP); aguardando migração 005 e validação funcional no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -107,7 +107,9 @@
 - [x] Frontend /admin/videos e /videos, /videos/{id}, integrado com site institucional e menu administrativo.
 - [x] Auditoria de mídias protege vídeos associados, mesmo em rascunho; backup já cobre MP4/WebM.
 - [x] Teste HTTP integrado ao CI verifica autorização JWT, fontes YouTube falsas, publicação, busca, ocultação, MP4 privado e publicado.
-- [ ] Testes CI e instalação no Windows (migração 005), validação do player e do novo logotipo.
+- [x] CI 38817558203 passou em React, PHP e MariaDB 11.4: migração 005, JWT, link YouTube, vídeo MP4 privado/publicado, pesquisa, ocultação e exclusão segura.
+- [x] Correção da inconsistência `composer.lock` x `composer.json` após sincronização local/remota.
+- [ ] Instalação no Windows (migração 005), validação do player e do novo logotipo.
 - [ ] Limites de upload PHP para 32 MiB, vídeos maiores via armazenamento externo, proteção de abuso e rate limiting antes da produção.
 
 ## Problema de comunicação local identificado em 2026-10-15

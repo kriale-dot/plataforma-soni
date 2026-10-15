@@ -9,7 +9,9 @@
 - Frontend: editor e prévia em `/admin/videos`, biblioteca pública em `/videos`, player em `/videos/{id}`, links no menu institucional.
 - Mídia referenciada por vídeo fica protegida pela auditoria/quarentena; apagar cadastro preserva bytes para backup/recuperação.
 - Teste integrado CI cobre Youtube, JWT, rascunho/publicação, pesquisa, arquivo MP4, exclusão de cadastro e acesso a mídia.
-- **Pendentes**: CI e execução local migração 005, teste no navegador, vídeos >32 MiB via storage externo, segurança pré-produção.
+- **CI aprovado**: GitHub Actions 38817558203, React, PHP e migração/testes HTTP no MariaDB 11.4.
+- Ajuste no `composer.lock` após merge local para restabelecer consistência com `composer.json` e extensão `ext-pdo_mysql`.
+- **Pendentes**: execução local migração 005, teste no navegador, vídeos >32 MiB via storage externo, segurança pré-produção.
 
 
 

@@ -36,3 +36,7 @@ Admin JWT:
 - O upload exige validação MIME e extensão, mas não é garantia de ausência de malware; antes da produção acrescentar antivírus, controle de cotas e segurança adicional.
 - Excluir um cadastro não remove o arquivo físico; a auditoria só avalia arquivos órfãos antigos após backup recente.
 - Nunca executar scripts de CI no banco da instalação real.
+
+## Teste automatizado
+- A v0.9.0 passou GitHub Actions 38817558203 com PHP, React e MariaDB 11.4.
+- Não foi executada migração nem teste visual no computador do usuário nesta etapa.
