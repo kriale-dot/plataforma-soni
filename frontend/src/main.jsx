@@ -7,7 +7,7 @@ import './styles.css';
 const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
 
 function Root() {
-  if (currentPath === '/admin') return <AdminPage />;
+  if (currentPath === '/admin' || currentPath === '/admin/site') return <AdminPage />;
 
   return (
     <>

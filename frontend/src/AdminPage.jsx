@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import SiteEditor from './SiteEditor.jsx';
 import { apiRequest } from './lib/api.js';
 import './admin.css';
 
@@ -8,6 +9,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [token, setToken] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [view, setView] = useState('dashboard');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -37,6 +39,7 @@ export default function AdminPage() {
       // Em memória apenas; recarregar a página encerra a sessão do frontend.
       setToken(login.token);
       setPassword('');
+      if (window.location.pathname === '/admin/site') setView('site');
     } catch (err) {
       if (err.status === 503) setError('O administrador ainda não foi configurado no arquivo api/.env.');
       else if (err.status === 401) setError('E-mail ou senha inválidos.');
@@ -46,10 +49,22 @@ export default function AdminPage() {
     }
   }
 
-  function logout() {
+  const logout = useCallback(() => {
     setToken(null);
     setPassword('');
     setError('');
+    setView('dashboard');
+    if (window.location.pathname === '/admin/site') window.history.replaceState(null, '', '/admin');
+  }, []);
+
+  function openEditor() {
+    setView('site');
+    window.history.pushState(null, '', '/admin/site');
+  }
+
+  function backToDashboard() {
+    setView('dashboard');
+    window.history.pushState(null, '', '/admin');
   }
 
   return (
@@ -68,10 +83,17 @@ export default function AdminPage() {
         <div className="adminContainer">
           <div className="adminIntro">
             <span className="adminEyebrow">PAINEL DE GESTÃO</span>
-            <h1>{token ? 'Bem-vindo ao painel.' : 'Acesso administrativo'}</h1>
+            <h1>{token ? (view === 'site' ? 'Conteúdo do site' : 'Bem-vindo ao painel.') : 'Acesso administrativo'}</h1>
             <p>{token ? 'O administrador está autenticado na API SONI.' : 'Entre com as credenciais configuradas no servidor. Nenhuma senha é armazenada no navegador.'}</p>
           </div>
 
+          {token && view === 'site' && (
+            <div className="adminEditorNavigation">
+              <button type="button" onClick={backToDashboard}>← Painel administrativo</button>
+              <button type="button" onClick={logout}>Sair da administração</button>
+            </div>
+          )}
+          {token && view === 'site' ? <SiteEditor token={token} onUnauthorized={logout} /> : (
           <section className="adminPanel" aria-label="Autenticação do administrador">
             <div className="adminPanelHead">
               <strong>{token ? 'Sessão autenticada' : 'Entrar na plataforma'}</strong>
@@ -85,7 +107,8 @@ export default function AdminPage() {
               <div className="adminWelcome">
                 <div className="adminSuccessIcon" aria-hidden="true">✓</div>
                 <h2>Acesso autorizado</h2>
-                <p>O login administrativo está funcionando. Os módulos de gerenciamento de testes, documentos e vídeos serão implementados nas próximas etapas.</p>
+                <p>Seu acesso está autorizado. Você já pode gerenciar o conteúdo institucional por blocos.</p>
+                <button type="button" className="adminEditorStart" onClick={openEditor}>Editar site institucional →</button>
                 <div className="adminModuleList">
                   <span>Testes <small>Em desenvolvimento</small></span>
                   <span>Documentos <small>Em desenvolvimento</small></span>
@@ -109,7 +132,8 @@ export default function AdminPage() {
               </form>
             )}
           </section>
-          <p className="adminFootnote">Plataforma SONI · v0.2.0 · Identidade Harmonia Técnica</p>
+          )}
+          <p className="adminFootnote">Plataforma SONI · v0.4.0 · Identidade Harmonia Técnica</p>
         </div>
       </main>
     </div>
