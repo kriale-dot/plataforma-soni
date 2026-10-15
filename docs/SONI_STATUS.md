@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.7.1 (devolutivas por faixa de acertos)  
 **Etapa:** 4 — Teste seus Conhecimentos: devolutivas personalizadas  
-**Estado:** v0.7.0 aprovada em CI, pendente validação no Windows. v0.7.1 implementada e aprovada nos testes automáticos React/PHP/MariaDB 11.4 (execução 38804274629); migrações 002 e 003 aplicadas com sucesso no Windows segundo saída enviada pelo responsável; validação funcional no navegador ainda pendente.
+**Estado:** v0.7.1 implementada, migrações 002/003 aplicadas e editor de devolutivas validado no Windows pelo responsável («Tudo ok»); testes automatizados de pontuação/faixas aprovados no GitHub Actions 38804274629. A confirmação não discrimina o resultado individual de cada nota simulada no navegador.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -79,7 +79,8 @@
 - [x] Página pública apresenta classificação, devolutiva e recomendação somente depois da correção.
 - [x] GitHub Actions 38804274629 aprovado: migrações 001–003, build React, PHP, validações de faixas, notas 0%/50%/100%, proteção de dados públicos e imutabilidade do histórico.
 - [x] Responsável confirmou no Windows: 001 já aplicada, 002 e 003 aplicadas; «Migrações concluídas.»
-- [ ] Validar no navegador o editor de faixas e o resultado de testes com devolutivas.
+- [x] Responsável confirmou «Tudo ok» após roteiro de validação das faixas e salvamento de mensagens no navegador (2026-10-15).
+- [ ] Não foi recebido relatório separado para cada resultado de nota 0%, 50% e 100% no Windows; esses casos passaram nos testes automáticos.
 - [ ] Cópia externa de backup e teste isolado de restauração ainda pendentes.
 
 ## Problema de comunicação local identificado em 2026-10-15
@@ -111,6 +112,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Validar CI v0.7.1. Migrações locais concluídas; reiniciar PHP/Vite. Editar devolutivas na área administrativa, concluir testes com notas diferentes e verificar a classificação. Não executar script de testes do CI na base real.
+Iniciar o módulo F5 — Biblioteca de Documentos (PDF/PNG), incluindo upload seguro, catálogo público, organização por categorias e visualização. Antes do deploy, tratar rate limiting das tentativas de quizzes, segurança, restauração isolada e backup externo. Não executar scripts de teste CI em banco real.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.
