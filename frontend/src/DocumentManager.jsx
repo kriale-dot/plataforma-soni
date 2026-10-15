@@ -167,7 +167,11 @@ export default function DocumentManager({ token, onUnauthorized }) {
     await execute(
       () => apiRequest('/admin/documents/' + selected, { method: 'DELETE', token }),
       'Documento removido do catálogo. O arquivo original foi preservado.',
-      () => add()
+      (_, refreshed) => {
+        setSelected('new');
+        setForm({ ...blank(), category_id: refreshed.categories[0]?.id || '' });
+        setShowPreview(false);
+      }
     );
   }
 

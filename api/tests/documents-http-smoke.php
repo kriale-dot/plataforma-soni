@@ -83,6 +83,10 @@ expectDoc($status === 200 && count($empty['documents']) === 0, 'Catálogo começ
 
 $pdf = validPdf();
 [$formBody, $formMime] = docMultipart('manual.pdf', $pdf, 'application/pdf');
+[$maliciousBody, $maliciousType] = docMultipart('falso.pdf', '<html><script>alert(1)</script></html>', 'application/pdf');
+[$badStatus] = docHttp('POST', '/admin/site/media', $maliciousBody, $token, $maliciousType);
+expectDoc($badStatus === 422, 'Arquivo HTML renomeado .pdf é rejeitado por MIME/cabeçalho');
+
 [$status, $raw] = docHttp('POST', '/admin/site/media', $formBody, $token, $formMime);
 $uploaded = json_decode($raw, true);
 expectDoc($status === 201 && isset($uploaded['id']) && $uploaded['kind'] === 'DOCUMENT',
