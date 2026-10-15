@@ -1,20 +1,25 @@
 # SONI — Histórico de versões
 
-## v0.1.0 — 2026-10-15 — Publicação inicial
-- Criado e autorizado o repositório kriale-dot/plataforma-soni.
-- Estabelecida a identidade visual oficial **Harmonia Técnica (Paleta 1)**.
-- Publicadas bases React/Vite e PHP/Slim 4 com rotas de saúde e login inicial da API.
-- Criado modelo SQL preliminar para provas multimídia, tentativas, documentos e vídeos.
-- Adicionada documentação viva (contexto, status, versões, requisitos e backlog).
+## v0.2.0 — 2026-10-15 — Fluxo inicial de login administrativo
+- Criada página React /admin com formulário, estado da API, mensagens de erro e logout.
+- Criado cliente HTTP frontend para conexão com Slim.
+- Integração com rotas /api/health, /api/admin/login e /api/admin/me.
+- Proxy de desenvolvimento de /api para 127.0.0.1:8282 no Vite.
+- Implementada retenção do token somente em memória (sem localStorage).
+- Reforçados cabeçalhos de cache e tipo de conteúdo para rotas administrativas na API.
+- Adicionado guia de instalação local do Windows, documentação e workflow de CI.
+- Mantida identidade oficial Harmonia Técnica (Paleta 1).
 
-**Verificação:** arquivos publicados via integração GitHub. Dependências, build, login e conexão com MySQL não validados em execução real nesta etapa.
+**Testes:** publicação do código, pendentes instalação e integração executadas na máquina do responsável. Não confundir tela pós-login com CRUD funcional.
 
-**Próximo marco planejado:** v0.2.0 — setup local verificado e conexão frontend/API, primeiro fluxo de login administrativo.
+**Próxima etapa:** validação local e primeiro banco MySQL/migrations.
 
-## Regras
-A cada entrega, acrescentar entrada com:
-- Versão, data e objetivo.
-- Arquivos impactados.
-- Funcionalidades e verificações realizadas.
-- Pendências ou problemas.
-- Próxima etapa.
+## v0.1.0 — 2026-10-15 — Fundação
+- Repositório kriale-dot/plataforma-soni autorizado e inicializado.
+- React/Vite, Slim 4, schema SQL de referência e documentação de desenvolvimento.
+- Definida a paleta oficial Harmonia Técnica (Paleta 1).
+
+**Testes:** arquivos confirmados no GitHub, não executados.
+
+## Regra de continuidade
+Documentar versão, data, arquivos, testes realizados, pendências e próximo passo após cada mudança.

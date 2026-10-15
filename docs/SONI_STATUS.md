@@ -1,32 +1,37 @@
-# SONI — Status do desenvolvimento
+# SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.1.0 (fundação)  
-**Fase:** 0 — Repositório e estrutura inicial  
-**Situação:** arquivos iniciais publicados no GitHub; testes de execução ainda pendentes.
+**Versão:** 0.2.0  
+**Etapa:** 1 — Integração React/Slim e login administrativo  
+**Estado:** implementação publicada no GitHub; validação ponta a ponta com dependências instaladas pendente.
 
-## Concluído nesta etapa
-- [x] Repositório correto localizado: kriale-dot/plataforma-soni.
-- [x] Acesso de gravação autorizado pelo responsável.
-- [x] Paleta 1 Harmonia Técnica escolhida e registrada como oficial.
-- [x] Estrutura de documentação e versionamento no GitHub.
-- [x] Arquivos-base React/Vite, Slim 4 e SQL de referência incluídos.
-- [x] Autenticação básica da API estruturada em variáveis .env de exemplo, sem credenciais reais.
-- [x] Site inicial demonstrativo fixado na paleta oficial.
+## Entregue no código
+- [x] Repositório oficial e Paleta 1 Harmonia Técnica.
+- [x] Página institucional React/Vite demonstrativa.
+- [x] Tela React /admin e link no rodapé do site.
+- [x] Cliente HTTP com tratamento de erro e sinalização da saúde da API.
+- [x] Login e consulta de autorização à API Slim (/api/admin/login e /api/admin/me).
+- [x] Token mantido somente na memória React; saída/logout.
+- [x] Proxy Vite /api na porta 8282.
+- [x] Configuração do administrador pelo arquivo api/.env, não versionado.
+- [x] Headers adicionais anti-cache e nosniff para a API.
+- [x] Instruções detalhadas de ambiente local e workflow de CI.
 
-## Não concluído / requer verificação
-- [ ] Instalar dependências via npm e Composer no computador de desenvolvimento.
-- [ ] Executar build do frontend e smoke test real da API local.
-- [ ] Configurar .env local do administrador com e-mail, hash de senha e JWT_SECRET.
-- [ ] Aplicar schema/migrations no MySQL.
-- [ ] Integração React ↔ API e painel administrativo.
-- [ ] CRUD de questões com mídias de áudio/imagem.
-- [ ] Motor de provas, correção e resultados.
-- [ ] Upload de documentos e vídeos; integração YouTube.
-- [ ] Proteções de produção, testes automatizados e deploy.
+## Validação pendente
+- [ ] composer install, npm install e execução simultânea no Windows do responsável.
+- [ ] Teste manual de login com email/senha reais e token validado.
+- [ ] Confirmar npm run build e execução do workflow GitHub Actions.
+- [ ] Confirmar regras de servidor, CORS e rate limiting para produção.
 
-## Próximo passo recomendado
-Validar ambiente React/Vite e Slim 4 localmente. Depois implementar login do administrador no frontend e infraestrutura de banco/migrations.
+## Ainda não desenvolvido
+- [ ] Interface real de gestão de conteúdo e CRUD.
+- [ ] Migrations e conexão MySQL.
+- [ ] Motor de provas, cadastro e aplicação com texto/imagem/áudio.
+- [ ] Biblioteca de PDF/PNG com upload seguro.
+- [ ] Biblioteca de vídeos via YouTube ou upload.
+- [ ] Testes completos, backup e deploy.
 
-## Limitações
-Código v0.1.0 é um ponto de partida, não uma plataforma operacional de cursos/testes. Nenhuma chave nem arquivo .env real é publicado. A disponibilidade do repositório foi verificada pela integração.
+## Próxima ação
+Seguir docs/SONI_LOCAL_SETUP.md, validar os dois servidores localmente e testar login. Em seguida implementar banco e primeiros CRUDs.
+
+Observação: verificação de publicação no GitHub não equivale a teste integrado no computador do usuário.

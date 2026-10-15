@@ -1,0 +1,45 @@
+name: SONI - validar frontend e API
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  frontend:
+    name: Frontend React
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependencias
+        working-directory: frontend
+        run: npm install --no-audit --no-fund
+      - name: Compilar React
+        working-directory: frontend
+        run: npm run build
+
+  api:
+    name: API PHP Slim
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+      - name: Validar Composer
+        working-directory: api
+        run: composer validate --no-check-publish
+      - name: Instalar dependencias
+        working-directory: api
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Verificar sintaxe PHP
+        working-directory: api
+        run: |
+          php -l public/index.php
+          php -l src/AdminAuth.php
+          php -l src/Http.php

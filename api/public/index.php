@@ -21,16 +21,21 @@ $app->addRoutingMiddleware();
 $allowedOrigin = (string) ($_ENV['FRONTEND_URL'] ?? 'http://localhost:5173');
 $app->add(static function (Request $request, RequestHandlerInterface $handler) use ($allowedOrigin): ResponseInterface {
     $response = strtoupper($request->getMethod()) === 'OPTIONS' ? new Response() : $handler->handle($request);
-
-    return $response
+    $response = $response
         ->withHeader('Access-Control-Allow-Origin', $allowedOrigin)
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        ->withHeader('Vary', 'Origin');
+        ->withHeader('Vary', 'Origin')
+        ->withHeader('X-Content-Type-Options', 'nosniff');
+
+    if (str_starts_with($request->getUri()->getPath(), '/api/admin/')) {
+        $response = $response->withHeader('Cache-Control', 'no-store');
+    }
+    return $response;
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.1.0']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.2.0']);
 });
 
 $app->post('/api/admin/login', static function (Request $request, ResponseInterface $response): ResponseInterface {
@@ -59,6 +64,5 @@ $app->get('/api/admin/me', static function (Request $request, ResponseInterface 
 });
 
 $app->options('/{routes:.+}', static fn (Request $request, ResponseInterface $response): ResponseInterface => $response);
-
 $app->addErrorMiddleware(($_ENV['APP_ENV'] ?? '') === 'development', true, true);
 $app->run();

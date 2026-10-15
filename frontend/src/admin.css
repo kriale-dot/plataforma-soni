@@ -1,0 +1,38 @@
+.adminPage{min-height:100vh;background:linear-gradient(160deg,#F3EBDD 0%,#F7FAFA 100%);color:var(--ink)}
+.adminContainer{width:min(100% - 40px,1040px);margin:0 auto}
+.adminHeader{background:#fff;border-bottom:1px solid #DEE5E6}
+.adminHeaderInner{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.adminBrand{display:flex;align-items:center;gap:10px;font:800 22px Manrope,Arial,sans-serif;color:var(--primary)}
+.adminBrand small{display:block;margin-top:3px;font:700 9px 'DM Sans',sans-serif;letter-spacing:1.8px}
+.adminBrandMark{display:grid;place-items:center;background:var(--primary);color:#fff;width:40px;height:40px;border-radius:9px;font-size:28px}
+.adminBack{font-size:13px;color:var(--primary);font-weight:700}
+.adminMain{padding:70px 0 90px}
+.adminIntro{text-align:center;max-width:650px;margin:0 auto 32px}
+.adminEyebrow{font-size:11px;letter-spacing:2.2px;color:#137C73;font-weight:800}
+.adminIntro h1{font:800 clamp(29px,4.5vw,43px)/1.2 Manrope,Arial,sans-serif;letter-spacing:-1.4px;color:var(--primary);margin:14px 0}
+.adminIntro p{font-size:15px;line-height:1.7;color:#55656B}
+.adminPanel{max-width:520px;margin:0 auto;background:#fff;border-radius:17px;box-shadow:0 22px 62px #153B4A17;border:1px solid #E2E9EA;overflow:hidden}
+.adminPanelHead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:24px 28px;border-bottom:1px solid #E9ECEF;font-size:14px;color:var(--primary)}
+.apiStatus{font-size:12px;display:inline-flex;gap:8px;align-items:center;font-weight:700;color:#64737A}
+.apiStatus i{width:9px;height:9px;background:#D8A24A;border-radius:50%}
+.apiStatus.online{color:#187D6A}.apiStatus.online i{background:#2FA89C}
+.apiStatus.offline{color:#9D4B4B}.apiStatus.offline i{background:#B75D5D}
+.adminForm{padding:27px 28px 30px;display:flex;flex-direction:column;gap:12px}
+.adminForm label{font-size:13px;font-weight:700;color:#344954}
+.adminForm input{width:100%;border:1px solid #CAD5D8;border-radius:9px;min-height:49px;padding:12px 13px;background:#FFF;color:var(--ink);font:inherit}
+.adminForm input:focus{outline:3px solid #2FA89C44;border-color:#2FA89C}
+.adminForm button{cursor:pointer;border:0;border-radius:9px;color:#1F2D34;background:var(--amber);font:800 14px 'DM Sans',sans-serif;padding:15px;margin-top:10px}
+.adminForm button:disabled{opacity:.65;cursor:wait}
+.adminError{background:#FFF2F2;border:1px solid #F0BBBB;color:#9E2727;padding:12px;border-radius:8px;font-size:13px;line-height:1.5}
+.adminHelp{margin:5px 0 0;font-size:12px;color:#607079;line-height:1.7}
+.adminHelp code{font-size:12px}
+.adminWelcome{text-align:center;padding:31px 29px 34px}
+.adminSuccessIcon{border-radius:50%;background:#E7F7F2;color:#127C64;font-size:27px;width:54px;height:54px;display:grid;place-items:center;margin:0 auto}
+.adminWelcome h2{font-size:23px;margin:16px 0 8px;color:var(--primary)}
+.adminWelcome p{font-size:14px;line-height:1.75;color:#53646C}
+.adminModuleList{display:grid;gap:9px;margin:25px 0}
+.adminModuleList span{display:flex;justify-content:space-between;gap:10px;background:#F5F8F7;padding:12px 14px;border-radius:8px;font-weight:700;font-size:13px;color:var(--primary)}
+.adminModuleList small{color:#73848A;font-weight:500}
+.adminSecondaryButton{border:1px solid var(--primary);background:transparent;border-radius:9px;color:var(--primary);padding:12px 18px;font-weight:800;cursor:pointer}
+.adminFootnote{text-align:center;margin-top:24px;font-size:12px;color:#65767D}
+@media(max-width:520px){.adminHeaderInner{min-height:70px}.adminMain{padding:45px 0 60px}.adminPanelHead{padding:20px}.adminForm{padding:22px}.adminBrand{font-size:19px}.adminBack{font-size:12px}}
