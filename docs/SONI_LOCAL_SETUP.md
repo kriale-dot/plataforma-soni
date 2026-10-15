@@ -187,3 +187,16 @@ Depois de atualizar o repositório, execute `php bin/migrate.php` na pasta `api`
 9. Exclusão de cadastro não apaga os bytes originais; a auditoria só pode tratar órfãos antigos após backup recente.
 
 Os arquivos de documentos devem ser fontes confiáveis. A validação MIME e de cabeçalho não substitui análise antivírus, moderação nem políticas de download para produção. O leitor PDF depende do navegador.
+
+
+## 13. Biblioteca de Vídeos (v0.9.0)
+
+1. Antes de editar o banco, faça backup atualizado com \`php bin/backup.php\` na pasta \`api\` e copie para outro dispositivo.
+2. Na raiz: \`git pull origin main\`.
+3. Na pasta \`api\`: \`php bin/migrate.php\`, que executa \`005_videos.sql\`. Não reaplica as migrações 001–004.
+4. Reinicie PHP e Vite. Faça login em \`http://localhost:5173/admin\` e escolha **Vídeos**.
+5. Teste link YouTube HTTPS: crie um vídeo com título/categoria, salve em rascunho, confira a prévia, publique e abra \`http://localhost:5173/videos\`. A reprodução depende de o dono do vídeo permitir incorporação.
+6. Teste MP4/WebM pequeno: escolha origem **Arquivo MP4/WebM**, envie (limite 32 MiB), confira prévia privada, salve e publique. A reprodução pública utiliza \`/api/site/media/{id}\` com HTTP Range.
+7. Para arquivos maiores, ajuste o \`php.ini\` identificado por \`php --ini\`: \`file_uploads=On\`, \`upload_max_filesize=36M\`, \`post_max_size=40M\`; reinicie PHP. **O limite interno permanece 32 MiB**.
+8. Volte ao rascunho ou marque oculto e confirme que o player/arquivo não estão mais disponíveis publicamente.
+9. Não execute os testes CI sobre seu banco real. O teste HTTP cria e exclui cadastros descartáveis.

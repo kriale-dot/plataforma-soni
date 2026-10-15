@@ -166,6 +166,9 @@ final class SiteMedia
                 ) OR EXISTS (
                     SELECT 1 FROM documents d WHERE d.media_id = m.id
                     AND d.publication_status = 'PUBLISHED' AND d.is_visible = 1
+                ) OR EXISTS (
+                    SELECT 1 FROM videos v WHERE v.media_id = m.id
+                    AND v.publication_status = 'PUBLISHED' AND v.is_visible = 1
                 )
             )";
         }

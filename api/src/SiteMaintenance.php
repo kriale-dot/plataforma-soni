@@ -236,6 +236,7 @@ final class SiteMaintenance
                       SELECT 1 FROM quiz_options qo WHERE qo.image_media_id = m.id OR qo.audio_media_id = m.id
                   )
                   AND NOT EXISTS (SELECT 1 FROM documents d WHERE d.media_id = m.id)
+                  AND NOT EXISTS (SELECT 1 FROM videos v WHERE v.media_id = m.id)
                   ORDER BY m.created_at ASC, m.id ASC LIMIT {$limit}";
         return $db->query($query)->fetchAll();
     }
@@ -270,9 +271,10 @@ final class SiteMaintenance
                              EXISTS(SELECT 1 FROM site_settings WHERE logo_media_id = ?) OR
                              EXISTS(SELECT 1 FROM quiz_questions WHERE image_media_id = ? OR audio_media_id = ?) OR
                              EXISTS(SELECT 1 FROM quiz_options WHERE image_media_id = ? OR audio_media_id = ?) OR
-                             EXISTS(SELECT 1 FROM documents WHERE media_id = ?))'
+                             EXISTS(SELECT 1 FROM documents WHERE media_id = ?) OR
+                             EXISTS(SELECT 1 FROM videos WHERE media_id = ?))'
                 );
-                $linked->execute([$id, $id, $id, $id, $id, $id, $id]);
+                $linked->execute([$id, $id, $id, $id, $id, $id, $id, $id]);
                 if ((int) $linked->fetchColumn() !== 0 ||
                     strtotime($record['created_at']) >= time() - $days * 86400) {
                     $db->rollBack();

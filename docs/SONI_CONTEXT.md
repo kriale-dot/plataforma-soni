@@ -63,3 +63,8 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Biblioteca PDF/PNG com categorias e busca, publicação/rascunho, frontend /admin/documents e /documentos.
 - Mídias na mesma pasta privada, com novo enum DOCUMENT para PDF e tipo IMAGE para PNG, associadas ao cadastro em documents.
 - Alterações mantêm CMS e quizzes funcionais; no Windows a migração 004 é necessária e ainda não confirmada.
+
+## Vídeos — v0.9.0 (2026-10-15)
+- Biblioteca /videos e /admin/videos, categorias, busca, origem YouTube por ID verificado ou uploads MP4/WebM pela biblioteca de mídia existente.
+- Banco migration 005; armazenagem segura e acesso público somente quando publicado/visível; auditoria protege vídeos em rascunho.
+- Repositório estava sincronizado no commit 0841ebe antes da v0.9, preservando novo logo em frontend/src/assets/soni-logo.png e App.jsx.

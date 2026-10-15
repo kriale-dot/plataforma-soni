@@ -76,3 +76,7 @@ Após atualizar o projeto, execute `php bin/migrate.php` na pasta `api` para apl
 ### Biblioteca de Documentos — v0.8.0
 
 PDFs e imagens PNG com categorias, pesquisa e visualização pública em `/documentos`; cadastro e publicação por JWT em `/admin/documents`. A migração `004_documents.sql` é necessária: execute `php bin/migrate.php` na pasta `api` após atualizar o repositório. Limites internos: 20 MiB para PDF e 6 MiB para PNG. A publicação controla o acesso público à mídia; o upload sozinho não publica o arquivo.
+
+### Biblioteca de Vídeos — v0.9.0
+
+Área pública em `/videos`, painel JWT em `/admin/videos`. Vídeos via link HTTPS YouTube ou upload MP4/WebM até 32 MiB, com categorias, busca, rascunho/publicação e player. Execute `php bin/migrate.php` na pasta `api` após atualizar o repositório para aplicar `005_videos.sql`. Consulte `docs/SONI_VIDEOS.md`.

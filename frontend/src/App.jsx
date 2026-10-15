@@ -8,7 +8,6 @@ const sectionId = { TESTES: 'testes', DOCUMENTOS: 'documentos', VIDEOS: 'videos'
 
 function internalLink(url) {
   if (!url) return null;
-  if (url === '/videos') return '#' + url.substring(1);
   return url;
 }
 
@@ -58,7 +57,7 @@ function ResourceCard({ block }) {
       <div className="cardTop"><span>SONI · {block.type}</span><span className="cardIcon" aria-hidden="true">{symbols[block.type]}</span></div>
       <h3>{block.title}</h3><p>{block.body_text}</p>
       <div className="cardBottom">
-        <span>{block.type === 'TESTES' ? 'Avaliações interativas disponíveis' : block.type === 'DOCUMENTOS' ? 'Materiais educativos disponíveis' : 'Conteúdo em desenvolvimento'}</span>
+        <span>{block.type === 'TESTES' ? 'Avaliações interativas disponíveis' : block.type === 'DOCUMENTOS' ? 'Materiais educativos disponíveis' : block.type === 'VIDEOS' ? 'Aulas e demonstrações disponíveis' : 'Conteúdo em desenvolvimento'}</span>
         {destination && <a href={destination}>{block.button_label || 'Saiba mais'} ↗</a>}
       </div>
     </article>
@@ -164,7 +163,7 @@ export default function App() {
           </a>
           <nav aria-label="Navegação principal">
             <a href="#sobre">Sobre</a><a href="/testes">Testes</a>
-            <a href="/documentos">Documentos</a><a href="#videos">Vídeos</a>
+            <a href="/documentos">Documentos</a><a href="/videos">Vídeos</a>
           </nav>
           <a className="navCta" href="#recursos">Explorar plataforma <span aria-hidden="true">↗</span></a>
         </div>

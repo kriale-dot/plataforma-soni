@@ -1,9 +1,9 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.8.0 (Biblioteca de Documentos PDF/PNG)  
-**Etapa:** 5 — Biblioteca de Documentos digital  
-**Estado:** v0.7.1 aprovada e validada no Windows pelo responsável. v0.8.0 Biblioteca de Documentos implementada em código, aprovada no GitHub Actions 38807367006 (PHP, React e MariaDB), migração 004 confirmada no Windows pelo responsável; validação do uso de PDF/PNG no navegador ainda pendente.
+**Versão:** 0.9.0 (Biblioteca de Vídeos YouTube/MP4/WebM)  
+**Etapa:** 6 — Biblioteca de Vídeos  
+**Estado:** v0.8.0 com migração 004 aplicada no Windows, uso visual de PDF/PNG ainda pendente de confirmação. Repositório local/remoto sincronizado no commit 0841ebe. v0.9.0 Biblioteca de Vídeos implementada em código, aguardando validação automática e local.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -98,6 +98,18 @@
 - [ ] Testar upload de PDF/PNG, prévia privada, publicação e pesquisa no navegador.
 - [ ] Definir paginação avançada, segurança de PDFs para produção, antivírus/CDN, categorias reordenáveis e teste de restauração isolada.
 
+## Biblioteca de Vídeos — v0.9.0
+- [x] Banco 005_videos.sql: categorias e registros YouTube ou upload MP4/WebM, rascunho/publicado, visível/oculto.
+- [x] API JWT para categorias e CRUD de vídeos, validação estrita da URL HTTPS YouTube e vínculo a mídia tipo VIDEO.
+- [x] API pública /api/videos e /api/videos/{id}, pesquisa por título, descrição e categoria.
+- [x] Upload MP4/WebM reutiliza a biblioteca de mídia existente (32 MiB) e prévia autenticada para arquivos em rascunho.
+- [x] Leitor público YouTube no youtube-nocookie.com ou player HTML5 para vídeo enviado.
+- [x] Frontend /admin/videos e /videos, /videos/{id}, integrado com site institucional e menu administrativo.
+- [x] Auditoria de mídias protege vídeos associados, mesmo em rascunho; backup já cobre MP4/WebM.
+- [x] Teste HTTP integrado ao CI verifica autorização JWT, fontes YouTube falsas, publicação, busca, ocultação, MP4 privado e publicado.
+- [ ] Testes CI e instalação no Windows (migração 005), validação do player e do novo logotipo.
+- [ ] Limites de upload PHP para 32 MiB, vídeos maiores via armazenamento externo, proteção de abuso e rate limiting antes da produção.
+
 ## Problema de comunicação local identificado em 2026-10-15
 - [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
 - [x] Teste via `127.0.0.1:8282` apresentou erro (informado pelo responsável).
@@ -127,6 +139,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Conferir GitHub Actions v0.8.0. Migração 004 concluída no Windows. Reiniciar PHP/Vite, abrir /admin → Documentos e testar PDF/PNG publicado e documento rascunho. Em produção ainda faltam segurança adicional de PDFs, rate limiting, backup externo e teste de restauração.
+Confirmar CI v0.9.0; no Windows git pull e php bin/migrate.php para aplicar 005_videos.sql, reiniciar PHP/Vite. Em /admin/videos cadastrar YouTube em rascunho, conferir prévia, publicar, testar busca/player em /videos e repetir com MP4/WebM pequeno. A migração 004 foi confirmada no Windows; uso visual da biblioteca de documentos ainda não foi informado.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

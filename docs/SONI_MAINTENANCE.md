@@ -73,3 +73,8 @@ Para restaurar de uma quarentena, use a pasta de backup correspondente e os regi
 - O script `bin/backup.php` inclui os arquivos PDF em `api/storage/site_media` e o SQL das tabelas de documentos.
 - A auditoria não trata como órfão nenhum arquivo vinculado a documento, inclusive rascunho ou oculto.
 - Refaça o backup após importar documentos; o snapshot anterior não contém os novos materiais.
+
+## Biblioteca de Vídeos (v0.9.0)
+- O backup do MariaDB e `site_media` inclui vídeos MP4/WebM vinculados, como outros arquivos. Copiar o backup para outro dispositivo.
+- Auditoria/quarentena não toca mídias vinculadas a registros `videos`, mesmo rascunhos/ocultos.
+- Links de vídeos do YouTube são dados no banco, não arquivos locais.

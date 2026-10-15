@@ -17,6 +17,7 @@ use Soni\SiteMedia;
 use Soni\QuizService;
 use Soni\QuizFeedback;
 use Soni\DocumentService;
+use Soni\VideoService;
 use Psr\Http\Message\UploadedFileInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -43,7 +44,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.8.0']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.9.0']);
 });
 
 // Configurações e blocos públicos; não retornar rascunhos ou blocos ocultos.
@@ -278,6 +279,46 @@ $app->put('/api/admin/documents/{id:[0-9]+}', static function (Request $request,
 });
 $app->delete('/api/admin/documents/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
     return $adminSite($request, $response, static fn (\PDO $db): array => DocumentService::delete($db, (int) $args['id']));
+});
+
+// Biblioteca pública de vídeos: somente publicados e visíveis.
+$app->get('/api/videos', static function (Request $request, ResponseInterface $response): ResponseInterface {
+    try {
+        return Http::json($response, VideoService::listPublic(Database::connect(), $request->getQueryParams()));
+    } catch (InvalidArgumentException $error) {
+        return Http::json($response, ['error' => $error->getMessage()], 422);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Biblioteca de vídeos temporariamente indisponível.'], 503);
+    }
+});
+$app->get('/api/videos/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args): ResponseInterface {
+    try {
+        return Http::json($response, VideoService::getPublic(Database::connect(), (int) $args['id']));
+    } catch (InvalidArgumentException) {
+        return Http::json($response, ['error' => 'Vídeo não encontrado ou não publicado.'], 404);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Vídeo temporariamente indisponível.'], 503);
+    }
+});
+
+// Administração autenticada JWT para categorias e vídeos.
+$app->get('/api/admin/videos', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => VideoService::listAdmin($db));
+});
+$app->post('/api/admin/video-categories', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => VideoService::saveCategory($db, null, (array) $request->getParsedBody()));
+});
+$app->put('/api/admin/video-categories/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => VideoService::saveCategory($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+$app->post('/api/admin/videos', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => VideoService::create($db, (array) $request->getParsedBody()));
+});
+$app->put('/api/admin/videos/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => VideoService::update($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+$app->delete('/api/admin/videos/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => VideoService::delete($db, (int) $args['id']));
 });
 
 $app->options('/{routes:.+}', static fn (Request $request, ResponseInterface $response): ResponseInterface => $response);

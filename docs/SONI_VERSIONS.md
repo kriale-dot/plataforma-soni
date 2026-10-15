@@ -1,5 +1,18 @@
 # SONI — Histórico de versões
 
+## v0.9.0 — 2026-10-15 — Biblioteca de Vídeos
+- Migração `005_videos.sql`: categorias e itens com origem YouTube ou mídia MP4/WebM, rascunho/publicação e visibilidade.
+- API autenticada JWT `/api/admin/videos`, `/api/admin/video-categories` e CRUD (upload usa rota de mídia já existente).
+- API pública `GET /api/videos` com pesquisa e filtro de categoria; `GET /api/videos/{id}`, somente itens publicados e visíveis.
+- URLs do YouTube aceitas apenas de `https://youtube.com`, `https://www.youtube.com`, `https://m.youtube.com`, `https://youtu.be`, validando o ID exato de 11 caracteres. Embed usa YouTube sem cookies antes do play.
+- Arquivos MP4/WebM até 32 MiB, armazenados fora do webroot. Mídias publicadas servidas com suporte a HTTP Range, rascunhos visíveis apenas via JWT.
+- Frontend: editor e prévia em `/admin/videos`, biblioteca pública em `/videos`, player em `/videos/{id}`, links no menu institucional.
+- Mídia referenciada por vídeo fica protegida pela auditoria/quarentena; apagar cadastro preserva bytes para backup/recuperação.
+- Teste integrado CI cobre Youtube, JWT, rascunho/publicação, pesquisa, arquivo MP4, exclusão de cadastro e acesso a mídia.
+- **Pendentes**: CI e execução local migração 005, teste no navegador, vídeos >32 MiB via storage externo, segurança pré-produção.
+
+
+
 ## v0.8.0 — 2026-10-15 — Biblioteca de Documentos (PDF/PNG)
 - Migração `004_documents.sql`: `document_categories`, `documents`, e enum DOCUMENT na tabela `site_media` para arquivos PDF. Dados anteriores preservados.
 - Upload de PDF até 20 MiB, com MIME real e assinatura `%PDF-`; PNG até 6 MiB usando validação existente.
