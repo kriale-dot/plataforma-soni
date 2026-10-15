@@ -46,6 +46,8 @@ jobs:
           php -l tests/auth-smoke.php
           php -l src/Database.php
           php -l src/SiteRepository.php
+          php -l src/SiteCms.php
+          php -l tests/site-cms-http-smoke.php
           php -l bin/migrate.php
           php -l bin/db-check.php
       - name: Testar autenticação
@@ -111,3 +113,17 @@ jobs:
           curl -fsS http://127.0.0.1:8282/api/site -o /tmp/soni-site.json
           php -r '$data=json_decode(file_get_contents("/tmp/soni-site.json"),true); if (!is_array($data) || count($data["blocks"]??[])!==5 || ($data["settings"]["site_title"]??"")!=="SONI | Sonorização de Igrejas") { fwrite(STDERR,"Conteudo publico inesperado\n"); exit(1); } echo "GET /api/site OK\n";'
           test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8282/favicon.ico)" = 204
+      - name: Criar credenciais fictícias para o teste HTTP CMS
+        working-directory: api
+        run: php -r 'file_put_contents(".env", "ADMIN_EMAIL=ci@example.test\nADMIN_PASSWORD_HASH=" . password_hash("ci-password", PASSWORD_DEFAULT) . "\nJWT_SECRET=" . str_repeat("c", 64) . "\n");'
+      - name: Testar CRUD CMS via HTTP com JWT
+        working-directory: api
+        run: |
+          php -S 127.0.0.1:8282 -t public public/index.php > /tmp/soni-cms-php.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" || true' EXIT
+          for i in $(seq 1 10); do
+            if curl -fsS http://127.0.0.1:8282/api/health >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          php tests/site-cms-http-smoke.php
