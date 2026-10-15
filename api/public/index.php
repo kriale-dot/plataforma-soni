@@ -12,6 +12,7 @@ use Soni\AdminAuth;
 use Soni\Http;
 use Soni\Database;
 use Soni\SiteRepository;
+use Soni\SiteCms;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 Dotenv::createImmutable(dirname(__DIR__))->safeLoad();
@@ -37,7 +38,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.3.0']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.4.0']);
 });
 
 // Configurações e blocos públicos; não retornar rascunhos ou blocos ocultos.
@@ -77,6 +78,54 @@ $app->get('/api/admin/me', static function (Request $request, ResponseInterface 
         return Http::json($response, ['error' => 'Não autorizado.'], 401);
     }
     return Http::json($response, ['role' => 'admin']);
+});
+
+// Rotas do editor institucional (exigem JWT administrativo, sem acesso anônimo).
+$adminSite = static function (Request $request, ResponseInterface $response, callable $action): ResponseInterface {
+    if (!AdminAuth::isValidBearer($request->getHeaderLine('Authorization'))) {
+        return Http::json($response, ['error' => 'Não autorizado.'], 401);
+    }
+    try {
+        return Http::json($response, $action(Database::connect()));
+    } catch (InvalidArgumentException $error) {
+        return Http::json($response, ['error' => $error->getMessage()], 422);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Falha ao consultar ou salvar o site.'], 503);
+    }
+};
+
+$app->get('/api/admin/site', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => SiteCms::readAdmin($db));
+});
+
+$app->put('/api/admin/site/settings', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        SiteCms::saveSettings($db, (array) $request->getParsedBody()));
+});
+
+$app->post('/api/admin/site/blocks', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        SiteCms::create($db, (array) $request->getParsedBody()));
+});
+
+$app->put('/api/admin/site/blocks/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        SiteCms::update($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+
+$app->patch('/api/admin/site/blocks/{id:[0-9]+}/publication', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        SiteCms::update($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+
+$app->patch('/api/admin/site/blocks/{id:[0-9]+}/order', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        SiteCms::move($db, (int) $args['id'], (string) (($request->getParsedBody()['direction'] ?? ''))));
+});
+
+$app->delete('/api/admin/site/blocks/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        SiteCms::delete($db, (int) $args['id']));
 });
 
 $app->options('/{routes:.+}', static fn (Request $request, ResponseInterface $response): ResponseInterface => $response);
