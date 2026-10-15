@@ -1,0 +1,35 @@
+.siteEditor{max-width:1100px;margin:30px auto 0;color:var(--ink)}
+.siteEditorTop{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:24px}
+.siteEditorTop h2{font-size:32px;margin:8px 0}.siteEditorTop p{font-size:14px;line-height:1.65;color:#64737A;max-width:670px}
+.siteEditorPreview{display:inline-flex;padding:12px 16px;border:1px solid #153B4A;border-radius:9px;white-space:nowrap;font-size:13px;font-weight:700;color:#153B4A}
+.siteEditorTabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.siteEditorTabs button{border:1px solid #C6D6D8;background:#fff;border-radius:8px;padding:10px 14px;color:var(--primary);font-weight:700;cursor:pointer}
+.siteEditorTabs button.active{background:var(--primary);color:#fff}
+.siteEditorTabs span{font-size:12px;color:#5A6D75;margin-left:auto}
+.siteEditorColumns{display:grid;grid-template-columns:minmax(230px,320px) minmax(0,1fr);gap:18px;align-items:start}
+.siteEditorList,.siteEditorEdit,.siteEditorSettings{background:#fff;border-radius:14px;border:1px solid #DEE6E7;padding:18px;box-shadow:0 8px 28px #153B4A0D}
+.siteEditorAdd{display:block;width:100%;padding:13px;background:#E6F5F1;border:1px dashed #2FA89C;color:#153B4A;border-radius:9px;cursor:pointer;font-weight:800;margin-bottom:16px}
+.siteEditorListItem{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #DFE8E8;border-radius:9px;padding:9px;margin-bottom:8px}
+.siteEditorListItem.chosen{border-color:#2FA89C;background:#F1FBF8}
+.siteEditorSelect{text-align:left;flex:1;min-width:0;border:0;background:transparent;color:var(--primary);font-size:13px;font-weight:800;cursor:pointer}
+.siteEditorSelect span{display:block;overflow-wrap:anywhere}.siteEditorSelect small{display:block;font-size:11px;margin-top:6px;font-weight:500;color:#64737A}
+.siteEditorListActions{display:flex;gap:3px}.siteEditorListActions button{background:#fff;border:1px solid #CFDADB;border-radius:6px;padding:5px 8px;cursor:pointer}
+.siteEditor button:disabled{opacity:.5;cursor:not-allowed}
+.siteEditorEdit h3{margin:2px 0 20px;color:var(--primary)}
+.siteEditorFields{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.siteEditorFields label,.siteEditorSettings label{display:flex;flex-direction:column;gap:7px;font-size:12px;color:#40565F;font-weight:700}
+.siteEditorFields label.wide{grid-column:1/-1}
+.siteEditorFields input,.siteEditorFields textarea,.siteEditorFields select,.siteEditorSettings input,.siteEditorSettings textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);border:1px solid #C8D6D9;border-radius:8px;padding:11px;background:white}
+.siteEditorFields textarea,.siteEditorSettings textarea{resize:vertical;line-height:1.6}
+.siteEditorFields .siteEditorCheck{flex-direction:row;align-items:center;gap:9px;align-self:end;min-height:44px}
+.siteEditorCheck input{width:18px;height:18px;accent-color:#153B4A}
+.siteEditorFormActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.siteEditorFormActions button,.siteEditorSettings button{padding:11px 15px;border:1px solid #A9C0C5;border-radius:8px;background:#fff;color:var(--primary);font-weight:800;cursor:pointer}
+.siteEditorFormActions .siteEditorSave,.siteEditorSettings button{border-color:var(--amber);background:var(--amber);color:#27333A}
+.siteEditorFormActions .siteEditorDanger{border-color:#C98B8B;color:#A03C3C;margin-left:auto}
+.siteEditorSettings{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:850px}
+.siteEditorSettings button{justify-self:start}
+.siteEditorSuccess{padding:12px 15px;color:#16644F;background:#E8F6F0;border:1px solid #B7E0D3;border-radius:9px;font-size:14px}
+.siteEditorHint{font-size:12px;color:#68777B;line-height:1.7;margin-top:20px}
+@media(max-width:800px){.siteEditorColumns{grid-template-columns:1fr}.siteEditorTop{flex-direction:column;align-items:flex-start}}
+@media(max-width:540px){.siteEditorFields,.siteEditorSettings{grid-template-columns:1fr}.siteEditorFormActions .siteEditorDanger{margin-left:0}}
