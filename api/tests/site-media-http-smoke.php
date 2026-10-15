@@ -46,7 +46,7 @@ function multipartFile(string $name, string $contents): array
     return [$file, 'multipart/form-data; boundary=' . $boundary];
 }
 
-$png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLtuAAAAABJRU5ErkJggg==', true);
+$png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGMwq50AAAIwAUQw5njCAAAAAElFTkSuQmCC', true);
 checked(is_string($png) && strlen($png) > 30, 'Arquivo de imagem preparado');
 
 [$status, $login] = jsonRequest('POST', '/admin/login', ['email' => 'ci@example.test', 'password' => 'ci-password']);
@@ -64,6 +64,7 @@ try {
     checked($status === 401, 'Upload anônimo bloqueado');
     [$status, $raw] = hit('POST', '/admin/site/media', $body, $token, $type);
     $uploaded = json_decode($raw, true);
+    if ($status !== 201) echo "Upload failed, status={$status}; body={$raw}\n";
     checked($status === 201 && isset($uploaded['id']) && $uploaded['kind'] === 'IMAGE', 'Upload PNG com MIME válido');
     $mediaId = (int) $uploaded['id'];
 
