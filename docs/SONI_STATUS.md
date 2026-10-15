@@ -1,9 +1,9 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.3.0 (fundação da persistência)  
-**Etapa:** 2 — MariaDB 11.4 e fundação do CMS institucional  
-**Estado:** React/Slim e login validados localmente; cliente MariaDB 11.4 e conexão root confirmados pelo responsável. Migração e consulta da API ainda pendentes no Windows.
+**Versão:** 0.4.0 (CMS textual e página pública dinâmica)  
+**Etapa:** 2 — CMS institucional: edição de texto, links, estado e ordem  
+**Estado:** React/Slim, login e rota GET /api/site confirmados localmente pelo responsável. Editor v0.4.0 aprovado no CI (API e build React), ainda pendente validação visual no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -30,9 +30,14 @@
 - [x] GET /favicon.ico responde 204, evitando erro 405 no console do navegador.
 - [x] Integração HTTP de GET /api/site e favicon validada pelo GitHub Actions com MariaDB 11.4 no commit 748c2c6 (execução 38793328967, todos os jobs aprovados).
 - [x] GitHub Actions executou a migração 001 em MariaDB 11.4 temporário, repetiu a migração sem duplicar registros e aprovou o filtro de rascunhos/ocultos (CI do commit ca9eab8).
-- [ ] Criar banco plataforma_soni e usuário soni_app no MariaDB local, configurar api/.env e executar migração.
-- [ ] Verificar php bin/db-check.php e GET /api/site no navegador do responsável.
-- [ ] Implementar CRUD de edição e site React dinâmico (não incluídos nesta entrega).
+- [x] Responsável confirmou em 2026-10-15 que /api/site passou a funcionar no ambiente local após atualização; isso indica consulta bem-sucedida ao MariaDB, mas a execução exata dos comandos de migração não foi relatada.
+- [x] GET /api/site confirmado pelo responsável no navegador. Teste explícito de php bin/db-check.php não informado.
+- [x] Código CRUD de settings e blocos da API protegido por JWT (criar/editar/excluir/ocultar/publicar/reordenar).
+- [x] Código React de editor em /admin/site (sessão em memória), acesso a partir do painel /admin.
+- [x] Site público React agora renderiza os blocos publicados recebidos de GET /api/site.
+- [x] Teste HTTP integrado no CI: login, autorização, rejeição de URL perigosa, criação, publicação, ocultação, ordem, configurações e exclusão; aprovado na execução 38794375321.
+- [ ] Validar visualmente no Windows fluxo de edição e propagação de texto ao site após git pull e reiniciar os servidores.
+- [ ] Implementar upload seguro de imagens, áudios e vídeos; visualização de rascunho antes da publicação; gestão de mídia; refinamento SEO/acessibilidade.
 
 ## Problema de comunicação local identificado em 2026-10-15
 - [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
@@ -50,12 +55,12 @@
 ## Nova decisão aprovada — site institucional editável
 - [x] Analisada como referência a implementação em `kriale-dot/mapa-percepcao-relacional`: editor por blocos com criação, alteração, remoção, ordem, visibilidade, título do site e upload de imagens.
 - [x] Registrado requisito definitivo de CMS institucional na SONI; documentação técnica em `docs/SONI_CMS_INSTITUCIONAL.md`.
-- [ ] Implementar CMS na API e MySQL, frontend público dinâmico e editor de blocos em `/admin/site`.
+- [x] Implementada primeira versão do CMS na API e React em `/admin/site`, com edição textual, links e estados de publicação. Upload e prévia de rascunhos pendentes.
 - [ ] Validar fluxo admin → salvar/publicar → página pública refletindo mudanças.
 - [ ] Editor não vai alterar a paleta oficial, apenas conteúdo configurável.
 
 ## Ainda não desenvolvido
-- [ ] Interface real de gestão de conteúdo e CRUD.
+- [x] Interface real para gerenciar configurações e blocos textuais; gestão de mídia/testes/documentos/vídeos ainda não implementada.
 - [x] Estrutura de migrations e conexão PDO/MariaDB incluída no código; execução local e conexão definitiva pendentes.
 - [ ] Motor de provas, cadastro e aplicação com texto/imagem/áudio.
 - [ ] Biblioteca PDF/PNG com upload seguro.
@@ -63,6 +68,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Atualizar com git pull, conferir `php bin/db-check.php` e abrir GET /api/site no navegador após reiniciar a API. Se a migração local ainda não tiver sido aplicada, seguir docs/SONI_DATABASE_SETUP.md. Depois iniciar CRUD CMS e renderização dinâmica no React.
+No Windows, git pull origin main, reiniciar PHP/Vite, abrir /admin e usar botão Editar site institucional. Alterar título de um bloco, salvar, abrir site público em outra aba e atualizar. Verificar ocultação, publicação e ordem. Após aprovação iniciar upload seguro de mídia e preview de rascunhos.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

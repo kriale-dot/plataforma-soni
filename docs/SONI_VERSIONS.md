@@ -1,5 +1,18 @@
 # SONI — Histórico de versões
 
+## v0.4.0 — 2026-10-15 — Primeiro editor institucional funcional
+- O responsável confirmou funcionamento de `GET /api/site` no MariaDB local (não informou saída detalhada dos scripts).
+- `api/src/SiteCms.php`: CRUD das configurações e dos blocos, validação de campos/links, ordenação transacional, rascunhos e visibilidade.
+- Rotas JWT: `GET /api/admin/site`, `PUT /api/admin/site/settings`, `POST /api/admin/site/blocks`, `PUT /api/admin/site/blocks/{id}`, `PATCH /api/admin/site/blocks/{id}/publication`, `PATCH /api/admin/site/blocks/{id}/order`, `DELETE /api/admin/site/blocks/{id}`.
+- `frontend/src/SiteEditor.jsx`: interface para título, textos, URL de mídia, links e gestão de blocos.
+- `frontend/src/AdminPage.jsx`: acesso ao editor a partir do painel autenticado; `/admin/site` exige login (JWT mantido apenas em memória).
+- `frontend/src/App.jsx`: renderização da página pública a partir do banco pela rota `GET /api/site`; preserva identidade Harmonia Técnica.
+- **GitHub Actions aprovado** em execução `38794375321`: PHP, build React, MariaDB e ciclo CRUD real com JWT via HTTP.
+- **Falta validar no Windows do responsável:** edição no painel e visualização no site.
+- **Falta implementar:** upload de mídia, visualização de rascunhos, gerenciamento de ativos, recursos de testes/documentos/vídeos e recursos de produção.
+
+
+
 ## Correção v0.3.0 — 2026-10-15 — Rota pública HTTP e favicon
 - Após captura de tela do responsável com HTTP 405, auditado o arquivo `api/public/index.php` publicado: a rota `GET /api/site` estava ausente, embora o repositório SiteRepository, a migration e a documentação já estivessem presentes.
 - Corrigido registro da rota `GET /api/site` com leitura PDO dos blocos publicados e tratamento de indisponibilidade do banco.

@@ -11,7 +11,7 @@
 - Enunciados e opções podem combinar **texto, imagem e áudio**.
 - Biblioteca pública de documentos em **PDF ou PNG**.
 - Biblioteca de vídeos por **YouTube ou upload**.
-- **Frontend:** React + Vite. **Backend/API:** PHP 8.2+ com Slim 4.
+- **Frontend:** React + Vite. **Backend/API:** PHP 8.2+ com Slim 4. **Banco local:** MariaDB 11.4, compatível com o SQL atual.
 - Administrador com credenciais armazenadas no **api/.env**, não em banco de dados; senha somente como hash.
 - O contexto e andamento são registrados neste repositório.
 - Consultar outros chats apenas se forem relevantes ao desenvolvimento.
@@ -42,12 +42,12 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Ler `docs/SONI_CMS_INSTITUCIONAL.md` para arquitetura, contratos de API e critérios de aceite.
 
 ## Pendências funcionais
-- Login web do administrador, painel administrativo, CRUD de conteúdo, uploads, persistência e aplicação de questionários.
+- CMS textual v0.4 implementado e CI aprovado: login, painel, conteúdo do site editável e persistente em MariaDB. Pendentes: validação manual local do editor, uploads seguros, preview de rascunhos e aplicação de questionários.
 - Definir política de tentativas, pontuação, relatórios e publicação.
 - Definir limites/licenciamento de documentos e vídeos e configuração de produção.
 
 ## Regra obrigatória de continuidade
 1. Ler este arquivo, SONI_STATUS.md, SONI_VERSIONS.md e SONI_BACKLOG.md antes de programar.
-2. Não confundir propostas/documentação com recursos funcionais já entregues. O site ainda é uma prévia estática: o CMS está especificado, não implementado.
+2. Não confundir código testado em CI com aceitação final no Windows: o CMS textual/dinâmico foi implementado na v0.4.0, mas o upload de mídia e preview de rascunhos continuam pendentes.
 3. Ao concluir qualquer alteração, atualizar status e histórico de versões e informar próxima etapa.
 4. Registrar decisões novas neste documento; nunca versionar api/.env, tokens ou senhas.

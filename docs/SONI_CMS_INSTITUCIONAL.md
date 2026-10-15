@@ -1,13 +1,13 @@
 # SONI — CMS do site institucional editável
 
-**Decisão confirmada em 2026-10-15. Status: esquema MariaDB, migration e endpoint público criados na v0.3.0; editor e renderização dinâmica ainda pendentes.**
+**Decisão confirmada em 2026-10-15. Status: v0.4.0 inclui editor de blocos textuais, publicação, ordenação e site React dinâmico. Uploads e prévia de rascunhos continuam pendentes.**
 **Referência analisada:** [mapa-percepcao-relacional](https://github.com/kriale-dot/mapa-percepcao-relacional), incluindo `ProfessionalSiteEditor.jsx`, `PublicInstitutionalSite.jsx`, `SiteController.php` e migration `009_site_institucional.sql`.
 
 ## Objetivo
 
 O administrador deverá criar e alterar o conteúdo do site institucional da Plataforma SONI sem editar arquivos React, CSS ou PHP. Usar **editor por blocos**, inspirado na plataforma Tânia, adaptado à SONI e mantendo a paleta oficial Harmonia Técnica.
 
-A página React ainda exibe conteúdo demonstrativo **estático**; a v0.3.0 já contém a fundação SQL e a rota pública `GET /api/site`, mas o editor CMS ainda será implementado.
+Na v0.4.0 a página React usa os blocos publicados fornecidos por `GET /api/site`. A interface do editor fica em `/admin/site` (login em memória); upload, preview de rascunhos e gestão de mídias ainda serão implementados.
 
 ## Funcionalidades do editor
 
@@ -115,3 +115,10 @@ Rotas são propostas; contratos exatos, resposta e padronização serão finaliz
 6. Documentar operações de publicação, rollback e recuperação.
 
 **Não marcar CMS concluído antes dos critérios de aceite terem sido verificados.**
+
+## Implementado na v0.4.0
+- Endpoints de leitura/edição em `api/public/index.php`, validação e persistência em `api/src/SiteCms.php`.
+- Renderização pública em `frontend/src/App.jsx` e editor em `frontend/src/SiteEditor.jsx`.
+- Criar/alterar/excluir/reordenar blocos; publicar/retirar de publicação; ocultar/mostrar; editar configurações gerais e links HTTPS/internos.
+- Rotas mutáveis exigem JWT; testes HTTP e MariaDB aprovados no CI `38794375321`.
+- **Ainda pendentes:** upload real com inspeção MIME, relacionar site_media, preview de rascunho, SEO e auditoria mais completos e teste manual no Windows.

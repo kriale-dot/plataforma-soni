@@ -11,12 +11,12 @@ SONI — Sonorização de Igrejas. Plataforma educacional com site institucional
 ## Requisito definitivo — site institucional editável
 O site público da SONI **não será estático**: o administrador poderá montar e atualizar as seções via editor visual por blocos, no modelo da plataforma Tânia (`kriale-dot/mapa-percepcao-relacional`). Poderá editar títulos, textos, imagens, áudios, vídeos, links e chamadas para ação; incluir, ocultar, excluir e reordenar blocos. Haverá integração com as áreas de testes, documentos e vídeos.
 
-**Status:** na v0.3.0 existe o modelo MariaDB e um endpoint público de leitura; editor e renderização dinâmica no React ainda não estão implementados. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
+**Status:** v0.4.0 tem editor textual em /admin/site com CRUD JWT, publicação, visibilidade e ordem, e página pública dinâmica. Uploads e preview de rascunhos ainda pendentes. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
 
-## Situação — v0.3.0
-Implementado no código: site institucional demonstrativo, tela /admin, login da API, logout em memória, proxy Vite /api, conexão MariaDB PDO, migration do CMS e GET /api/site.
+## Situação — v0.4.0
+Implementado no código: site institucional dinâmico por blocos, tela /admin, editor /admin/site após login, rotas privadas JWT para CRUD e ordem, proxy Vite /api, conexão MariaDB PDO e migration do CMS.
 
-**React/Slim e login já validados no Windows; migrações MariaDB ainda pendentes na máquina do usuário.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
+**React/Slim, login e API pública MariaDB validados no Windows. Editor visual v0.4.0 aprovado no CI; validação manual do editor ainda pendente.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
 
 ## MariaDB / CMS institucional
 
@@ -43,7 +43,7 @@ npm install
 npm run dev
 ~~~
 
-Endereços: http://localhost:5173 e http://localhost:5173/admin. A API responde em http://localhost:8282/api/health.
+Endereços: http://localhost:5173, http://localhost:5173/admin e http://localhost:5173/admin/site (login necessário). A API responde em http://localhost:8282/api/health.
 
 ## Regras de segurança
 - Não compartilhar nem versionar api/.env. Arquivo de exemplo api/.env.example não contém segredos.

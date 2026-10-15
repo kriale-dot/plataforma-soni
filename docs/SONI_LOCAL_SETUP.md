@@ -131,3 +131,14 @@ No computador do responsável (15/10/2026), o primeiro retornou HTTP 200 e o seg
 - Em produção, o Vite e o servidor embutido de PHP devem ser substituídos por hospedagem/servidor HTTPS.
 
 **Após testar localmente**, atualizar docs/SONI_STATUS.md e registrar resultados, sem compartilhar valores secretos.
+
+## 7. Testar o editor do site (v0.4.0)
+1. Atualize na raiz do repositório: `git pull origin main`.
+2. Reinicie o servidor PHP (`composer start` na pasta api) e o Vite (`npm run dev` na pasta frontend).
+3. Abra http://localhost:5173/admin e faça login. Clique em **Editar site institucional**.
+4. Selecione um bloco de texto, altere seu título, clique em **Salvar bloco**.
+5. Abra http://localhost:5173 em outra aba e atualize: a mudança deve aparecer.
+6. Teste botões de **Ocultar/Mostrar**, **Publicar/Voltar a rascunho**, **Subir/Descer**, **Adicionar bloco** e **Configurações**.
+7. O editor fica em `/admin/site`, mas o JWT é mantido na memória: recarregar a página exigirá novo login.
+
+Limitações conhecidas da v0.4.0: os arquivos de mídia ainda não possuem upload; é possível referenciar URLs HTTPS válidas. Preview de rascunhos não implementado. Não digite scripts HTML ou URLs `javascript:` (a API rejeita links inseguros).
