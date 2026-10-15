@@ -9,13 +9,20 @@ use RuntimeException;
 
 final class Database
 {
+    private static function env(string $name, string $fallback = ''): string
+    {
+        // No Windows, phpdotenv preenche $_ENV; no GitHub Actions, getenv() também funciona.
+        $value = $_ENV[$name] ?? getenv($name);
+        return is_string($value) ? $value : $fallback;
+    }
+
     public static function connect(): PDO
     {
-        $host = trim((string) ($_ENV['DB_HOST'] ?? 'localhost'));
-        $port = trim((string) ($_ENV['DB_PORT'] ?? '3306'));
-        $name = trim((string) ($_ENV['DB_NAME'] ?? ''));
-        $user = trim((string) ($_ENV['DB_USER'] ?? ''));
-        $password = (string) ($_ENV['DB_PASSWORD'] ?? '');
+        $host = trim(self::env('DB_HOST', 'localhost'));
+        $port = trim(self::env('DB_PORT', '3306'));
+        $name = trim(self::env('DB_NAME'));
+        $user = trim(self::env('DB_USER'));
+        $password = self::env('DB_PASSWORD');
 
         if ($host === '' || $name === '' || $user === '' ||
             !ctype_digit($port) || (int) $port < 1 || (int) $port > 65535 ||

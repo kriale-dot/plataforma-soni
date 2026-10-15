@@ -15,7 +15,7 @@ try {
     $site = SiteRepository::readPublic($pdo);
 
     echo 'Conexão PDO: OK' . PHP_EOL;
-    echo 'Banco: ' . ($_ENV['DB_NAME'] ?? '?') . PHP_EOL;
+    echo 'Banco: ' . ($_ENV['DB_NAME'] ?? getenv('DB_NAME') ?: '?') . PHP_EOL;
     echo 'Servidor: ' . $version . PHP_EOL;
     echo 'Site institucional: ' . $site['settings']['site_title'] . PHP_EOL;
     echo 'Blocos publicados: ' . count($site['blocks']) . PHP_EOL;
