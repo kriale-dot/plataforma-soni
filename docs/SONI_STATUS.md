@@ -1,9 +1,9 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.5.0 (upload de mídias e prévia no editor)  
-**Etapa:** 2 — CMS institucional: gestão de mídias  
-**Estado:** v0.5.0 validada localmente pelo responsável para imagens, áudios e vídeos; GitHub Actions também aprovado para upload de imagem e proteção de acesso. Funcionalidades de manutenção/produção pendentes.
+**Versão:** 0.6.0 (backup verificável e auditoria de mídias)  
+**Etapa:** 3 — Proteção dos dados e manutenção do CMS  
+**Estado:** v0.5.0 validada localmente; ferramentas de backup e auditoria v0.6.0 implementadas no código, aguardando CI e teste guiado no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -45,6 +45,14 @@
 - [x] O responsável confirmou no Windows (2026-10-15): "Já testei imagem, audio e vídeo e todos estao funcionando". Uploads e reprodução dos três tipos de mídia validados na prática; não houve relatório separado dos limites extremos do php.ini.
 - [ ] Implementar limpeza de mídias órfãs, backup, auditoria e ajustes SEO/acessibilidade.
 
+## Manutenção e backup v0.6.0
+- [x] Implementado `php bin/backup.php`: exportação SQL MariaDB com senha fora dos argumentos, cópia das mídias e manifesto SHA-256, armazenamento fora do webroot.
+- [x] Implementada verificação de integridade do snapshot; cópias incompletas não são promovidas a backup concluído.
+- [x] Implementado `php bin/media-audit.php`: análise sem modificação por padrão; exclui da lista mídias usadas em blocos publicados, ocultos, rascunhos e logotipo.
+- [x] Implementada quarentena opcional (movimentação recuperável, não remoção permanente), restrita a mídias sem vínculo mais antigas que 30 dias, dependente de backup íntegro criado nas últimas 12 horas.
+- [ ] Validar os scripts de manutenção no GitHub Actions e executá-los primeiro em modo seguro no Windows.
+- [ ] Testar restauração completa em banco separado, testar backup externo/off-site e definir retenção/quota.
+
 ## Problema de comunicação local identificado em 2026-10-15
 - [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
 - [x] Teste via `127.0.0.1:8282` apresentou erro (informado pelo responsável).
@@ -74,6 +82,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Concluir segurança e manutenção de mídias institucionais: identificar/limpar arquivos órfãos sem apagar conteúdo em uso, configurar backup do banco e de api/storage/site_media, revisar limites/cotas e retenção. Em seguida iniciar módulo Teste seus Conhecimentos com categorias, questões, alternativas de texto/imagem/áudio e tentativas digitais. Preservar editor v0.5.0 e paleta oficial.
+Confirmar CI v0.6.0. No Windows testar `php bin/backup.php` e `php bin/media-audit.php` (simulação); confirmar que o backup está íntegro e depois armazenar cópia externa. Não executar quarentena antes dessa validação. Em seguida iniciar o módulo Teste seus Conhecimentos.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

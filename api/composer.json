@@ -19,6 +19,8 @@
   "scripts": {
     "start": "php -S localhost:8282 -t public public/index.php",
     "db:migrate": "@php bin/migrate.php",
-    "db:check": "@php bin/db-check.php"
+    "db:check": "@php bin/db-check.php",
+    "db:backup": "@php bin/backup.php",
+    "media:audit": "@php bin/media-audit.php"
   }
 }

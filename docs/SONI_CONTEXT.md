@@ -31,6 +31,7 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - React/Vite e Slim 4, proposta de banco MySQL 8.
 - Token JWT com validade, hash da senha e segredo gerenciado fora do repositório.
 - Arquivos de upload com inspeção MIME e armazenamento seguro fora do webroot.
+- Backup de MariaDB e pasta api/storage/site_media juntos, sem publicar backups; verificação SHA-256. Exclusão de órfãos somente após backup recente e usando quarentena.
 - Não revelar respostas corretas ao visitante antes da conclusão da tentativa.
 - Testes devem ser interativos; não são PDFs preenchíveis.
 - Design responsivo, acessível por teclado, textos alternativos e controles de reprodução de áudio.
@@ -42,7 +43,7 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Ler `docs/SONI_CMS_INSTITUCIONAL.md` para arquitetura, contratos de API e critérios de aceite.
 
 ## Pendências funcionais
-- CMS textual v0.4 implementado e CI aprovado: login, painel, conteúdo do site editável e persistente em MariaDB. Editor v0.4 validado localmente. Upload de imagem/áudio/vídeo da v0.5 validado localmente pelo responsável; implementação da aplicação de questionários ainda pendente.
+- CMS textual v0.4 implementado e CI aprovado: login, painel, conteúdo do site editável e persistente em MariaDB. Editor v0.4 validado localmente. Upload de imagem/áudio/vídeo da v0.5 validado localmente pelo responsável; implementação da v0.6 com backup e auditoria de mídias implementados, aguardando validação Windows; aplicação de questionários ainda pendente.
 - Definir política de tentativas, pontuação, relatórios e publicação.
 - Definir limites/licenciamento de documentos e vídeos e configuração de produção.
 

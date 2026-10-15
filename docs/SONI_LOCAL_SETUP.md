@@ -160,3 +160,7 @@ post_max_size=40M
 - Pasta de mídia: api/storage/site_media fora de api/public. Garanta permissões e inclua em backups junto do MariaDB.
 - Não há migração nova: site_media e site_blocks.media_id já estão na migração 001.
 - Vídeos longos: prefira YouTube/HTTPS por enquanto; uploads fragmentados e CDN serão avaliados futuramente.
+
+## 9. Backup e auditoria sem excluir nada (v0.6.0)
+
+Veja docs/SONI_MAINTENANCE.md. Na pasta api, execute `php bin/backup.php` para criar uma cópia de dados e arquivos, e `php bin/media-audit.php` para simular uma análise de mídias antigas sem vínculo. Não execute `--quarantine` na primeira validação. Depois copie seu backup para outro dispositivo.

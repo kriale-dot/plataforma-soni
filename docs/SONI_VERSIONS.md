@@ -1,5 +1,16 @@
 # SONI — Histórico de versões
 
+## v0.6.0 — 2026-10-15 — Proteção e manutenção de dados
+- `api/src/SiteMaintenance.php`: exportação SQL com mariadb-dump, cópia de mídias, checksums SHA-256 e verificação de backup.
+- `api/bin/backup.php`: criação de snapshot em api/storage/backups e opção de verificação manual.
+- `api/bin/media-audit.php`: modo de simulação por padrão (sem apagar nada) para localizar mídias de 30+ dias sem referência.
+- A quarentena opcional exige backup verificado e recente, revisita a relação com blocos e logotipo antes de mover arquivos e guarda os arquivos em api/storage/site_media_quarantine.
+- `api/tests/maintenance-smoke.php`: testes integrados em MariaDB descartável, protegendo mídia em uso e validando backup e movimentação de órfãos.
+- **Não há alteração de schema** e não houve execução de backup/quarentena no computador do responsável.
+- **Ainda pendentes**: teste de restauração integral em banco isolado, transferência para dispositivo externo, política de retenção e validação no Windows.
+
+
+
 ## Validação local — 2026-10-15 — Mídias da v0.5.0 aprovadas
 - O responsável confirmou que testou imagem, áudio e vídeo no Windows e que os três tipos funcionaram.
 - Com isso, o fluxo essencial de gerenciamento/reprodução de mídia está validado localmente, além dos testes automáticos já aprovados.
