@@ -1,5 +1,13 @@
 # SONI — Histórico de versões
 
+## Validação local — 2026-10-15 — Mídias da v0.5.0 aprovadas
+- O responsável confirmou que testou imagem, áudio e vídeo no Windows e que os três tipos funcionaram.
+- Com isso, o fluxo essencial de gerenciamento/reprodução de mídia está validado localmente, além dos testes automáticos já aprovados.
+- Não houve validação explícita de limites máximos do PHP, exclusão de mídias órfãs ou rotinas de backup; permanecem pendentes.
+- Próxima etapa: manutenção segura de mídia e backups, antes de ampliar o sistema de testes interativos.
+
+
+
 ## v0.5.0 — 2026-10-15 — Upload de mídias e prévia institucional
 - Upload autenticado com verificação conjunta da extensão e MIME real, tamanho e dimensões de imagem.
 - Tipos: JPG/JPEG/PNG/WebP/GIF até 6 MiB; MP3/WAV/OGG até 15 MiB; MP4/WebM até 32 MiB.

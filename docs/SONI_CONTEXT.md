@@ -42,12 +42,12 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Ler `docs/SONI_CMS_INSTITUCIONAL.md` para arquitetura, contratos de API e critérios de aceite.
 
 ## Pendências funcionais
-- CMS textual v0.4 implementado e CI aprovado: login, painel, conteúdo do site editável e persistente em MariaDB. Editor v0.4 validado localmente. Upload e prévia de blocos implementados na v0.5 (pendente validação local), aplicação de questionários ainda pendente.
+- CMS textual v0.4 implementado e CI aprovado: login, painel, conteúdo do site editável e persistente em MariaDB. Editor v0.4 validado localmente. Upload de imagem/áudio/vídeo da v0.5 validado localmente pelo responsável; implementação da aplicação de questionários ainda pendente.
 - Definir política de tentativas, pontuação, relatórios e publicação.
 - Definir limites/licenciamento de documentos e vídeos e configuração de produção.
 
 ## Regra obrigatória de continuidade
 1. Ler este arquivo, SONI_STATUS.md, SONI_VERSIONS.md e SONI_BACKLOG.md antes de programar.
-2. Não confundir código testado em CI com aceitação final no Windows: o CMS textual/dinâmico foi implementado na v0.4.0, e a v0.5.0 adicionou upload e prévia do bloco (pendente validação local).
+2. Não confundir código testado em CI com aceitação final no Windows: o CMS textual/dinâmico foi implementado na v0.4.0, e a v0.5.0 adicionou upload e prévia do bloco (imagem/áudio/vídeo confirmados pelo responsável no Windows).
 3. Ao concluir qualquer alteração, atualizar status e histórico de versões e informar próxima etapa.
 4. Registrar decisões novas neste documento; nunca versionar api/.env, tokens ou senhas.
