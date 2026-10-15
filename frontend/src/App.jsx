@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiRequest } from './lib/api.js';
+import soniLogo from './assets/soni-logo.png';
 
 const symbols = { TESTES: '◉', DOCUMENTOS: '▤', VIDEOS: '▶' };
 const resourceTypes = new Set(['TESTES', 'DOCUMENTOS', 'VIDEOS']);
@@ -151,7 +152,14 @@ export default function App() {
       <header className="header">
         <div className="layout headerInner">
           <a className="brand" href="/" aria-label="SONI, voltar ao início">
-            <span className="brandIcon" aria-hidden="true">≋</span>
+            <img
+              src={soniLogo}
+              alt=""
+              aria-hidden="true"
+              width={48}
+              height={44}
+              style={{ objectFit: 'contain', flexShrink: 0 }}
+            />
             <span>SONI<small>SONORIZAÇÃO DE IGREJAS</small></span>
           </a>
           <nav aria-label="Navegação principal">
