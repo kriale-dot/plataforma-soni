@@ -226,7 +226,7 @@ final class SiteRangeStream extends Stream
         return $this->tell() >= $this->stop || parent::eof();
     }
 
-    public function read(int $length): string
+    public function read($length): string
     {
         if ($this->eof()) {
             return '';
