@@ -1,5 +1,13 @@
 # SONI — Histórico de versões
 
+## Verificação local — 2026-10-15 — Proxy da API corrigido
+- Após baixar as alterações e reiniciar Vite, o responsável confirmou que a comunicação React ↔ Slim passou a funcionar, com a API conectada em `/admin`.
+- `curl.exe -i http://localhost:8282/api/health` havia retornado HTTP 200; acesso via IPv4 explícito falhava nessa instalação do Windows.
+- Instalação de dependências Composer/npm também foi informada como bem-sucedida pelo responsável.
+- **Login administrativo com credenciais locais ainda não foi verificado.** Próxima ação: configurar `api/.env` sem versionar segredos.
+- Versão funcional mantida em v0.2.0.
+
+
 ## Ajuste de ambiente — 2026-10-15 — Proxy Vite no Windows (v0.2.0)
 - Diagnóstico: API Slim confirmou HTTP 200 em `http://localhost:8282/api/health`, mas apresentou erro de conexão via `http://127.0.0.1:8282/api/health`.
 - Alterado `frontend/vite.config.js` para fazer proxy do `/api` para `http://localhost:8282` em vez do IPv4 explícito. Evita desencontro com a interface usada pelo PHP no computador do responsável.

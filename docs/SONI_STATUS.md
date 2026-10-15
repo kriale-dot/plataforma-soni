@@ -25,10 +25,10 @@
 - [x] Teste via `127.0.0.1:8282` apresentou erro (informado pelo responsável).
 - [x] O Vite estava configurado para encaminhar `/api` à interface IPv4 `127.0.0.1`, onde não foi possível estabelecer conexão.
 - [x] Atualizado `frontend/vite.config.js` para usar o endereço `localhost:8282`, consistente com a API acessível.
-- [ ] Pendente teste local depois de `git pull` e reiniciar o Vite; confirmar indicador `API: conectada` na página `/admin`.
+- [x] Após `git pull` e reinicialização do Vite, o responsável confirmou que o indicador `API: conectada` funcionou na página `/admin` (2026-10-15).
 
 ## Validação pendente
-- [ ] Executar composer install e npm install no Windows do responsável.
+- [x] Responsável informou que `composer install` e `npm install` terminaram sem erros no Windows (2026-10-15).
 - [ ] Executar navegação e login React → Slim, com credenciais reais apenas em api/.env local.
 - [ ] Conferir erros de autenticação, desconexão e saída no navegador.
 - [ ] Definir rate limit e configurações finais de HTTPS/CORS antes de produção.
@@ -49,6 +49,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Seguir docs/SONI_LOCAL_SETUP.md para validação no computador. **Prioridade funcional após a validação: MySQL + CMS do site institucional editável (modelo Tânia adaptado)**. Depois seguir para CRUD de categorias/testes.
+Configurar credenciais reais somente no `api/.env` local (ADMIN_EMAIL, ADMIN_PASSWORD_HASH e JWT_SECRET) e validar login no navegador, incluindo credencial errada e logout. Depois iniciar MySQL + CMS institucional editável (modelo Tânia adaptado), antes do CRUD de testes.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.
