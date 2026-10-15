@@ -48,12 +48,22 @@ $catId = (int) $catalog['categories'][0]['id'];
 demand($status === 200 && isset($created['id']) &&
     $created['publication_status'] === 'DRAFT', 'Novo teste inicia em rascunho');
 $id = (int) $created['id'];
+$imageId = null;
+foreach (($created['media'] ?? []) as $media) {
+    if ($media['kind'] === 'IMAGE') {
+        $imageId = (int) $media['id'];
+        break;
+    }
+}
+demand($imageId !== null, 'Biblioteca de imagem anterior disponível para reuso');
 
 [$status, $published] = callApi('GET', '/quizzes');
 demand($status === 200 && count($published) === 0, 'Teste em rascunho não consta no catálogo');
 
 [$status] = callApi('GET', '/quizzes/' . $id);
 demand($status === 404, 'Rascunho não acessível ao aluno');
+[$status] = callApi('GET', '/site/media/' . $imageId);
+demand($status === 404, 'Mídia ainda não vinculada a teste publicado permanece privada');
 
 [$status] = callApi('PUT', '/admin/quizzes/' . $id, [
     'publication_status' => 'PUBLISHED',
@@ -71,10 +81,11 @@ demand($status === 422, 'Questão exige uma resposta correta');
 
 [$status, $q] = callApi('POST', '/admin/quizzes/' . $id . '/questions', [
     'prompt_text' => 'Qual situação requer atenção à microfonia?',
+    'image_media_id' => $imageId,
     'explanation' => 'Microfones voltados para caixas podem realimentar o sistema.',
     'options' => [
         ['option_text' => 'Microfone apontado diretamente para o retorno', 'is_correct' => true],
-        ['option_text' => 'Ganhos ajustados corretamente', 'is_correct' => false],
+        ['option_text' => 'Ganhos ajustados corretamente', 'image_media_id' => $imageId, 'is_correct' => false],
         ['option_text' => 'Caixas fora do eixo principal do microfone', 'is_correct' => false],
     ],
 ], $token);
@@ -95,6 +106,11 @@ demand($status === 200 && count($list) === 1 && (int) $list[0]['id'] === $id,
 
 [$status, $public, $raw] = callApi('GET', '/quizzes/' . $id);
 demand($status === 200 && count($public['questions']) === 1, 'Aluno recebe questão publicada');
+demand((int) $public['questions'][0]['image_media_id'] === $imageId &&
+    (int) $public['questions'][0]['options'][1]['image_media_id'] === $imageId,
+    'Mídias de enunciados e alternativas estão disponíveis');
+[$status] = callApi('GET', '/site/media/' . $imageId);
+demand($status === 200, 'Mídia de prova publicada torna-se acessível');
 demand(!isset($public['questions'][0]['options'][0]['is_correct']) &&
     !isset($public['questions'][0]['explanation']) &&
     !str_contains($raw, 'correct_option_id'), 'API pública não revela gabarito');
@@ -143,4 +159,6 @@ demand($status === 422, 'Questões com tentativas não podem ser alteradas nem n
 
 [$status] = callApi('GET', '/quizzes/' . $id);
 demand($status === 404, 'Teste retirado da publicação não aparece ao aluno');
+[$status] = callApi('GET', '/site/media/' . $imageId);
+demand($status === 404, 'Mídia deixa de ser pública após despublicar');
 echo "Fluxo completo de questionários, proteção de respostas e correção aprovados.\n";

@@ -57,7 +57,7 @@ function ResourceCard({ block }) {
       <div className="cardTop"><span>SONI · {block.type}</span><span className="cardIcon" aria-hidden="true">{symbols[block.type]}</span></div>
       <h3>{block.title}</h3><p>{block.body_text}</p>
       <div className="cardBottom">
-        <span>Conteúdo em desenvolvimento</span>
+        <span>{block.type === 'TESTES' ? 'Avaliações interativas disponíveis' : 'Conteúdo em desenvolvimento'}</span>
         {destination && <a href={destination}>{block.button_label || 'Saiba mais'} ↗</a>}
       </div>
     </article>

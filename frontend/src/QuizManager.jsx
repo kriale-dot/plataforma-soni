@@ -318,7 +318,7 @@ export default function QuizManager({ token, onUnauthorized }) {
                   {question.options.length > 2 &&
                     <button type="button" onClick={() => setQuestion((old) => {
                       const options = old.options.filter((_, j) => j !== i);
-                      if (!options.some((o) => o.is_correct)) options[0].is_correct = true;
+                      if (!options.some((o) => o.is_correct)) options[0] = { ...options[0], is_correct: true };
                       return { ...old, options };
                     })}>Remover</button>}
                 </div>

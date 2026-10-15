@@ -40,3 +40,5 @@
 .adminEditorStart{margin:16px 0 6px;padding:14px 20px;background:var(--amber);border:0;border-radius:9px;color:var(--ink);font-size:14px;font-weight:800;cursor:pointer}
 .adminEditorNavigation{display:flex;justify-content:space-between;gap:12px;max-width:1100px;margin:0 auto 12px}
 .adminEditorNavigation button{border:1px solid #B8CFD1;background:white;color:var(--primary);border-radius:8px;padding:10px 13px;font-weight:700;cursor:pointer}
+
+.adminModuleList button{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:transparent;border:1px solid #DEEBEB;border-radius:8px;color:var(--primary);padding:12px 14px;margin:6px 0;text-align:left;font:700 13px 'DM Sans',sans-serif;cursor:pointer}.adminModuleList button small{font-size:11px;color:#087F74}
