@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.7.1 (devolutivas por faixa de acertos)  
 **Etapa:** 4 — Teste seus Conhecimentos: devolutivas personalizadas  
-**Estado:** v0.7.0 aprovada em CI, pendente validação no Windows. v0.7.1 implementada no código; migração 003 e testes CI de faixas/devolutivas aguardando validação.
+**Estado:** v0.7.0 aprovada em CI, pendente validação no Windows. v0.7.1 implementada e aprovada nos testes automáticos React/PHP/MariaDB 11.4 (execução 38804274629); migração local 003 e validação no Windows pendentes.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -77,7 +77,8 @@
 - [x] O editor React permite ajustar porcentagens, classificação, mensagem e recomendação; adicionar/remover faixas.
 - [x] A resposta do POST de finalização contém performance_feedback com a faixa aplicada e registro persistente histórico em quiz_attempt_feedback.
 - [x] Página pública apresenta classificação, devolutiva e recomendação somente depois da correção.
-- [ ] Rodar testes de CI e validar no Windows com git pull, php bin/migrate.php e publicação de teste.
+- [x] GitHub Actions 38804274629 aprovado: migrações 001–003, build React, PHP, validações de faixas, notas 0%/50%/100%, proteção de dados públicos e imutabilidade do histórico.
+- [ ] Validar no Windows com git pull, php bin/migrate.php e conclusão de teste com devolutiva.
 - [ ] Cópia externa de backup e teste isolado de restauração ainda pendentes.
 
 ## Problema de comunicação local identificado em 2026-10-15

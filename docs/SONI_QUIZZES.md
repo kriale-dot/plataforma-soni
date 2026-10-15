@@ -55,3 +55,7 @@ Privadas com JWT:
 - A nota é corrigida no servidor com duas casas decimais; nenhuma devolutiva aparece na API de perguntas antes de finalizar.
 - O registro histórico é gravado em `quiz_attempt_feedback` junto com a tentativa. Mudar as faixas depois não altera as devolutivas anteriores.
 - Não inserir HTML ou códigos nas mensagens: o editor apresenta texto simples.
+
+## Qualidade
+- CI aprovado em 2026-10-15, execução GitHub Actions 38804274629, incluindo notas 0/50/100, textos correspondentes, faixa sem lacunas, JWT e histórico.
+- A migração no Windows permanece pendente de confirmação do responsável.
