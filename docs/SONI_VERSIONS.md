@@ -4,7 +4,7 @@
 - Após captura de tela do responsável com HTTP 405, auditado o arquivo `api/public/index.php` publicado: a rota `GET /api/site` estava ausente, embora o repositório SiteRepository, a migration e a documentação já estivessem presentes.
 - Corrigido registro da rota `GET /api/site` com leitura PDO dos blocos publicados e tratamento de indisponibilidade do banco.
 - Adicionada resposta 204 para `GET /favicon.ico`, eliminando erro 405 secundário no DevTools.
-- GitHub Actions passa a testar a rota `GET /api/site` via servidor HTTP PHP com MariaDB 11.4, impedindo regressões de registro de rota.
+- GitHub Actions passou a testar a rota `GET /api/site` via servidor HTTP PHP com MariaDB 11.4, impedindo regressões de registro de rota. Teste aprovado em 2026-10-15 (commit 748c2c6, execução 38793328967).
 - A migração local ainda depende de confirmação do responsável; não alterar nem apagar dados existentes.
 
 

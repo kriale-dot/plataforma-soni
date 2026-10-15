@@ -28,7 +28,7 @@
 - [x] Script php bin/db-check.php para testar conexão e conteúdo sem expor senhas.
 - [x] Endpoint público GET /api/site para recuperar somente blocos visíveis/publicados do banco; corrigida omissão da rota no index.php em 2026-10-15, após erro HTTP 405 informado pelo responsável.
 - [x] GET /favicon.ico responde 204, evitando erro 405 no console do navegador.
-- [ ] Validar integração HTTP da rota GET /api/site no GitHub Actions após a correção.
+- [x] Integração HTTP de GET /api/site e favicon validada pelo GitHub Actions com MariaDB 11.4 no commit 748c2c6 (execução 38793328967, todos os jobs aprovados).
 - [x] GitHub Actions executou a migração 001 em MariaDB 11.4 temporário, repetiu a migração sem duplicar registros e aprovou o filtro de rascunhos/ocultos (CI do commit ca9eab8).
 - [ ] Criar banco plataforma_soni e usuário soni_app no MariaDB local, configurar api/.env e executar migração.
 - [ ] Verificar php bin/db-check.php e GET /api/site no navegador do responsável.
