@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.7.0 (primeiro módulo de testes interativos)  
 **Etapa:** 4 — Teste seus Conhecimentos: categorias, questões e aplicação pública  
-**Estado:** v0.6.0 backup criado e verificado no Windows; auditoria sem órfãos aprovada pelo responsável. v0.7.0 programada no código, aguardando testes CI e validação no Windows.
+**Estado:** v0.6.0 backup criado e verificado no Windows; auditoria sem órfãos aprovada pelo responsável. v0.7.0 implementada e aprovada no CI MariaDB/React/PHP (execução 38802753975), aguardando validação local no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.

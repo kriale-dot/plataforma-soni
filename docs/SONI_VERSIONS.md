@@ -9,7 +9,7 @@
 - Painel de testes em \`/admin/quizzes\` para categorias, provas, questões, opções e upload/reuso de mídia.
 - Site público em \`/testes\`, com aplicação interativa, resultado e explicações após finalizar.
 - \`site_media\` passa a autorizar acesso público a mídia de testes publicados; ferramenta de auditoria reconhece mídias referenciadas em questões/alternativas.
-- Adicionado teste HTTP ao CI para criação/publicação/gabarito; aguarda validação automática e manual.
+- Teste HTTP integrado aprovado no CI 38802753975: criação/publicação, gabarito invisível antes de responder, correção, edição protegida após tentativas e mídia de enunciados/alternativas, além de PHP lint e build React.
 - **Necessário executar a migração nova** com \`php bin/migrate.php\` no Windows.
 - Pendências: rate limit de tentativas, versões/relatórios avançados, estatísticas, embaralhamento e testes com arquivos multimídia reais em várias plataformas.
 
