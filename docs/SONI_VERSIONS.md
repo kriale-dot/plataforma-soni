@@ -1,5 +1,25 @@
 # SONI — Histórico de versões
 
+## v0.7.0 — 2026-10-15 — Primeiro Teste seus Conhecimentos
+- Banco \`002_quizzes.sql\`: categorias, testes, enunciados, alternativas, resultados e respostas, com referência a imagem e áudio enviados no CMS.
+- \`QuizService.php\`: endpoints administrativos JWT, validação de publicação, criação/alteração/exclusão de questões e correção de testes.
+- API pública: \`GET /api/quizzes\`, \`GET /api/quizzes/{id}\`, \`POST /api/quizzes/{id}/attempts\` (avaliação anônima com correção após finalizar).
+- Não revelar resposta correta nem explicação no GET público. Envio exige todas as questões respondidas, opção válida e pertencente à questão.
+- Edição de questões publicada bloqueada; após registrar tentativas, exige criar novo teste para manter consistência dos resultados.
+- Painel de testes em \`/admin/quizzes\` para categorias, provas, questões, opções e upload/reuso de mídia.
+- Site público em \`/testes\`, com aplicação interativa, resultado e explicações após finalizar.
+- \`site_media\` passa a autorizar acesso público a mídia de testes publicados; ferramenta de auditoria reconhece mídias referenciadas em questões/alternativas.
+- Adicionado teste HTTP ao CI para criação/publicação/gabarito; aguarda validação automática e manual.
+- **Necessário executar a migração nova** com \`php bin/migrate.php\` no Windows.
+- Pendências: rate limit de tentativas, versões/relatórios avançados, estatísticas, embaralhamento e testes com arquivos multimídia reais em várias plataformas.
+
+## Validação local — 2026-10-15 — Backup v0.6.0 e auditoria
+- \`php bin/backup.php\`: responsável confirmou "Backup concluído e verificado", snapshot privado \`20261015-201352-540b7e04\`.
+- \`php bin/media-audit.php\`: responsável confirmou 0 arquivos sem referência com idade > 30 dias; nenhum arquivo alterado.
+- A integridade da cópia foi verificada; **a restauração isolada e cópia em disco externo não foram informadas**.
+
+
+
 ## v0.6.0 — 2026-10-15 — Proteção e manutenção de dados
 - `api/src/SiteMaintenance.php`: exportação SQL com mariadb-dump, cópia de mídias, checksums SHA-256 e verificação de backup.
 - `api/bin/backup.php`: criação de snapshot em api/storage/backups e opção de verificação manual.

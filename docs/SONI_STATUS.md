@@ -1,9 +1,9 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-15  
-**Versão:** 0.6.0 (backup verificável e auditoria de mídias)  
-**Etapa:** 3 — Proteção dos dados e manutenção do CMS  
-**Estado:** v0.5.0 validada localmente; ferramentas de backup e auditoria v0.6.0 aprovadas em CI MariaDB 11.4 (execução 38799724661), teste guiado no Windows pendente.
+**Versão:** 0.7.0 (primeiro módulo de testes interativos)  
+**Etapa:** 4 — Teste seus Conhecimentos: categorias, questões e aplicação pública  
+**Estado:** v0.6.0 backup criado e verificado no Windows; auditoria sem órfãos aprovada pelo responsável. v0.7.0 programada no código, aguardando testes CI e validação no Windows.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -54,6 +54,22 @@
 - [ ] Executar primeiro os comandos seguros de backup e auditoria no Windows do responsável.
 - [ ] Testar restauração completa em banco separado, testar backup externo/off-site e definir retenção/quota.
 
+
+## Confirmação local da v0.6.0 — 2026-10-15
+- [x] O responsável executou \`php bin/backup.php\`: "Backup concluído e verificado", snapshot \`20261015-201352-540b7e04\` (diretório privado, não versionado).
+- [x] O responsável executou \`php bin/media-audit.php\`: 0 mídias sem referência com mais de 30 dias; simulação sem alterações.
+- [ ] Confirmar cópia do backup para outro disco/destino seguro e ensaio de restauração isolada; a verificação SHA-256 não é restauração.
+
+## Primeira versão dos questionários — v0.7.0
+- [x] Código da migração \`002_quizzes.sql\`: categorias, testes, questões, alternativas, tentativas e respostas, com mídias opcionais de imagem e áudio.
+- [x] API administrativa JWT para criar/editar categorias e testes e gerenciar questões e alternativas; publicação sujeita à validação de todas as questões.
+- [x] API pública de catálogo e aplicação, sem revelar gabarito/explicação antes de completar a tentativa; correção e persistência do resultado no servidor.
+- [x] Formulário do aluno com seleção de uma alternativa por questão e explicações após envio; painel do administrador com cadastro de mídia via biblioteca existente.
+- [x] Mídias associadas aos testes publicados podem ser reproduzidas via rota pública; auditoria de mídias protege vínculos em questões e alternativas, inclusive rascunhos.
+- [x] Teste HTTP integrado ao CI para rascunhos, publicação, alternativas, gabarito e persistência de tentativas.
+- [ ] Verificar CI da v0.7.0 e testar no Windows. Uma nova migração SQL precisa ser aplicada com \`php bin/migrate.php\`.
+- [ ] Para produção: rate limiting das tentativas anônimas, prevenção de abuso, controles de sessão, questões aleatórias, versões avançadas e relatórios de desempenho.
+
 ## Problema de comunicação local identificado em 2026-10-15
 - [x] Teste direto via `curl.exe -i http://localhost:8282/api/health` retornou HTTP 200 e JSON válido (informado pelo responsável).
 - [x] Teste via `127.0.0.1:8282` apresentou erro (informado pelo responsável).
@@ -83,6 +99,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Confirmar CI v0.6.0. No Windows testar `php bin/backup.php` e `php bin/media-audit.php` (simulação); confirmar que o backup está íntegro e depois armazenar cópia externa. Não executar quarentena antes dessa validação. Em seguida iniciar o módulo Teste seus Conhecimentos.
+Verificar pipeline GitHub da v0.7.0. No Windows atualizar com git pull, executar `php bin/migrate.php` na pasta api, reiniciar PHP/Vite, acessar /admin e criar um teste em Gerenciar testes; publicar e responder em /testes. Manter backup v0.6.0, copiar para destino externo e não executar quarentena.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

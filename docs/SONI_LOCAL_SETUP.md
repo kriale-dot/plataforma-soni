@@ -164,3 +164,7 @@ post_max_size=40M
 ## 9. Backup e auditoria sem excluir nada (v0.6.0)
 
 Veja docs/SONI_MAINTENANCE.md. Na pasta api, execute `php bin/backup.php` para criar uma cópia de dados e arquivos, e `php bin/media-audit.php` para simular uma análise de mídias antigas sem vínculo. Não execute `--quarantine` na primeira validação. Depois copie seu backup para outro dispositivo.
+
+## 10. Testes interativos — v0.7.0
+
+Após `git pull origin main`, execute **dentro de `api`**: `php bin/migrate.php`. Deve retornar `Aplicada: 002_quizzes.sql`, mantendo a migration 001 como já aplicada. Reinicie PHP e Vite. Entre em http://localhost:5173/admin e clique em **Gerenciar testes**. Crie um teste em Fundamentos de Sonorização, adicione questões com 2 a 6 alternativas, marque uma correta e clique em Publicar teste. Aplique em http://localhost:5173/testes e confira a correção final. Nenhuma pergunta fictícia é publicada automaticamente.

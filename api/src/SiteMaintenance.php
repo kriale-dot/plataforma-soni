@@ -229,6 +229,12 @@ final class SiteMaintenance
                   WHERE m.created_at < DATE_SUB(NOW(), INTERVAL {$days} DAY)
                   AND NOT EXISTS (SELECT 1 FROM site_blocks b WHERE b.media_id = m.id)
                   AND NOT EXISTS (SELECT 1 FROM site_settings s WHERE s.logo_media_id = m.id)
+                  AND NOT EXISTS (
+                      SELECT 1 FROM quiz_questions qq WHERE qq.image_media_id = m.id OR qq.audio_media_id = m.id
+                  )
+                  AND NOT EXISTS (
+                      SELECT 1 FROM quiz_options qo WHERE qo.image_media_id = m.id OR qo.audio_media_id = m.id
+                  )
                   ORDER BY m.created_at ASC, m.id ASC LIMIT {$limit}";
         return $db->query($query)->fetchAll();
     }
@@ -260,9 +266,11 @@ final class SiteMaintenance
                 }
                 $linked = $db->prepare(
                     'SELECT (EXISTS(SELECT 1 FROM site_blocks WHERE media_id = ?) OR
-                             EXISTS(SELECT 1 FROM site_settings WHERE logo_media_id = ?))'
+                             EXISTS(SELECT 1 FROM site_settings WHERE logo_media_id = ?) OR
+                             EXISTS(SELECT 1 FROM quiz_questions WHERE image_media_id = ? OR audio_media_id = ?) OR
+                             EXISTS(SELECT 1 FROM quiz_options WHERE image_media_id = ? OR audio_media_id = ?))'
                 );
-                $linked->execute([$id, $id]);
+                $linked->execute([$id, $id, $id, $id, $id, $id]);
                 if ((int) $linked->fetchColumn() !== 0 ||
                     strtotime($record['created_at']) >= time() - $days * 86400) {
                     $db->rollBack();

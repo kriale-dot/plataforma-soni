@@ -14,6 +14,7 @@ use Soni\Database;
 use Soni\SiteRepository;
 use Soni\SiteCms;
 use Soni\SiteMedia;
+use Soni\QuizService;
 use Psr\Http\Message\UploadedFileInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -29,7 +30,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
     $response = $response
         ->withHeader('Access-Control-Allow-Origin', $allowedOrigin)
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
         ->withHeader('Vary', 'Origin')
         ->withHeader('X-Content-Type-Options', 'nosniff');
 
@@ -40,7 +41,7 @@ $app->add(static function (Request $request, RequestHandlerInterface $handler) u
 });
 
 $app->get('/api/health', static function (Request $request, ResponseInterface $response): ResponseInterface {
-    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.6.0']);
+    return Http::json($response, ['status' => 'ok', 'service' => 'plataforma-soni-api', 'version' => '0.7.0']);
 });
 
 // Configurações e blocos públicos; não retornar rascunhos ou blocos ocultos.
@@ -168,6 +169,67 @@ $app->post('/api/admin/site/media', static function (Request $request, ResponseI
     } catch (Throwable) {
         return Http::json($response, ['error' => 'Não foi possível enviar o arquivo.'], 503);
     }
+});
+
+// Área pública de provas: não inclui gabarito, explicação nem indicador is_correct.
+// Somente ao finalizar TODAS as questões o resultado e o gabarito são retornados.
+$app->get('/api/quizzes', static function (Request $request, ResponseInterface $response): ResponseInterface {
+    try {
+        return Http::json($response, QuizService::listPublic(Database::connect()));
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Não foi possível listar os testes.'], 503);
+    }
+});
+
+$app->get('/api/quizzes/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args): ResponseInterface {
+    try {
+        return Http::json($response, QuizService::publicDetail(Database::connect(), (int) $args['id']));
+    } catch (InvalidArgumentException) {
+        return Http::json($response, ['error' => 'Teste não encontrado ou não publicado.'], 404);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Teste temporariamente indisponível.'], 503);
+    }
+});
+
+$app->post('/api/quizzes/{id:[0-9]+}/attempts', static function (Request $request, ResponseInterface $response, array $args): ResponseInterface {
+    try {
+        $body = $request->getParsedBody();
+        if (!is_array($body)) throw new InvalidArgumentException('Formato de respostas inválido.');
+        return Http::json($response, QuizService::submit(Database::connect(), (int) $args['id'], $body), 201);
+    } catch (InvalidArgumentException $error) {
+        return Http::json($response, ['error' => $error->getMessage()], 422);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Não foi possível finalizar o teste.'], 503);
+    }
+});
+
+// Gestão de categorias, testes e questões, sempre com a autenticação JWT do administrador.
+$app->get('/api/admin/quizzes', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::adminList($db));
+});
+$app->post('/api/admin/quiz-categories', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::saveCategory($db, null, (array) $request->getParsedBody()));
+});
+$app->put('/api/admin/quiz-categories/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::saveCategory($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+$app->post('/api/admin/quizzes', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::createQuiz($db, (array) $request->getParsedBody()));
+});
+$app->get('/api/admin/quizzes/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::adminDetail($db, (int) $args['id']));
+});
+$app->put('/api/admin/quizzes/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::updateQuiz($db, (int) $args['id'], (array) $request->getParsedBody()));
+});
+$app->post('/api/admin/quizzes/{id:[0-9]+}/questions', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::saveQuestion($db, (int) $args['id'], null, (array) $request->getParsedBody()));
+});
+$app->put('/api/admin/quizzes/{id:[0-9]+}/questions/{questionId:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::saveQuestion($db, (int) $args['id'], (int) $args['questionId'], (array) $request->getParsedBody()));
+});
+$app->delete('/api/admin/quizzes/{id:[0-9]+}/questions/{questionId:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::deleteQuestion($db, (int) $args['id'], (int) $args['questionId']));
 });
 
 $app->options('/{routes:.+}', static fn (Request $request, ResponseInterface $response): ResponseInterface => $response);

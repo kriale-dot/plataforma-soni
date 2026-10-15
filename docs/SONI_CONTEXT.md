@@ -34,6 +34,7 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - Backup de MariaDB e pasta api/storage/site_media juntos, sem publicar backups; verificação SHA-256. Exclusão de órfãos somente após backup recente e usando quarentena.
 - Não revelar respostas corretas ao visitante antes da conclusão da tentativa.
 - Testes devem ser interativos; não são PDFs preenchíveis.
+- Na v0.7, todas as questões são de única escolha (2 a 6 alternativas, uma correta); não revelar o gabarito antes do POST de finalização da tentativa; nunca usar este endpoint de respostas para relatório administrativo sem autorização.
 - Design responsivo, acessível por teclado, textos alternativos e controles de reprodução de áudio.
 
 ## Planejamento técnico do editor institucional

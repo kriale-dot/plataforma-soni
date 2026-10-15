@@ -137,9 +137,22 @@ final class SiteMedia
         $sql = 'SELECT m.kind, m.storage_path, m.mime_type, m.size_bytes
                   FROM site_media m WHERE m.id = ?';
         if (!$admin) {
-            $sql .= " AND EXISTS (
-                SELECT 1 FROM site_blocks b WHERE b.media_id = m.id
-                AND b.is_visible = 1 AND b.publication_status = 'PUBLISHED'
+            $sql .= " AND (
+                EXISTS (
+                    SELECT 1 FROM site_blocks b WHERE b.media_id = m.id
+                    AND b.is_visible = 1 AND b.publication_status = 'PUBLISHED'
+                ) OR EXISTS (
+                    SELECT 1 FROM quiz_questions qq
+                    JOIN quizzes q ON q.id = qq.quiz_id
+                    WHERE q.publication_status = 'PUBLISHED'
+                    AND (qq.image_media_id = m.id OR qq.audio_media_id = m.id)
+                ) OR EXISTS (
+                    SELECT 1 FROM quiz_options qo
+                    JOIN quiz_questions qq ON qq.id = qo.question_id
+                    JOIN quizzes q ON q.id = qq.quiz_id
+                    WHERE q.publication_status = 'PUBLISHED'
+                    AND (qo.image_media_id = m.id OR qo.audio_media_id = m.id)
+                )
             )";
         }
         $stmt = $db->prepare($sql);

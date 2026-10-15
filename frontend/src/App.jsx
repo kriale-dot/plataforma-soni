@@ -7,7 +7,7 @@ const sectionId = { TESTES: 'testes', DOCUMENTOS: 'documentos', VIDEOS: 'videos'
 
 function internalLink(url) {
   if (!url) return null;
-  if (url === '/testes' || url === '/documentos' || url === '/videos') return '#' + url.substring(1);
+  if (url === '/documentos' || url === '/videos') return '#' + url.substring(1);
   return url;
 }
 
@@ -155,7 +155,7 @@ export default function App() {
             <span>SONI<small>SONORIZAÇÃO DE IGREJAS</small></span>
           </a>
           <nav aria-label="Navegação principal">
-            <a href="#sobre">Sobre</a><a href="#testes">Testes</a>
+            <a href="#sobre">Sobre</a><a href="/testes">Testes</a>
             <a href="#documentos">Documentos</a><a href="#videos">Vídeos</a>
           </nav>
           <a className="navCta" href="#recursos">Explorar plataforma <span aria-hidden="true">↗</span></a>

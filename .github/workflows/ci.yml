@@ -54,6 +54,8 @@ jobs:
           php -l bin/migrate.php
           php -l bin/db-check.php
           php -l src/SiteMaintenance.php
+          php -l src/QuizService.php
+          php -l tests/quiz-http-smoke.php
           php -l bin/backup.php
           php -l bin/media-audit.php
           php -l tests/maintenance-smoke.php
@@ -138,6 +140,7 @@ jobs:
           done
           php tests/site-cms-http-smoke.php
           php tests/site-media-http-smoke.php
+          php tests/quiz-http-smoke.php
       - name: Testar backup íntegro e quarentena segura
         working-directory: api
         run: |

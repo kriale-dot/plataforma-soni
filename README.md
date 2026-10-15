@@ -13,7 +13,7 @@ O site público da SONI **não será estático**: o administrador poderá montar
 
 **Status:** v0.5.0 adiciona upload de imagens/áudio/vídeo com prévia particular do bloco. CMS textual da v0.4.0 e site dinâmico permanecem; validação v0.5 no Windows pendente. Arquitetura e critérios de aceite em [docs/SONI_CMS_INSTITUCIONAL.md](docs/SONI_CMS_INSTITUCIONAL.md).
 
-## Situação — v0.6.0
+## Situação — v0.7.0
 Implementado no código: site institucional dinâmico por blocos, tela /admin, editor /admin/site após login, rotas privadas JWT para CRUD e ordem, proxy Vite /api, conexão MariaDB PDO, upload de mídia autenticado e migration do CMS.
 
 **React/Slim, login e API pública MariaDB validados no Windows. Editor v0.4.0 aprovado no CI e validado no Windows; novo upload v0.5.0 precisa de verificação local.** O painel depois de entrar mostra módulos ainda não implementados; MySQL, CRUD, testes interativos e bibliotecas não estão funcionais.
@@ -64,3 +64,7 @@ Workflow CI disponível em .github/workflows/ci.yml para compilar o frontend e v
 ## Manutenção e segurança dos arquivos
 
 A v0.6.0 inclui backup verificável do MariaDB + mídias e auditoria conservadora de arquivos não utilizados. Veja [docs/SONI_MAINTENANCE.md](docs/SONI_MAINTENANCE.md). **Não execute quarentena sem verificar e copiar o backup.**
+
+## Teste seus Conhecimentos — v0.7.0
+
+A v0.7.0 inclui catálogo e aplicação em `/testes`, editor em `/admin/quizzes`, criação de categorias, testes e questões com texto, imagens e áudios. **É necessário executar `php bin/migrate.php` dentro de `api` após atualizar o código**, pois a migração `002_quizzes.sql` cria novas tabelas sem alterar as antigas. O resultado é corrigido somente após a finalização do teste. Veja `docs/SONI_QUIZZES.md`.
