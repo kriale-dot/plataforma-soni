@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.2.0  
 **Etapa:** 1 — Integração React/Slim e login administrativo  
-**Estado:** código no GitHub; validações automáticas em CI; testes completos no Windows do responsável pendentes.
+**Estado:** integração e login com credenciais locais validados pelo responsável no Windows; testes negativos/logout e CMS pendentes.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -29,7 +29,7 @@
 
 ## Validação pendente
 - [x] Responsável informou que `composer install` e `npm install` terminaram sem erros no Windows (2026-10-15).
-- [ ] Executar navegação e login React → Slim, com credenciais reais apenas em api/.env local.
+- [x] Responsável confirmou login bem-sucedido no painel React conectado ao Slim com credenciais configuradas localmente no api/.env (2026-10-15).
 - [ ] Conferir erros de autenticação, desconexão e saída no navegador.
 - [ ] Definir rate limit e configurações finais de HTTPS/CORS antes de produção.
 
@@ -49,6 +49,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Configurar credenciais reais somente no `api/.env` local (ADMIN_EMAIL, ADMIN_PASSWORD_HASH e JWT_SECRET) e validar login no navegador, incluindo credencial errada e logout. Depois iniciar MySQL + CMS institucional editável (modelo Tânia adaptado), antes do CRUD de testes.
+Verificar disponibilidade local do MySQL (`mysql --version` e conexão de teste) sem compartilhar senhas. Em seguida iniciar infraestrutura MySQL + migrations do CMS institucional editável (modelo Tânia adaptado). Teste com credenciais erradas e logout no login permanece pendente.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

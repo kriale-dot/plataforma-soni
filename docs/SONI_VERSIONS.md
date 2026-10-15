@@ -1,5 +1,13 @@
 # SONI — Histórico de versões
 
+## Validação local — 2026-10-15 — Login administrativo aprovado
+- O responsável confirmou que o login no painel `/admin` passou a funcionar após configurar as credenciais no `api/.env`.
+- Isso valida o fluxo positivo React ↔ Slim com as credenciais locais; não implica que a proteção de produção, rate limiting, testes negativos ou logout estejam concluídos.
+- Credenciais e segredos **não foram enviados ao repositório**.
+- Próxima atividade: verificar conexão local com MySQL e implementar o CMS do site institucional editável; versão do código permanece **v0.2.0**.
+
+
+
 ## Verificação local — 2026-10-15 — Proxy da API corrigido
 - Após baixar as alterações e reiniciar Vite, o responsável confirmou que a comunicação React ↔ Slim passou a funcionar, com a API conectada em `/admin`.
 - `curl.exe -i http://localhost:8282/api/health` havia retornado HTTP 200; acesso via IPv4 explícito falhava nessa instalação do Windows.
