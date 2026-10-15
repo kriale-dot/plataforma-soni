@@ -10,7 +10,7 @@
 - Painel React permite criar, excluir e editar faixas e textos. Tela pública exibe classificação e recomendação junto ao resultado.
 - Teste automatizado HTTP inclui notas 0%, 50%, 100%, lacuna de 0,01%, sobreposição, proteção do endpoint e imutabilidade do histórico.
 - GitHub Actions 38804274629 aprovado: React, PHP, migrações 001–003 e devolutivas em 0%, 50% e 100%; rejeição de lacunas, sobreposição e acesso sem JWT; cópia histórica validada.
-- Validação manual no Windows ainda pendente.
+- **Migrações 002 e 003 concluídas no Windows**, confirmadas pelo responsável com saída de `php bin/migrate.php`; ainda pendente validação visual e da aplicação do teste no navegador.
 
 
 

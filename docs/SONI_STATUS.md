@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.7.1 (devolutivas por faixa de acertos)  
 **Etapa:** 4 — Teste seus Conhecimentos: devolutivas personalizadas  
-**Estado:** v0.7.0 aprovada em CI, pendente validação no Windows. v0.7.1 implementada e aprovada nos testes automáticos React/PHP/MariaDB 11.4 (execução 38804274629); migração local 003 e validação no Windows pendentes.
+**Estado:** v0.7.0 aprovada em CI, pendente validação no Windows. v0.7.1 implementada e aprovada nos testes automáticos React/PHP/MariaDB 11.4 (execução 38804274629); migrações 002 e 003 aplicadas com sucesso no Windows segundo saída enviada pelo responsável; validação funcional no navegador ainda pendente.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -78,7 +78,8 @@
 - [x] A resposta do POST de finalização contém performance_feedback com a faixa aplicada e registro persistente histórico em quiz_attempt_feedback.
 - [x] Página pública apresenta classificação, devolutiva e recomendação somente depois da correção.
 - [x] GitHub Actions 38804274629 aprovado: migrações 001–003, build React, PHP, validações de faixas, notas 0%/50%/100%, proteção de dados públicos e imutabilidade do histórico.
-- [ ] Validar no Windows com git pull, php bin/migrate.php e conclusão de teste com devolutiva.
+- [x] Responsável confirmou no Windows: 001 já aplicada, 002 e 003 aplicadas; «Migrações concluídas.»
+- [ ] Validar no navegador o editor de faixas e o resultado de testes com devolutivas.
 - [ ] Cópia externa de backup e teste isolado de restauração ainda pendentes.
 
 ## Problema de comunicação local identificado em 2026-10-15
@@ -110,6 +111,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Validar CI v0.7.1. No Windows git pull, php bin/migrate.php (migrações 002/003 conforme estado local), reiniciar PHP/Vite. Editar devolutivas na área administrativa, concluir testes com notas diferentes e verificar a classificação. Não executar script de testes do CI na base real.
+Validar CI v0.7.1. Migrações locais concluídas; reiniciar PHP/Vite. Editar devolutivas na área administrativa, concluir testes com notas diferentes e verificar a classificação. Não executar script de testes do CI na base real.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.
