@@ -18,10 +18,9 @@
 - [x] Instruções de ambiente local e workflow GitHub Actions.
 - [x] Biblioteca firebase/php-jwt atualizada da versão 6 para ^7.2.1 para corrigir bloqueio por alerta de segurança.
 - [x] CI do commit 8612fb1: npm install/build e Composer install + PHP lint passaram.
-- [x] Testes de autenticação com credenciais fictícias adicionados ao CI (resultado da nova execução deve ser verificado).
+- [x] Testes de autenticação com credenciais fictícias executados com sucesso no CI em 27ad41d (login correto, credenciais inválidas e token adulterado).
 
 ## Validação pendente
-- [ ] Conferir nova execução de CI com smoke test administrativo.
 - [ ] Executar composer install e npm install no Windows do responsável.
 - [ ] Executar navegação e login React → Slim, com credenciais reais apenas em api/.env local.
 - [ ] Conferir erros de autenticação, desconexão e saída no navegador.
