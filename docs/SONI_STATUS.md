@@ -3,7 +3,7 @@
 **Data:** 2026-10-15  
 **Versão:** 0.9.0 (Biblioteca de Vídeos YouTube/MP4/WebM)  
 **Etapa:** 6 — Biblioteca de Vídeos  
-**Estado:** v0.8.0 com migração 004 aplicada no Windows, uso visual de PDF/PNG ainda pendente de confirmação. Repositório local/remoto sincronizado no commit 0841ebe. v0.9.0 Biblioteca de Vídeos implementada e aprovada no GitHub Actions 38817558203 (React, PHP, MariaDB 11.4 e testes HTTP); aguardando migração 005 e validação funcional no Windows.
+**Estado:** v0.8.0 com migração 004 aplicada no Windows, uso visual de PDF/PNG ainda pendente de confirmação. Repositório local/remoto sincronizado no commit 0841ebe. v0.9.0 Biblioteca de Vídeos implementada e aprovada no GitHub Actions 38817558203 (React, PHP, MariaDB 11.4 e testes HTTP); migração 005 concluída no Windows segundo retorno do responsável; validação funcional do player e editor ainda pendente.
 
 ## Entregue no código
 - [x] Repositório oficial e Paleta 1 Harmonia Técnica.
@@ -109,7 +109,8 @@
 - [x] Teste HTTP integrado ao CI verifica autorização JWT, fontes YouTube falsas, publicação, busca, ocultação, MP4 privado e publicado.
 - [x] CI 38817558203 passou em React, PHP e MariaDB 11.4: migração 005, JWT, link YouTube, vídeo MP4 privado/publicado, pesquisa, ocultação e exclusão segura.
 - [x] Correção da inconsistência `composer.lock` x `composer.json` após sincronização local/remota.
-- [ ] Instalação no Windows (migração 005), validação do player e do novo logotipo.
+- [x] Responsável confirmou migração 005_videos.sql aplicada no Windows: 001–004 já aplicadas; «Migrações concluídas.»
+- [ ] Validar no navegador cadastro/preview/publicação de YouTube e MP4/WebM, pesquisa e player; confirmar logotipo.
 - [ ] Limites de upload PHP para 32 MiB, vídeos maiores via armazenamento externo, proteção de abuso e rate limiting antes da produção.
 
 ## Problema de comunicação local identificado em 2026-10-15
@@ -141,6 +142,6 @@
 - [ ] Testes completos, backup e deploy.
 
 ## Próxima ação
-Confirmar CI v0.9.0; no Windows git pull e php bin/migrate.php para aplicar 005_videos.sql, reiniciar PHP/Vite. Em /admin/videos cadastrar YouTube em rascunho, conferir prévia, publicar, testar busca/player em /videos e repetir com MP4/WebM pequeno. A migração 004 foi confirmada no Windows; uso visual da biblioteca de documentos ainda não foi informado.
+CI aprovado e migração 005 confirmada no Windows. Reiniciar PHP/Vite. Em /admin/videos cadastrar YouTube em rascunho, conferir prévia, publicar, testar busca/player em /videos e repetir com MP4/WebM pequeno. A migração 004 foi confirmada no Windows; uso visual da biblioteca de documentos ainda não foi informado.
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

@@ -11,7 +11,7 @@
 - Teste integrado CI cobre Youtube, JWT, rascunho/publicação, pesquisa, arquivo MP4, exclusão de cadastro e acesso a mídia.
 - **CI aprovado**: GitHub Actions 38817558203, React, PHP e migração/testes HTTP no MariaDB 11.4.
 - Ajuste no `composer.lock` após merge local para restabelecer consistência com `composer.json` e extensão `ext-pdo_mysql`.
-- **Pendentes**: execução local migração 005, teste no navegador, vídeos >32 MiB via storage externo, segurança pré-produção.
+- **Migração local concluída**: responsável confirmou 005_videos.sql aplicada no Windows, mantendo 001–004 aplicadas. **Pendentes**: teste do player no navegador, vídeos >32 MiB via storage externo, segurança pré-produção.
 
 
 

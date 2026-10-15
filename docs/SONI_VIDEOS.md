@@ -40,3 +40,7 @@ Admin JWT:
 ## Teste automatizado
 - A v0.9.0 passou GitHub Actions 38817558203 com PHP, React e MariaDB 11.4.
 - Não foi executada migração nem teste visual no computador do usuário nesta etapa.
+
+## Confirmação de instalação local
+- Responsável executou `php bin/migrate.php`: 001–004 já aplicadas, 005_videos.sql aplicada, «Migrações concluídas».
+- Ainda aguardando confirmação de cadastro/reprodução YouTube e MP4/WebM via navegador no Windows.
