@@ -58,6 +58,7 @@ jobs:
           php -l src/QuizFeedback.php
           php -l src/DocumentService.php
           php -l src/VideoService.php
+          php -l tests/cors-http-smoke.php
           php -l tests/videos-http-smoke.php
           php -l tests/documents-http-smoke.php
           php -l tests/quiz-feedback-http-smoke.php
@@ -150,6 +151,7 @@ jobs:
           php tests/quiz-feedback-http-smoke.php
           php tests/documents-http-smoke.php
           php tests/videos-http-smoke.php
+          php tests/cors-http-smoke.php
       - name: Testar backup íntegro e quarentena segura
         working-directory: api
         run: |

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiRequest, apiUploadFile, apiMediaBlob } from './lib/api.js';
+import { apiRequest, apiUploadFile, apiMediaBlob, apiMediaUrl } from './lib/api.js';
 import './site-editor.css';
 
 const blockTypes = [
@@ -66,11 +66,11 @@ function BlockPreview({ block, media, token }) {
       <small>{block.subtitle}</small>
       <h3>{block.title || 'Título do bloco'}</h3>
       <p>{block.body_text || 'O texto aparecerá aqui.'}</p>
-      {kind === 'IMAGE' && mediaUrl && <img src={mediaUrl} alt={block.alt_text || ''} />}
-      {kind === 'AUDIO' && mediaUrl && <audio controls preload="none" src={mediaUrl}/>}
+      {kind === 'IMAGE' && mediaUrl && <img src={apiMediaUrl(mediaUrl)} alt={block.alt_text || ''} />}
+      {kind === 'AUDIO' && mediaUrl && <audio controls preload="none" src={apiMediaUrl(mediaUrl)}/>}
       {kind === 'VIDEO' && mediaUrl && (mediaUrl.startsWith('blob:') || mediaUrl.startsWith('/api/') || /\.(mp4|webm)(\?|#|$)/i.test(mediaUrl)
-        ? <video controls preload="metadata" src={mediaUrl}/>
-        : <p>Vídeo externo: <a href={mediaUrl} target="_blank" rel="noopener noreferrer">Abrir vídeo ↗</a></p>)}
+        ? <video controls preload="metadata" src={apiMediaUrl(mediaUrl)}/>
+        : <p>Vídeo externo: <a href={apiMediaUrl(mediaUrl)} target="_blank" rel="noopener noreferrer">Abrir vídeo ↗</a></p>)}
       {error && <p role="alert">{error}</p>}
       {block.button_label && <span className="sitePreviewButton">{block.button_label}</span>}
     </div>

@@ -9,6 +9,12 @@ export class ApiError extends Error {
   }
 }
 
+// Resolve mídias da API no mesmo host no desenvolvimento ou no subdomínio de produção.
+export function apiMediaUrl(path) {
+  if (typeof path !== 'string' || !path.startsWith('/api/')) return path;
+  return apiBase + path.slice('/api'.length);
+}
+
 export async function apiRequest(path, { method = 'GET', body, token, signal } = {}) {
   const endpoint = path.startsWith('/') ? path : '/' + path;
   const headers = { Accept: 'application/json' };

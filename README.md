@@ -87,3 +87,7 @@ PDFs e imagens PNG com categorias, pesquisa e visualização pública em `/docum
 ### Biblioteca de Vídeos — v0.9.0
 
 Área pública em `/videos`, painel JWT em `/admin/videos`. Vídeos via link HTTPS YouTube ou upload MP4/WebM até 32 MiB, com categorias, busca, rascunho/publicação e player. Execute `php bin/migrate.php` na pasta `api` após atualizar o repositório para aplicar `005_videos.sql`. Consulte `docs/SONI_VIDEOS.md`.
+
+## Arquitetura de deploy v1.0.0 em preparação
+
+Frontend: `https://somdaigreja.com.br` e `https://www.somdaigreja.com.br`, arquivos em `/var/www/somdaigreja.com.br/frontend` e DocumentRoot `frontend/dist`. API: `https://api.somdaigreja.com.br`, arquivos em `/var/www/somdaigreja.com.br/api`, DocumentRoot `api/public`. O build usa `VITE_API_BASE_URL=https://api.somdaigreja.com.br/api`; a API configura `FRONTEND_URL` e `FRONTEND_ALT_URL`. Veja [guia de deploy](docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md). **Não implantar sem revisão dos diretórios antigos, backup e segurança de produção.**

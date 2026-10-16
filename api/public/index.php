@@ -27,11 +27,17 @@ $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 $app->addRoutingMiddleware();
 
-$allowedOrigin = (string) ($_ENV['FRONTEND_URL'] ?? 'http://localhost:5173');
-$app->add(static function (Request $request, RequestHandlerInterface $handler) use ($allowedOrigin): ResponseInterface {
+$allowedOrigins = array_values(array_filter([
+    rtrim((string) ($_ENV['FRONTEND_URL'] ?? 'http://localhost:5173'), '/'),
+    rtrim((string) ($_ENV['FRONTEND_ALT_URL'] ?? ''), '/'),
+], static fn (string $url): bool => $url !== ''));
+$app->add(static function (Request $request, RequestHandlerInterface $handler) use ($allowedOrigins): ResponseInterface {
     $response = strtoupper($request->getMethod()) === 'OPTIONS' ? new Response() : $handler->handle($request);
+    $origin = $request->getHeaderLine('Origin');
+    if ($origin !== '' && in_array($origin, $allowedOrigins, true)) {
+        $response = $response->withHeader('Access-Control-Allow-Origin', $origin);
+    }
     $response = $response
-        ->withHeader('Access-Control-Allow-Origin', $allowedOrigin)
         ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS')
         ->withHeader('Vary', 'Origin')

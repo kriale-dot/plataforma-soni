@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiRequest } from './lib/api.js';
+import { apiRequest, apiMediaUrl } from './lib/api.js';
 import soniLogo from './assets/soni-logo.png';
 import './videos.css';
 
@@ -20,7 +20,7 @@ function VideoPlayer({ video }) {
       referrerPolicy="strict-origin-when-cross-origin" allowFullScreen/>;
   }
   return <video className="videoPlayer" controls preload="metadata" playsInline
-    src={'/api/site/media/' + video.media_id}>Seu navegador não suporta reprodução de vídeo.</video>;
+    src={apiMediaUrl('/api/site/media/' + video.media_id)}>Seu navegador não suporta reprodução de vídeo.</video>;
 }
 
 function Catalog() {

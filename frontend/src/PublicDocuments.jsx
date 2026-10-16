@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiRequest } from './lib/api.js';
+import { apiRequest, apiMediaUrl } from './lib/api.js';
 import './documents.css';
 
 function DocHeader() {
@@ -85,7 +85,7 @@ function Detail({ id }) {
       });
     return () => abort.abort();
   }, [id]);
-  const mediaUrl = document ? '/api/site/media/' + Number(document.media_id) : '';
+  const mediaUrl = document ? apiMediaUrl('/api/site/media/' + Number(document.media_id)) : '';
   return <div className="docPublic">
     <DocHeader/>
     <main className="layout docDetail">

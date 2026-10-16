@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { apiRequest } from './lib/api.js';
+import { apiRequest, apiMediaUrl } from './lib/api.js';
 import soniLogo from './assets/soni-logo.png';
 
 const symbols = { TESTES: '◉', DOCUMENTOS: '▤', VIDEOS: '▶' };
@@ -77,7 +77,7 @@ function SiteBlock({ block }) {
             <p>{block.body_text}</p>
             {url && <div className="heroButtons"><a className="buttonAmber" href={url}>{block.button_label || 'Saiba mais'} <span aria-hidden="true">→</span></a></div>}
           </div>
-          {block.media_url ? <img className="siteHeroImage" src={block.media_url} alt={block.alt_text || ''}/> : <MixerPreview/>}
+          {block.media_url ? <img className="siteHeroImage" src={apiMediaUrl(block.media_url)} alt={block.alt_text || ''}/> : <MixerPreview/>}
         </div>
       </section>
     );
@@ -91,12 +91,12 @@ function SiteBlock({ block }) {
   if (block.type === 'IMAGEM' || block.type === 'TEXTO_IMAGEM') {
     return <section className="layout siteContentBlock siteImageText">
       <div><span className="overline teal">{block.subtitle}</span><h2>{block.title}</h2><p>{block.body_text}</p></div>
-      {image && <img src={block.media_url} alt={block.alt_text || ''} loading="lazy"/>}
+      {image && <img src={apiMediaUrl(block.media_url)} alt={block.alt_text || ''} loading="lazy"/>}
     </section>;
   }
   if (block.type === 'VIDEO' || block.type === 'AUDIO') {
     return <section className="layout siteContentBlock"><span className="overline teal">{block.subtitle}</span><h2>{block.title}</h2><p>{block.body_text}</p>
-      {block.media_url && (block.type === 'VIDEO' ? <YoutubeFrame url={block.media_url} title={block.title}/> : <audio controls src={block.media_url} preload="none">Seu navegador não suporta áudio HTML5.</audio>)}
+      {block.media_url && (block.type === 'VIDEO' ? <YoutubeFrame url={apiMediaUrl(block.media_url)} title={block.title}/> : <audio controls src={apiMediaUrl(block.media_url)} preload="none">Seu navegador não suporta áudio HTML5.</audio>)}
     </section>;
   }
   if (block.type === 'CTA' || block.type === 'LINK') {

@@ -7,7 +7,7 @@
 
 - Usaremos o Droplet Ubuntu 24.04 LTS **já existente** da DigitalOcean.
 - O Droplet é compartilhado com outras aplicações. Não sobrescrever arquivos, VirtualHosts, certificados, bancos nem pastas existentes.
-- Nome do domínio/subdomínio SONI e topologia final: **a definir depois do diagnóstico**.
+- Domínios e diretórios planejados: `somdaigreja.com.br`/`www.somdaigreja.com.br` (frontend) e `api.somdaigreja.com.br` (API); conforme topologia definida abaixo.
 - O MVP v0.9.0 está congelado; são permitidas apenas alterações necessárias à produção (segurança, deploy, correções, operações e testes).
 
 ## Etapa 1 — Diagnóstico seguro (somente leitura)
@@ -39,7 +39,7 @@ Os comandos coletam informação do sistema e **não devem alterar** pacotes, co
 - Não foram informadas saídas de `apache2ctl -M`, `free -h` e checagem do serviço banco/PHP-FPM.
 - Não alterar os VirtualHosts/certificados existentes, não executar `apt install` nesta fase e não disponibilizar dados sensíveis do servidor.
 
-**Próxima decisão:** escolher um subdomínio exclusivo para SONI. Sugestão de organização, sem configurar ainda: `soni.somdaigreja.com.br`. A escolha deve ser confirmada pelo responsável.
+**Decisão posterior:** o responsável definiu `somdaigreja.com.br` e `www.somdaigreja.com.br` para o frontend e `api.somdaigreja.com.br` para o backend.
 
 **Consultas adicionais seguras, quando solicitado:**
 
@@ -52,6 +52,64 @@ systemctl list-units 'php*-fpm.service' --type=service --all --no-pager
 ```
 
 Esses comandos apenas leem informações. O estado `inactive` ou `unknown` não autoriza instalar nem reiniciar serviços sem verificar a configuração.
+
+
+## Topologia definida pelo responsável (2026-10-16)
+
+**Aprovada para planejamento; ainda não implantada.** Utilizar o mesmo Droplet Ubuntu existente e domínios já controlados:
+
+| Função | Endereço | Diretório no Ubuntu | DocumentRoot efetivo |
+| --- | --- | --- | --- |
+| React (site e administração) | `https://somdaigreja.com.br` | `/var/www/somdaigreja.com.br/frontend` | `/var/www/somdaigreja.com.br/frontend/dist` |
+| React (alias) | `https://www.somdaigreja.com.br` | mesma pasta do frontend | mesmo `dist` |
+| PHP/Slim (API) | `https://api.somdaigreja.com.br` | `/var/www/somdaigreja.com.br/api` | `/var/www/somdaigreja.com.br/api/public` |
+
+**Importante:** usar barras normais `/` nos caminhos Linux. Não publicar arquivos-fonte React, `.env`, `vendor`, `storage` ou backups no DocumentRoot.
+
+As versões antigas de `somdaigreja.com.br` e `api.somdaigreja.com.br` já tiveram VirtualHosts HTTP/HTTPS desativados pelo responsável, mas arquivos, certificados e DNS continuam preservados. `admin.somdaigreja.com.br` permanecerá desativado; o painel novo ficará em `https://somdaigreja.com.br/admin`. O diretório antigo `/var/www/atendente-ia` **não deve ser removido**, pois outro VirtualHost pode compartilhá-lo.
+
+### Ajuste do frontend para API em outro domínio
+
+O build de produção deverá receber a variável:
+
+```dotenv
+VITE_API_BASE_URL=https://api.somdaigreja.com.br/api
+```
+
+Aplicar antes de `npm run build` (variáveis Vite são incorporadas no artefato estático). O código da SONI agora transforma referências `/api/site/media/...` retornadas pelo CMS e usadas em quizzes, vídeos e documentos em URLs da API de produção; em desenvolvimento com Vite mantém caminhos relativos.
+
+Configuração privada da API (não versionar `.env`):
+
+```dotenv
+APP_ENV=production
+FRONTEND_URL=https://somdaigreja.com.br
+FRONTEND_ALT_URL=https://www.somdaigreja.com.br
+```
+
+A API autoriza CORS apenas para a origem `Origin` que corresponda exatamente a um desses valores (ou ao frontend local em desenvolvimento). Requer configuração segura de ADMIN_EMAIL, ADMIN_PASSWORD_HASH, JWT_SECRET e DB_*; nunca copiar as credenciais da instalação local por mensagens ou GitHub.
+
+**Roteamento:** o frontend precisa entregar `index.html` para `/admin`, `/testes`, `/documentos`, `/videos` e subrotas, mas não capturar endpoints da API. No subdomínio API o Apache deve encaminhar `/api/*` ao Slim `public/index.php` por configuração de rewrite/fallback testada, com PHP-FPM/mod_php conforme modo real constatado. As configurações de Apache/SSL serão preparadas depois de conhecer os módulos e as pastas atuais. Não sobrescrever nem reabilitar cegamente os antigos VirtualHosts.
+
+### Etapa imediatamente seguinte: verificar as pastas sem alterar dados
+
+```bash
+for p in /var/www/somdaigreja.com.br /var/www/somdaigreja.com.br/frontend /var/www/somdaigreja.com.br/api; do
+  if [ -e "$p" ]; then
+    sudo ls -ld "$p"
+    sudo find "$p" -mindepth 1 -maxdepth 1 -printf '  %f\n' | head -35
+  else
+    echo "Ainda não existe: $p"
+  fi
+done
+
+sudo apache2ctl -M | grep -E 'rewrite_module|dir_module|ssl_module|headers_module|proxy_fcgi_module|php_module'
+systemctl list-units 'php*-fpm.service' --type=service --all --no-pager
+sudo systemctl is-active mysql
+free -h
+```
+
+Esses comandos são **somente leitura**. Não executar `rm`, `mv`, `git clone`, `certbot`, `a2ensite`, `chown -R` ou migrations no Droplet até identificar os arquivos antigos e preparar um backup.
+
 
 ## Etapa 2 — Planejamento (após inspecionar diagnóstico)
 

@@ -80,3 +80,11 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - O servidor hospeda outros serviços: isolar SONI por VirtualHost e banco, sem modificar outras aplicações; nenhum deploy foi executado ainda.
 - Domínio, Apache, PHP-FPM, banco, DNS, TLS, espaço e atualizações precisam ser inspecionados; primeiro passo é diagnóstico somente leitura.
 - Guia: docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md.
+
+## Implantação escolhida — 2026-10-16
+- Frontend React: /var/www/somdaigreja.com.br/frontend; domínio somdaigreja.com.br e www; DocumentRoot de produção frontend/dist.
+- API Slim: /var/www/somdaigreja.com.br/api; domínio api.somdaigreja.com.br; DocumentRoot api/public.
+- admin.somdaigreja.com.br será mantido desativado; painel /admin do frontend.
+- VirtualHosts antigos desses domínios foram desativados. Nenhum diretório, banco, certificado ou DNS foi removido; preservar /var/www/atendente-ia por depender de outro domínio.
+- Dev usar /api; produção VITE_API_BASE_URL=https://api.somdaigreja.com.br/api e API com FRONTEND_URL e FRONTEND_ALT_URL exatos.
+- Inspecionar pastas e configuração real Apache/PHP/banco antes de copiar arquivos.

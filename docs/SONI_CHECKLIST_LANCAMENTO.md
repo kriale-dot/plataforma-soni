@@ -10,8 +10,9 @@
 
 - [x] Servidor selecionado: Droplet DigitalOcean já existente, com Ubuntu 24.04 LTS, compartilhado com outras aplicações do responsável.
 - [ ] Completar diagnóstico dos serviços: Apache 2.4.58, PHP CLI 8.3.6, pdo_mysql/fileinfo e MySQL client 8.0.46 confirmados em 2026-10-16; faltam versão/estado do servidor SQL, PHP-FPM/mod_php, módulos Apache e RAM.
-- [ ] Confirmar subdomínio exclusivo para a SONI, sem registrar DNS antes do aceite (sugestão: soni.somdaigreja.com.br).
-- [ ] Projetar isolamento da SONI por VirtualHost, diretório e banco exclusivos, sem alterar sites e bancos já ativos.
+- [x] Endereços do deploy escolhidos: `https://somdaigreja.com.br` e `https://www.somdaigreja.com.br` (frontend), `https://api.somdaigreja.com.br` (API). DNS e TLS existentes precisam ser conferidos.
+- [x] Caminhos planejados: `/var/www/somdaigreja.com.br/frontend` (DocumentRoot `dist`) e `/var/www/somdaigreja.com.br/api` (DocumentRoot `public`), VirtualHosts separados. Banco e usuário exclusivos ainda a criar.
+- [ ] Inspecionar pastas desses caminhos, que podem conter arquivos antigos, antes de copiar dados. Fazer backup antes de substituições.
 - [ ] Verificar backups externos e plano de recuperação do Droplet antes da implantação.
 
 - [x] Partição raiz verificada: 96 GB total, 29 GB utilizados, 68 GB livres (31%).

@@ -10,7 +10,10 @@
 - [x] Responsável confirmou reutilizar o Droplet DigitalOcean com Ubuntu 24.04 LTS como destino da SONI.
 - [x] Diagnóstico parcial: Ubuntu 24.04.4, Apache 2.4.58, PHP CLI 8.3.6 + fileinfo/pdo_mysql, cliente MySQL 8.0.46, diversos VirtualHosts 80/443, disco com 68 GB livres.
 - [ ] Confirmar RAM, módulos Apache, modo PHP (PHP-FPM/mod_php), servidor SQL e disponibilidade do serviço; domínio exclusivo ainda não definido.
-- [ ] Nome de domínio/subdomínio, VirtualHost isolado e caminho final ainda não definidos.
+- [x] Layout de deploy escolhido: frontend em `/var/www/somdaigreja.com.br/frontend/dist` para raiz e www; API em `/var/www/somdaigreja.com.br/api/public` para `api.somdaigreja.com.br`. Painel integrado em `/admin`.
+- [x] Domínios anteriores `somdaigreja.com.br`, `api.somdaigreja.com.br` e `admin.somdaigreja.com.br` tiveram VirtualHosts desativados pelo responsável; arquivos/dados/DNS/certificados preservados.
+- [x] Ajuste de código para URLs de mídias em API cross-origin e lista estrita de origens frontend (`FRONTEND_URL`/`FRONTEND_ALT_URL`) implementado; CI pendente.
+- [ ] Inspecionar conteúdo de `/var/www/somdaigreja.com.br` e serviços PHP/banco antes de qualquer cópia/reativação.
 - [ ] Nenhuma migração, alteração de DNS, configuração do Apache ou instalação foi executada no servidor nesta etapa.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 
@@ -164,6 +167,6 @@
 **Novos módulos e melhorias opcionais:** adiados para pós-lançamento, conforme escopo congelado.
 
 ## Próxima ação
-Diagnóstico inicial do Droplet favorável (servidor compartilhado com vários VirtualHosts; disco 68 GB livres). Confirmar subdomínio da SONI; concluir inspeção dos módulos Apache/PHP-FPM/banco/RAM antes de planejar VirtualHost isolado, segurança, backup e homologação. **Não criar funcionalidades novas nesta fase.**
+Domínios e caminhos definidos. Executar inspeção somente leitura dos diretórios de destino, módulos Apache, serviço PHP-FPM e banco, e RAM; não sobrescrever os sites antigos. Validar CI do ajuste de URLs cross-domain, depois backups, VirtualHosts isolados, TLS, segurança e homologação. **Não criar funcionalidades novas nesta fase.**
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

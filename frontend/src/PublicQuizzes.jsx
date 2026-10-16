@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { apiRequest } from './lib/api.js';
+import { apiRequest, apiMediaUrl } from './lib/api.js';
 import './quiz.css';
 
 function QuizMedia({ imageId, audioId }) {
   return <div className="quizMedia">
-    {Number(imageId) > 0 && <img loading="lazy" src={'/api/site/media/' + Number(imageId)} alt="Imagem integrante da questão ou alternativa"/>}
-    {Number(audioId) > 0 && <audio controls preload="none" src={'/api/site/media/' + Number(audioId)}>Seu navegador não suporta áudio.</audio>}
+    {Number(imageId) > 0 && <img loading="lazy" src={apiMediaUrl('/api/site/media/' + Number(imageId))} alt="Imagem integrante da questão ou alternativa"/>}
+    {Number(audioId) > 0 && <audio controls preload="none" src={apiMediaUrl('/api/site/media/' + Number(audioId))}>Seu navegador não suporta áudio.</audio>}
   </div>;
 }
 
