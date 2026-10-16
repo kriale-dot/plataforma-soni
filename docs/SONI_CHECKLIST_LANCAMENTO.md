@@ -52,7 +52,7 @@
 **Evidência exigida:** resultados de testes de acesso negado, segurança de uploads, proteção de endpoints, HTTPS e rate limiting em produção.
 
 ### Fase C — Backup, restauração e atualização (P0)
-- [ ] Executar `php bin/backup.php` e validar o manifesto para a base real e todas as mídias.
+- [x] `php bin/backup.php` executado em produção: backup local verificado em 2026-10-16; SQL e mídias no diretório `20261016-110803-d28cea70`.
 - [ ] Manter cópia criptografada em outro dispositivo/local seguro, com retenção e periodicidade definidas; testar acesso à cópia.
 - [ ] Testar restauração **em banco e armazenamento isolados**, conferindo tabelas, arquivos, permissões e funcionamento de uma amostra de conteúdos. Nunca restaurar sobre a base de trabalho para fazer um ensaio.
 - [ ] Definir rotina de backup recorrente e alerta em caso de falha; conferir espaço livre.
