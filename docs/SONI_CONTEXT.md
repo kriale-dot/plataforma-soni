@@ -100,4 +100,4 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - A nova atividade solicitada é o **Teste de Ouvido 01 — Identificação de Frequências**, como conteúdo do módulo Quiz já existente, e não um novo subsistema.
 - Script PHP de importação gera WAVs de tons puros e 12 questões, insere mídia/questões/devolutivas e mantém **DRAFT por padrão**.
 - Nenhuma migração, modificação de servidor ou publicação ocorre ao incluir o código no GitHub. A importação deve ser executada conscientemente e validada antes de publicar.
-- Orientações e limitações: `docs/SONI_TESTE_OUVIDO_01.md`. Implementação em branch/PR para revisão; MVP 0.9.0 em produção permanece inalterado.
+- Orientações e limitações: `docs/SONI_TESTE_OUVIDO_01.md`. Código integrado à `main` após PR #1 e CI aprovado. Os bancos de dados não foram alterados e o MVP 0.9.0 em produção permanece inalterado.
