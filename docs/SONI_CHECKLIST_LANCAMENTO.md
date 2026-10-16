@@ -45,7 +45,7 @@
 - [ ] **Adiado por decisão do responsável em 2026-10-16:** implantar limite de tentativas no login administrativo e submissão pública de quizzes (`429`, janela, IP/proxy confiável e auditoria mínima). O adiamento não comprova segurança contra força bruta/abuso.
 - [ ] Revisar upload/download: MIME, assinatura de arquivos, extensão, tamanho no PHP/reverse proxy, locais graváveis, `nosniff`, permissões e autorização de rascunhos/arquivos ocultos.
 - [ ] Determinar política para arquivos PDF e vídeo de terceiros: origem confiável, varredura antivírus antes de publicar, retenção e remoção de conteúdo perigoso.
-- [ ] Validar senhas, permissões de diretórios, proteção de endpoints administrativos, inexistência de gabaritos antes da correção e bloqueio de dados privados.
+- [ ] Validar senhas, permissões de diretórios, proteção de todos os endpoints administrativos, inexistência de gabaritos antes da correção e bloqueio de dados privados. **Verificação parcial aprovada (2026-10-16):** 401 sem JWT em `/api/admin/site`, `/api/admin/videos` e `/api/admin/documents`.
 - [ ] Definir política de privacidade/termos de uso conforme informações efetivamente coletadas; validar logs para não gravar credenciais, JWT ou dados pessoais desnecessários.
 - [ ] Fazer revisão básica de dependências e vulnerabilidades; resolver achados bloqueadores.
 
