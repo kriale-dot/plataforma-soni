@@ -125,8 +125,13 @@ expectDoc($status === 200 && count($notFound['documents']) === 0, 'Filtro exclui
 expectDoc($status === 200 && (int) $detail['media_id'] === $pdfId &&
     $detail['mime_type'] === 'application/pdf', 'Documento publicado recuperável');
 
-[$status, $file] = docHttp('GET', '/site/media/' . $pdfId);
+[$status, $file, $pdfHeaders] = docHttp('GET', '/site/media/' . $pdfId);
 expectDoc($status === 200 && $file === $pdf, 'PDF publicado servido com bytes preservados');
+$pdfResponseHeaders = implode("\n", $pdfHeaders);
+expectDoc(str_contains(strtolower($pdfResponseHeaders), "content-security-policy: frame-ancestors 'self' http://localhost:5173"),
+    'PDF autoriza iframe do frontend por CSP frame-ancestors');
+expectDoc(!preg_match('/^X-Frame-Options:\s*SAMEORIGIN/im', $pdfResponseHeaders),
+    'PDF não bloqueia leitor embutido no frontend de outro subdomínio');
 
 [$status, $range] = docHttp('GET', '/site/media/' . $pdfId, null, null, null); // Requisitado completo novamente
 expectDoc($status === 200 && str_starts_with($range, '%PDF-'), 'PDF entregue como arquivo');

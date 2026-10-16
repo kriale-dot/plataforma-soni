@@ -16,7 +16,9 @@
 - [x] Responsável confirmou que `/var/www/somdaigreja.com.br` existe e está vazio e que `frontend` e `api` ainda não existem.
 - [x] Apache possui `dir_module`, `headers_module`, `php_module`, `rewrite_module`, `ssl_module`; PHP operando com mod_php (não apareceu serviço PHP-FPM).
 - [x] Serviço MySQL ativo; RAM total 7,8 GiB, disponível 4,2 GiB; sem swap configurada.
-- [ ] Clonar repositório público na pasta vazia, conferir versões de Composer/Node e preparar arquivos; nenhuma cópia/deploy no servidor confirmada ainda.
+- [x] Responsável clonou `main` em `/var/www/somdaigreja.com.br`, diretórios `frontend` e `api` presentes; Git limpo.
+- [x] Composer 2.10.1, Node 24.21.0 e npm 11.19.0 disponíveis. `composer install`, `npm ci` e build React sem mensagens de erro conforme relato do responsável; saída de `dist/index.html` ainda não enviada.
+- [ ] Verificar versão/ocupação do banco `plataforma_soni` e usuário `soni_app` antes de criá-los; não alterar esquemas de outras aplicações.
 - [ ] Nenhuma migração, alteração de DNS, configuração do Apache ou instalação foi executada no servidor nesta etapa.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 

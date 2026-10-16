@@ -150,3 +150,18 @@ ls -ld frontend api
 ```
 
 Ainda não executar `composer install`, `npm install`, migração, `a2ensite`, reiniciar Apache, configurar DNS ou alterar permissões até verificar o clone e as versões de ferramentas. Repositório versionado nunca deve conter `api/.env` nem `api/storage` de produção.
+
+## Preparação de dependências confirmada pelo responsável (2026-10-16)
+
+- `git clone` concluído em `/var/www/somdaigreja.com.br`, branch `main` limpa.
+- Composer 2.10.1, PHP 8.3.6, Node 24.21.0, npm 11.19.0 disponíveis.
+- Instalação Composer/npm e build de produção relatados sem erros; validação HTTP e configuração de banco ainda pendentes.
+- PDFs servidos em `api.somdaigreja.com.br` e visualizados em iframe no frontend cross-origin: usar `Content-Security-Policy: frame-ancestors` restrito aos frontends configurados, **não** `X-Frame-Options: SAMEORIGIN`, que bloquearia os PDFs. Implementação e teste em CI; atualizar checkout do Droplet por `git pull --ff-only` apenas depois de confirmar estado local.
+
+### Próxima checagem de banco (somente leitura)
+
+```bash
+sudo mysql -e "SELECT VERSION() AS versao_mysql; SELECT SCHEMA_NAME AS banco_existente FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'plataforma_soni'; SELECT User, Host FROM mysql.user WHERE User = 'soni_app';"
+```
+
+Se o banco ou usuário já existir, interromper e investigar antes de criar, alterar credenciais ou executar migrações. Não compartilhar segredos.

@@ -238,7 +238,21 @@ final class SiteMedia
             ->withHeader('X-Content-Type-Options', 'nosniff')
             ->withHeader('Cache-Control', $admin ? 'private, no-store' : 'public, max-age=300');
         if ($mime === 'application/pdf') {
-            $result = $result->withHeader('X-Frame-Options', 'SAMEORIGIN');
+            // O leitor de PDFs fica no frontend; a API reside em outro subdomínio.
+            // X-Frame-Options: SAMEORIGIN bloquearia o iframe do leitor.
+            $origins = [
+                rtrim((string) ($_ENV['FRONTEND_URL'] ?? 'http://localhost:5173'), '/'),
+                rtrim((string) ($_ENV['FRONTEND_ALT_URL'] ?? ''), '/'),
+            ];
+            $origins = array_values(array_unique(array_filter(
+                $origins,
+                static fn (string $origin): bool =>
+                    preg_match('~^https?://[a-zA-Z0-9.-]+(?::[0-9]{2,5})?$~D', $origin) === 1
+            )));
+            $result = $result->withHeader(
+                'Content-Security-Policy',
+                "frame-ancestors 'self'" . ($origins ? ' ' . implode(' ', $origins) : '')
+            );
         }
         if ($status === 206) {
             $result = $result->withHeader('Content-Range', "bytes {$start}-{$end}/{$size}");
