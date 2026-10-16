@@ -216,10 +216,10 @@
 ## Regra de continuidade
 Registrar data, versão, alterações, verificações, problemas e próxima etapa; nunca versionar segredos.
 
-## Conteúdo proposto pós-implantação — 2026-10-16 — Teste de Ouvido 01
+## Conteúdo integrado ao código — 2026-10-16 — Teste de Ouvido 01
 
-- Branch de trabalho com importador de conteúdo auditivo para o módulo de quizzes existente; **não representa release de produto**.
+- PR #1 aprovado no CI e integrado à `main` (commit 945eb9e), com importador de conteúdo auditivo para o módulo de quizzes existente; **não representa release de produto**.
 - 12 perguntas e 11 tons WAV (grave, médio, agudo, comparações), correção e devolutivas do backend existente.
 - Sem alteração de schema ou rota; criação do teste como rascunho até revisão pelo administrador.
-- Workflow de CI estendido para validar sintaxe PHP, importação, contagem de mídias e bloqueio de duplicação.
-- Pendente mesclagem, testes no computador do responsável e publicação manual; **MVP implantado continua na versão 0.9.0**.
+- Workflow de CI aprovado na execução de PR 38898592161: frontend, PHP, MariaDB, importação, contagem de mídias WAV e bloqueio de duplicação.
+- Pendente importação no computador do responsável, teste auditivo e publicação manual; **MVP implantado continua na versão 0.9.0**.
