@@ -213,3 +213,11 @@
 Domínios e caminhos definidos. Executar inspeção somente leitura dos diretórios de destino, módulos Apache, serviço PHP-FPM e banco, e RAM; não sobrescrever os sites antigos. Validar CI do ajuste de URLs cross-domain, depois backups, VirtualHosts isolados, TLS, segurança e homologação. **Não criar funcionalidades novas nesta fase.**
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.
+
+## Implementação proposta — Teste de Ouvido 01 (2026-10-16)
+
+- **Em branch, ainda não implantada:** `feature/teste-ouvido-01-frequencias`. Não contar como funcionalidade já publicada.
+- Criado importador CLI para 12 questões de identificação/comparação de frequência com 11 áudios WAV de dois segundos, 5 devolutivas e rascunho por padrão.
+- Reutiliza quizzes, JWT administrativo, arquivos de mídia privados, correção e tentativas armazenadas já existentes. Sem alterações de banco ou frontend.
+- Verificações automatizadas adicionadas ao CI; homologação depende de execução bem-sucedida no GitHub Actions e teste real do usuário com fones no ambiente local.
+- Próximos passos: revisar/mesclar PR, executar importação em ambiente local, validar reprodução/correção/devolutivas, e só então decidir a publicação em produção.

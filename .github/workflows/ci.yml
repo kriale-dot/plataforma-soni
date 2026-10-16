@@ -65,6 +65,8 @@ jobs:
           php -l tests/quiz-http-smoke.php
           php -l bin/backup.php
           php -l bin/media-audit.php
+          php -l bin/seed-ear-frequency-01.php
+          php -l tests/ear-frequency-smoke.php
           php -l tests/maintenance-smoke.php
           php -r 'require "vendor/autoload.php"; if (!class_exists("Soni\\SiteMaintenance")) exit(1);'
       - name: Testar autenticação
@@ -157,3 +159,12 @@ jobs:
         run: |
           php tests/maintenance-smoke.php
           php bin/media-audit.php
+      - name: Validar Teste de Ouvido 01 no banco de CI
+        working-directory: api
+        run: |
+          php bin/seed-ear-frequency-01.php
+          php tests/ear-frequency-smoke.php
+          if php bin/seed-ear-frequency-01.php; then
+            echo 'ERRO: o importador duplicou o teste'
+            exit 1
+          fi
