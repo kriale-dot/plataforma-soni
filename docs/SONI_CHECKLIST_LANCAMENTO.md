@@ -67,6 +67,7 @@
 - [ ] Criar e completar teste com resultados diferentes, conferindo pontuação/devolutiva e privacidade do gabarito.
 - [ ] Testar PDF e PNG: upload, prévia privada, pesquisa, publicação, visualização, ocultação e rejeição de arquivo inválido.
 - [ ] Testar vídeo YouTube e MP4/WebM: criação, prévia, publicação, player, busca, ocultação e retorno `404` para mídia não publicada.
+- [x] Smoke HTTP por HTTPS das cinco rotas públicas frontend e cinco da API; todas responderam 200 conforme relato do responsável em 2026-10-16.
 - [ ] Verificar API e frontend por HTTPS no domínio real, inclusive celular, diferentes navegadores, mensagens de erro e formulários acessíveis.
 - [ ] Testar perda e recuperação controlada da conexão do banco, limites de upload e interrupções do servidor.
 - [ ] Confirmar integridade de páginas/menus e do logotipo SONI em site e módulos.
