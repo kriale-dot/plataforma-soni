@@ -20,3 +20,12 @@ Atualizar status e histórico a cada etapa; não marcar funcionalidades como tes
 
 ## Regra do pós-MVP
 Funcionalidades e otimizações não bloqueadoras (novos perfis, certificados, gamificação, relatórios avançados, paginação avançada e storage para vídeos maiores) não entram na v1.0.0, salvo decisão explícita após os testes do piloto. Qualquer correção aceita no MVP deve ser verificada pelo CI e registrada no histórico.
+
+## Próxima entrega de conteúdo — Teste de Ouvido 01
+
+- [x] Conteúdo e gerador CLI de áudios incluídos em branch isolada (12 questões, 11 sons, rascunho).
+- [x] Teste automatizado de estrutura e de WAV incluído no workflow de PR.
+- [ ] Aguardar CI verde, revisão e integração do PR.
+- [ ] Importar no banco local e conferir todos os players/alternativas por ouvido.
+- [ ] Aprovar conteúdo e publicar o teste em produção, somente após validação do responsável.
+- A entrega reutiliza o motor de quizzes do MVP; não substitui correções P0 de segurança pendentes.
