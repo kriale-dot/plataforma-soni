@@ -2,18 +2,20 @@
 
 **Referência:** MVP v0.9.0 congelado em `SONI_MVP_ESCOPO.md`.
 **Meta:** tornar a primeira versão utilizável com segurança, backup restaurável e monitoramento em um domínio HTTPS.
-**Situação inicial:** P0 não comprovados no servidor de produção. Nenhuma implantação pública foi confirmada.
+**Situação atual (2026-10-16):** frontend e API acessíveis via HTTPS, conforme testes do responsável, mas P0 de segurança, armazenamento, backup, homologação e monitoração não concluídos; v1.0.0 ainda não autorizada.
 
 > **Regra de avanço:** marcar uma caixa apenas depois de executar a verificação no ambiente-alvo e guardar evidência (data, comando sem segredos, resultado, URL de CI ou anotação de teste). Não guardar senhas, tokens, dumps, arquivos de usuários ou `.env` no repositório.
 
 ## Decisão de infraestrutura — confirmada em 2026-10-16
 
 - [x] Servidor selecionado: Droplet DigitalOcean já existente, com Ubuntu 24.04 LTS, compartilhado com outras aplicações do responsável.
-- [ ] Completar diagnóstico dos serviços: Apache 2.4.58, PHP CLI 8.3.6, pdo_mysql/fileinfo e MySQL client 8.0.46 confirmados em 2026-10-16; faltam versão/estado do servidor SQL, PHP-FPM/mod_php, módulos Apache e RAM.
+- [x] Diagnóstico concluído: Apache 2.4.58/mod_php, PHP 8.3.6 (pdo_mysql/fileinfo), MySQL 8.0.46 ativo, RAM 7,8 GiB e 4,2 GiB disponíveis.
 - [x] Endereços do deploy escolhidos: `https://somdaigreja.com.br` e `https://www.somdaigreja.com.br` (frontend), `https://api.somdaigreja.com.br` (API). DNS e TLS existentes precisam ser conferidos.
-- [x] Caminhos planejados: `/var/www/somdaigreja.com.br/frontend` (DocumentRoot `dist`) e `/var/www/somdaigreja.com.br/api` (DocumentRoot `public`), VirtualHosts separados. Banco e usuário exclusivos ainda a criar.
+- [x] Caminhos implantados: frontend em `frontend/dist`, API em `api/public`, VirtualHosts dedicados com SSL existente e MySQL `plataforma_soni` usuário `soni_app` restrito ao banco.
 - [x] Inspeção confirmou diretório base existente e vazio, sem `frontend` nem `api`, em 2026-10-16; não será necessário substituir arquivos anteriores nesta pasta.
-- [ ] Clonar código na pasta base e validar instalação de dependências, sem reativar VirtualHosts antes da configuração e dos backups.
+- [x] Git clonado, dependências PHP/Node instaladas, build React realizado; migrações 001–005 relatadas como corretas pelo responsável.
+- [x] VirtualHosts HTTPS ativados e checagens de frontend/API aprovadas, sem concluir homologação funcional e segurança.
+- [ ] Confirmar permissão de escrita segura para mídias do Apache, login administrativo, testes HTTP de arquivos PDF/PNG e vídeos e limites de upload.
 - [ ] Verificar backups externos e plano de recuperação do Droplet antes da implantação.
 
 - [x] Partição raiz verificada: 96 GB total, 29 GB utilizados, 68 GB livres (31%).
@@ -95,4 +97,4 @@ Paginação avançada, contas para alunos, certificados, relatórios sofisticado
 | Lançamento 1.0.0 | **Não autorizado** | Evidência de todos os P0 e decisão GO |
 | Piloto | **Não iniciado** | Primeiros usuários e formulário de retorno |
 
-**Próxima ação prática recomendada:** escolher o ambiente/servidor onde a SONI será implantada e preparar o inventário de configuração, sem colocar dados reais em ambiente não validado.
+**Próxima ação prática recomendada:** verificar permissões do `.env` e `api/storage` para `www-data`, testar login e publicação/ocultação de mídias, corrigir rate limiting e segurança, implementar backup fora do Droplet com restauração isolada e monitorar antes do aceite v1.0.0.

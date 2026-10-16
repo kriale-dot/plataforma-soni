@@ -3,23 +3,27 @@
 **Data:** 2026-10-16  
 **Versão:** 0.9.0 — MVP funcional congelado (próxima meta: 1.0.0)  
 **Etapa:** 7/8 — Preparação para produção, segurança e implantação  
-**Estado:** MVP v0.9.0 aprovado pelo responsável em 2026-10-15 após confirmação de testes locais; CI React/PHP/MariaDB aprovado (38817558203). Migrações 001–005 aplicadas no Windows. **Ainda não liberado para produção:** faltam checklist P0, cópia externa e restauração de backup, HTTPS, limites de abuso, homologação e monitoramento.
+**Estado:** MVP v0.9.0 aprovado pelo responsável em 2026-10-15 após confirmação de testes locais; CI React/PHP/MariaDB aprovado (38817558203). Migrações 001–005 aplicadas no Windows. **Implantação técnica inicial disponível via HTTPS (confirmação do responsável em 2026-10-16), mas lançamento v1.0.0 ainda NÃO autorizado:** faltam checklist P0, cópia externa e restauração de backup, limites de abuso, homologação e monitoramento.
 
 
 ## Preparação de produção — escolha do servidor (2026-10-16)
 - [x] Responsável confirmou reutilizar o Droplet DigitalOcean com Ubuntu 24.04 LTS como destino da SONI.
 - [x] Diagnóstico parcial: Ubuntu 24.04.4, Apache 2.4.58, PHP CLI 8.3.6 + fileinfo/pdo_mysql, cliente MySQL 8.0.46, diversos VirtualHosts 80/443, disco com 68 GB livres.
-- [ ] Confirmar RAM, módulos Apache, modo PHP (PHP-FPM/mod_php), servidor SQL e disponibilidade do serviço; domínio exclusivo ainda não definido.
+- [x] Confirmados RAM, módulos Apache e mod_php, MySQL 8.0.46 ativo e domínios finais.
 - [x] Layout de deploy escolhido: frontend em `/var/www/somdaigreja.com.br/frontend/dist` para raiz e www; API em `/var/www/somdaigreja.com.br/api/public` para `api.somdaigreja.com.br`. Painel integrado em `/admin`.
 - [x] Domínios anteriores `somdaigreja.com.br`, `api.somdaigreja.com.br` e `admin.somdaigreja.com.br` tiveram VirtualHosts desativados pelo responsável; arquivos/dados/DNS/certificados preservados.
-- [x] Ajuste de código para URLs de mídias em API cross-origin e lista estrita de origens frontend (`FRONTEND_URL`/`FRONTEND_ALT_URL`) implementado; CI pendente.
+- [x] Ajuste de código para URLs de mídias cross-origin, CORS e incorporação segura de PDF; CI React/PHP/MariaDB concluída com sucesso no commit `464831e`.
 - [x] Responsável confirmou que `/var/www/somdaigreja.com.br` existe e está vazio e que `frontend` e `api` ainda não existem.
 - [x] Apache possui `dir_module`, `headers_module`, `php_module`, `rewrite_module`, `ssl_module`; PHP operando com mod_php (não apareceu serviço PHP-FPM).
 - [x] Serviço MySQL ativo; RAM total 7,8 GiB, disponível 4,2 GiB; sem swap configurada.
 - [x] Responsável clonou `main` em `/var/www/somdaigreja.com.br`, diretórios `frontend` e `api` presentes; Git limpo.
 - [x] Composer 2.10.1, Node 24.21.0 e npm 11.19.0 disponíveis. `composer install`, `npm ci` e build React sem mensagens de erro conforme relato do responsável; saída de `dist/index.html` ainda não enviada.
-- [ ] Verificar versão/ocupação do banco `plataforma_soni` e usuário `soni_app` antes de criá-los; não alterar esquemas de outras aplicações.
-- [ ] Nenhuma migração, alteração de DNS, configuração do Apache ou instalação foi executada no servidor nesta etapa.
+- [x] MySQL 8.0.46, banco `plataforma_soni` inicialmente vazio, usuário `soni_app` com concessões restritas a esse banco; conexão por senha e API PDO confirmadas pelo responsável.
+- [x] Migrações 001–005 concluídas e consideradas corretas pelo responsável.
+- [x] VirtualHosts específicos frontend e API criados/habilitados, TLS existentes (frontend/raiz/www e API) e `apache2ctl configtest` = Syntax OK.
+- [x] Apache recarregado e quatro checagens HTTP aprovadas pelo responsável: frontend raiz, www e `/admin`, API `/api/health` e `/api/site` (descritos coletivamente como quatro verificações).
+- [ ] Verificar permissões `.env` e escrita de `api/storage/site_media` para `www-data`.
+- [ ] Testar login administrativo no navegador, uploads/leituras cross-origin, proteção das rotas e testes E2E. Não considerar v1.0.0 lançada até completar P0.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 
 ## Marco oficial — MVP v0.9.0 congelado (2026-10-15)

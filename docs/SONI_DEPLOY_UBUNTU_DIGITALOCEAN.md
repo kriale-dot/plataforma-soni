@@ -165,3 +165,13 @@ sudo mysql -e "SELECT VERSION() AS versao_mysql; SELECT SCHEMA_NAME AS banco_exi
 ```
 
 Se o banco ou usuário já existir, interromper e investigar antes de criar, alterar credenciais ou executar migrações. Não compartilhar segredos.
+
+## Verificação do Apache HTTPS — confirmação do responsável em 2026-10-16
+
+- Certificados Let's Encrypt reaproveitados e válidos para raiz + www (até 27/12/2026) e API (até 08/12/2026).
+- VirtualHosts frontend 80/443 e API 80/443 habilitados e `apache2ctl configtest` com `Syntax OK`.
+- Configuração HTTPS do frontend passou a servir `frontend/dist`, com `FallbackResource /index.html` para React SPA.
+- API HTTPS passou a servir `api/public`, com `FallbackResource /index.php` para Slim.
+- Responsável confirmou as quatro verificações HTTP de frontend e API corretas. Nenhum relatório completo de testes do painel, mídias ou segurança ainda.
+- **Próximo passo:** checar permissões de `api/.env` e `api/storage` para `www-data` e testar integração administrativa.
+- **Status:** infraestrutura base funcional, *não* declarar lançamento v1.0.0; P0 permanecem pendentes.
