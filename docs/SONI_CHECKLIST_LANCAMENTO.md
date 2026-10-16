@@ -53,7 +53,7 @@
 
 ### Fase C — Backup, restauração e atualização (P0)
 - [x] `php bin/backup.php` executado em produção: backup local verificado em 2026-10-16; SQL e mídias no diretório `20261016-110803-d28cea70`.
-- [ ] **Adiado temporariamente em 2026-10-16:** manter cópia criptografada fora do Droplet. Não considerar concluído, pois a cópia local não protege contra perda total do servidor.
+- [ ] **Não priorizado por decisão do responsável em 2026-10-16:** não configurar novos backups externos por ora, porque os arquivos-fonte já estão no GitHub/Google Drive. Isso não equivale a backup do banco MySQL em produção nem das mídias recebidas no Droplet. Documentar aceitação do risco antes do GO/NO-GO.
 - [ ] Testar restauração **em banco e armazenamento isolados**, conferindo tabelas, arquivos, permissões e funcionamento de uma amostra de conteúdos. Nunca restaurar sobre a base de trabalho para fazer um ensaio.
 - [ ] Definir rotina de backup recorrente e alerta em caso de falha; conferir espaço livre.
 - [ ] Documentar implantação e retorno à versão anterior, incluindo **compatibilidade do banco**; não desfazer migrations ou apagar dados por tentativa.
