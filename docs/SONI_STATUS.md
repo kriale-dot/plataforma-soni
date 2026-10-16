@@ -28,7 +28,7 @@
 - [x] Biblioteca de documentos PDF e PNG: responsável confirmou upload, visualização pública, publicação e ocultação funcionando.
 - [x] Biblioteca de vídeos YouTube/MP4-WebM validada pelo responsável: prévia privada, publicação, reprodução e ocultação aprovadas.
 - [x] Primeiro backup real da SONI gerado e verificado pelo script PHP em `api/storage/backups/20261016-110803-d28cea70` (confirmação do responsável em 2026-10-16).
-- [ ] Criar cópia criptografada e armazená-la fora do Droplet; confirmar integridade após transferência. Testar restauração isolada sem tocar no banco `plataforma_soni`.
+- [ ] **ADIADO por decisão do responsável em 2026-10-16:** cópia criptografada fora do Droplet e restauração isolada. Backup local verificado, mas não protege contra perda do Droplet; pendência bloqueante para aceite de lançamento público 1.0.0.
 - [ ] Testar proteção de rotas, rate limits, monitoramento e homologação E2E.
 - [x] Código de backup adaptado para localizar `mariadb-dump` ou `mysqldump` e não exigir permissão global `PROCESS` do MySQL 8 (CI pendente). Não considerar v1.0.0 lançada até completar P0.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
