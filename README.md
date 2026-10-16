@@ -19,7 +19,7 @@ O site público da SONI **não será estático**: o administrador poderá montar
 
 O MVP contém site institucional por blocos, administração JWT, testes interativos com pontuação/devolutivas, documentos PDF/PNG e vídeos do YouTube/MP4/WebM. O novo logotipo encontra-se em `frontend/src/assets/soni-logo.png`.
 
-**A v0.9.0 não está liberada para produção.** A primeira versão pública será **v1.0.0**, depois de executar os requisitos obrigatórios de segurança, deploy, backup externo, restauração, monitoramento e homologação.
+**MVP v0.9.0 implantado e acessível por HTTPS desde 2026-10-16.** O responsável encerrou o processo operacional de deploy nesta data, com os testes principais aprovados. **A release formal 1.0.0 ainda não foi homologada**: rate limiting, backup externo/restauração isolada, monitoramento, verificação E2E dos testes interativos e outros controles permanecem pendentes por decisão expressa. Ver [registro de encerramento](docs/SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md).
 
 - [Escopo oficial e política de congelamento](docs/SONI_MVP_ESCOPO.md)
 - [Checklist de lançamento da v1.0.0](docs/SONI_CHECKLIST_LANCAMENTO.md)
@@ -56,7 +56,7 @@ Endereços: http://localhost:5173, http://localhost:5173/admin e http://localhos
 - Não compartilhar nem versionar api/.env. Arquivo de exemplo api/.env.example não contém segredos.
 - O administrador usa hash da senha, não senha em texto puro.
 - JWT não é salvo em localStorage; atualizar a página encerra a sessão visual.
-- Antes da produção, implementar limitação de tentativas de login, configurações HTTPS/CORS, políticas de upload e monitoramento.
+- HTTPS/CORS e limites de upload foram configurados na implantação. **Ainda pendentes:** limitação de tentativas de login e de envio de quizzes, monitoramento e revisão de segurança completa. Não considerar a operação em HTTPS como evidência de conformidade integral.
 - Nunca revelar o gabarito dos testes antes da conclusão da tentativa.
 
 ## Documentação viva
@@ -88,6 +88,6 @@ PDFs e imagens PNG com categorias, pesquisa e visualização pública em `/docum
 
 Área pública em `/videos`, painel JWT em `/admin/videos`. Vídeos via link HTTPS YouTube ou upload MP4/WebM até 32 MiB, com categorias, busca, rascunho/publicação e player. Execute `php bin/migrate.php` na pasta `api` após atualizar o repositório para aplicar `005_videos.sql`. Consulte `docs/SONI_VIDEOS.md`.
 
-## Arquitetura de deploy v1.0.0 em preparação
+## Arquitetura de deploy do MVP 0.9.0 em operação
 
-Frontend: `https://somdaigreja.com.br` e `https://www.somdaigreja.com.br`, arquivos em `/var/www/somdaigreja.com.br/frontend` e DocumentRoot `frontend/dist`. API: `https://api.somdaigreja.com.br`, arquivos em `/var/www/somdaigreja.com.br/api`, DocumentRoot `api/public`. O build usa `VITE_API_BASE_URL=https://api.somdaigreja.com.br/api`; a API configura `FRONTEND_URL` e `FRONTEND_ALT_URL`. Veja [guia de deploy](docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md). **Não implantar sem revisão dos diretórios antigos, backup e segurança de produção.**
+Frontend: `https://somdaigreja.com.br` e `https://www.somdaigreja.com.br`, arquivos em `/var/www/somdaigreja.com.br/frontend` e DocumentRoot `frontend/dist`. API: `https://api.somdaigreja.com.br`, arquivos em `/var/www/somdaigreja.com.br/api`, DocumentRoot `api/public`. O build usa `VITE_API_BASE_URL=https://api.somdaigreja.com.br/api`; a API configura `FRONTEND_URL` e `FRONTEND_ALT_URL`. Veja [guia de deploy](docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md). **O deploy técnico já foi concluído.** O servidor compartilha recursos com outros projetos; não alterar VirtualHosts, bancos ou permissões globais sem diagnóstico. O encerramento operacional não elimina os riscos explicitados no [checklist de lançamento](docs/SONI_CHECKLIST_LANCAMENTO.md).

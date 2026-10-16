@@ -1,5 +1,7 @@
 # SONI — Etapas de desenvolvimento
 
+**Marco posterior (2026-10-16):** deploy operacional do MVP 0.9.0 encerrado a pedido do responsável, com site e API disponíveis em HTTPS. F7 (segurança/qualidade) conserva pendências; F8 (deploy técnico) está operacionalmente encerrada. O projeto aguarda reporte futuro de problemas; release formal 1.0.0 não homologada. Ver [registro de encerramento](SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md).
+
 **Decisão em 2026-10-15:** MVP v0.9.0 **APROVADO E CONGELADO**. Próxima meta: versão 1.0.0 em produção. Priorizar qualidade, segurança, restauração de backup e lançamento; novas funcionalidades fora do escopo ficam no pós-MVP. Referências: `SONI_MVP_ESCOPO.md` e `SONI_CHECKLIST_LANCAMENTO.md`.
 
 
@@ -12,7 +14,7 @@
 6. **F5 — Documentos [primeira versão implementada v0.8.0]:** upload autenticado de PDF/PNG, categorias, busca, visualização, publicação e rascunhos; CI 38807367006 aprovado, migração 004 concluída no Windows; pendentes validação visual e funcional da biblioteca. Pendentes paginação, revisão de segurança e recursos avançados.
 7. **F6 — Vídeos [MVP validado pelo responsável v0.9.0]:** YouTube (links HTTPS validados), MP4/WebM (até 32 MiB), categorias, pesquisa, publicação, visualização e painel admin. CI 38817558203 aprovado; migração 005 confirmada no Windows e testes funcionais gerais confirmados; evidências detalhadas serão reunidas em homologação. Pendentes paginação, arquivos maiores e recursos avançados.
 8. **F7 — Qualidade [em preparação / P0]:** rate limiting, testes E2E, segurança de uploads e login, acessibilidade essencial, backups externos, restauração isolada e monitoramento. Conferir checklist.
-9. **F8 — Deploy [em planejamento / P0]:** hospedagem, HTTPS, CORS, jobs e monitoramento.
+9. **F8 — Deploy [infraestrutura implantada; encerrado operacionalmente em 2026-10-16]:** hospedagem, HTTPS, CORS e rotas públicos funcionando; jobs/monitoramento e homologação formal ainda pendentes.
 
 Atualizar status e histórico a cada etapa; não marcar funcionalidades como testadas sem execução verificada.
 

@@ -1,8 +1,11 @@
 # SONI — Checklist de lançamento v1.0.0
 
+> **Situação consolidada em 2026-10-16:** o responsável solicitou o encerramento do deploy operacional do **MVP 0.9.0**, já acessível por HTTPS. Essa decisão não equivale ao aceite integral dos itens P0 nem à publicação da release **1.0.0**. Não exigir novas etapas na sessão encerrada; preservar pendências e riscos para correções futuras. Ver [encerramento do deploy](SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md).
+
+
 **Referência:** MVP v0.9.0 congelado em `SONI_MVP_ESCOPO.md`.
 **Meta:** tornar a primeira versão utilizável com segurança, backup restaurável e monitoramento em um domínio HTTPS.
-**Situação atual (2026-10-16):** frontend e API acessíveis via HTTPS, conforme testes do responsável, mas P0 de segurança, armazenamento, backup, homologação e monitoração não concluídos; v1.0.0 ainda não autorizada.
+**Situação atual (2026-10-16):** deploy operacional encerrado, frontend e API disponíveis em HTTPS conforme testes do responsável, uploads e bibliotecas aprovados. Permanecem pendências de segurança, cópia externa, restauração e homologação E2E; release v1.0.0 não autorizada.
 
 > **Regra de avanço:** marcar uma caixa apenas depois de executar a verificação no ambiente-alvo e guardar evidência (data, comando sem segredos, resultado, URL de CI ou anotação de teste). Não guardar senhas, tokens, dumps, arquivos de usuários ou `.env` no repositório.
 
@@ -97,9 +100,10 @@ Paginação avançada, contas para alunos, certificados, relatórios sofisticado
 | Marco | Estado inicial | Para avançar |
 | --- | --- | --- |
 | MVP 0.9.0 | **Aprovado** | Escopo congelado e CI aprovado |
-| Preparação 1.0.0 | **Em andamento** | Confirmar e executar P0 |
-| Homologação pública | **Não iniciada** | Segurança, backups e deploy de teste aprovados |
-| Lançamento 1.0.0 | **Não autorizado** | Evidência de todos os P0 e decisão GO |
+| Deploy operacional do MVP 0.9.0 | **Encerrado em 16/10/2026** | Funcionalidades principais testadas em HTTPS; pendências e riscos registrados |
+| Preparação 1.0.0 | **Pausada a pedido do responsável** | Retomar P0 e avaliação dos riscos quando oportuno |
+| Homologação pública | **Parcial** | Páginas/bibliotecas testadas; quizzes E2E, segurança e operação ainda pendentes |
+| Lançamento formal 1.0.0 | **Não autorizado** | Evidência dos P0 e decisão específica de release GO |
 | Piloto | **Não iniciado** | Primeiros usuários e formulário de retorno |
 
-**Próxima ação prática recomendada:** verificar permissões do `.env` e `api/storage` para `www-data`, testar login e publicação/ocultação de mídias, corrigir rate limiting e segurança, implementar backup fora do Droplet com restauração isolada e monitorar antes do aceite v1.0.0.
+**Encerramento desta execução:** responsável optou em 2026-10-16 por finalizar o deploy já funcional e comunicar eventuais problemas posteriormente. Itens marcados como pendentes permanecem pendentes; não disparar novas ações no servidor nem declarar lançamento 1.0.0 por decorrência desta decisão.

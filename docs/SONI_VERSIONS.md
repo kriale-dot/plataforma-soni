@@ -1,5 +1,14 @@
 # SONI — Histórico de versões
 
+## Marco de implantação — 2026-10-16 — Deploy operacional encerrado
+- MVP **0.9.0** implantado e acessível via HTTPS no servidor DigitalOcean existente, segundo confirmação do responsável.
+- Frontend/API em domínios separados, banco MySQL 8, Apache/mod_php, migrações 001–005 e módulos principais funcionando.
+- Cenários comprovados em produção: acesso HTTP 200 às rotas públicas, HTTP 401 em três rotas administrativas sem login, upload de imagem, PDF/PNG, vídeos YouTube e MP4/WebM, rascunho/publicação/ocultação.
+- Backup local SQL+mídias criado e validado. Cópia externa/restauração isolada, rate limiting, monitoramento e teste E2E dos quizzes não foram aprovados e ficaram pendentes.
+- **Decisão:** responsável finalizou o procedimento de deploy sem exigir essas etapas adicionais agora; incidentes serão comunicados futuramente. Não marcar release formal **1.0.0** nem inferir o SHA exato do checkout do Droplet.
+- Registro: [Encerramento do deploy](SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md).
+
+
 ## Marco de produto — 2026-10-15 — MVP v0.9.0 aprovado e congelado
 - Aceite explícito do responsável após informar que os testes passaram.
 - Funcionalidades contempladas: CMS/site, administração, quizzes e devolutivas, documentos e vídeos, backup básico.

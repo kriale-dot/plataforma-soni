@@ -1,10 +1,34 @@
 # SONI — Status de desenvolvimento
 
 **Data:** 2026-10-16  
-**Versão:** 0.9.0 — MVP funcional congelado (próxima meta: 1.0.0)  
-**Etapa:** 7/8 — Preparação para produção, segurança e implantação  
-**Estado:** MVP v0.9.0 aprovado pelo responsável em 2026-10-15 após confirmação de testes locais; CI React/PHP/MariaDB aprovado (38817558203). Migrações 001–005 aplicadas no Windows. **Implantação técnica inicial disponível via HTTPS (confirmação do responsável em 2026-10-16), mas lançamento v1.0.0 ainda NÃO autorizado:** faltam checklist P0, cópia externa e restauração de backup, limites de abuso, homologação e monitoramento.
+**Versão:** 0.9.0 — MVP funcional implantado em HTTPS (release formal 1.0.0 não realizada)  
+**Etapa:** Implantação operacional encerrada em 2026-10-16 por solicitação do responsável; pendências de qualidade e segurança registradas  
+**Estado:** Site e API em funcionamento segundo validações do responsável em 2026-10-16. Principais módulos verificados. Encerramento do procedimento de deploy aceito com pendências de segurança, cópia externa/restauração, monitoramento e testes E2E. **A release formal v1.0.0 não foi aprovada.**
 
+
+
+## Encerramento operacional do deploy — 2026-10-16
+
+**Decisão do responsável:** encerrar nesta data a sessão de implantação da Plataforma SONI, deixando o serviço HTTPS em operação e o acompanhamento de incidentes para demanda futura. **Isto é aceite de encerramento operacional do deploy do MVP 0.9.0, não é certificação de conformidade de segurança nem emissão da release 1.0.0.** Nenhuma alteração adicional no Droplet foi solicitada nesta decisão.
+
+**Endereços em uso:** `https://somdaigreja.com.br` e `https://www.somdaigreja.com.br` (frontend + `/admin`); `https://api.somdaigreja.com.br` (API).
+
+**Evidências relatadas e aprovadas:**
+- VirtualHosts Apache, certificados TLS existentes, migrações 001–005 e banco `plataforma_soni` funcionando.
+- CORS corrigido no `api/.env`, frontend conectado à API; upload de imagem acima de 2 MB e prévia concluídos.
+- PDF/PNG e YouTube/MP4/WebM: cadastro, pré-visualização, publicação/reprodução e ocultação funcionando conforme testes do responsável.
+- `GET /api/admin/site`, `GET /api/admin/videos`, `GET /api/admin/documents` retornaram 401 sem autenticação.
+- `/`, `/testes`, `/documentos`, `/videos` e `/admin` retornaram 200 no frontend. `/api/health`, `/api/site`, `/api/quizzes`, `/api/documents`, `/api/videos` retornaram 200 na API.
+- Um backup local de banco e mídias foi criado e verificado em `api/storage/backups/20261016-110803-d28cea70`; este backup **não substitui uma cópia externa**.
+- GitHub Actions do ajuste de backup para MySQL 8 (`38891500536`): frontend, PHP e MariaDB concluídos com sucesso.
+
+**Pendências assumidas / sem comprovação de execução:** rate limiting de login/submissão, cópia externa e restauração isolada, monitoramento e alertas, homologação E2E do ciclo dos quizzes (pontuação/devolutiva no navegador), cobertura de segurança completa, política de privacidade/termos e verificação do commit exato instalado no Droplet. O resultado HTTP 405 da URL `/.env` não expôs o arquivo no teste, mas não foi investigado além da proteção conferida pelo DocumentRoot `api/public`.
+
+**Decisão sobre release:** MVP 0.9.0 implantado e deploy operacional encerrado; **não criar tag v1.0.0 nem assinalar lançamento totalmente homologado**. A plataforma está acessível e eventuais correções serão tratadas em novo atendimento mediante relato do usuário.
+
+**Importante:** este registro é atualização apenas no repositório. Uma alteração documental no GitHub não comprova que o checkout local do Droplet esteja no mesmo commit do GitHub. O serviço implantado não foi modificado na etapa de encerramento.
+
+**Registro de referência:** [SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md](SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md).
 
 ## Preparação de produção — escolha do servidor (2026-10-16)
 - [x] Responsável confirmou reutilizar o Droplet DigitalOcean com Ubuntu 24.04 LTS como destino da SONI.
@@ -33,7 +57,7 @@
 - [x] Smoke test HTTP público validado pelo responsável em 2026-10-16: `/`, `/testes`, `/documentos`, `/videos` e `/admin` no frontend, mais `/api/health`, `/api/site`, `/api/quizzes`, `/api/documents` e `/api/videos` na API, responderam HTTP 200. Validação de conteúdo, jogos/fluxos e segurança ainda pendente.
 - [ ] Testar as demais proteções de rotas, monitoramento e homologação E2E.
 - [ ] **Rate limiting não implementado/validado — ADIADO por decisão do responsável em 2026-10-16.** Login administrativo continua exposto a tentativas automatizadas; manter como risco residual e pendência de segurança do lançamento.
-- [x] Código de backup adaptado para localizar `mariadb-dump` ou `mysqldump` e não exigir permissão global `PROCESS` do MySQL 8 (CI pendente). Não considerar v1.0.0 lançada até completar P0.
+- [x] Código de backup adaptado para localizar `mariadb-dump` ou `mysqldump` sem permissão global `PROCESS`; CI de frontend/PHP/MariaDB aprovado no run `38891500536`.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 
 ## Marco oficial — MVP v0.9.0 congelado (2026-10-15)
@@ -43,7 +67,7 @@
 - [x] Registrada a decisão em `docs/SONI_MVP_ESCOPO.md`.
 - [x] Criado o checklist de lançamento com bloqueadores P0 em `docs/SONI_CHECKLIST_LANCAMENTO.md`.
 - [ ] Validar ambiente de produção, HTTPS, limites de abuso, proteção de uploads, política de privacidade, backups externos, restauração isolada, deploy, monitoramento, conteúdo e testes ponta a ponta.
-- [ ] Realizar aceite GO/NO-GO para a v1.0.0; publicação e disponibilidade pública **não confirmadas**.
+- [ ] Realizar aceite formal GO/NO-GO da release 1.0.0; **o site já está acessível publicamente**, mas os controles P0 não foram integralmente comprovados.
 
 **Política:** fase de estabilização. Somente correções, segurança, backup, conteúdo essencial, implantação e testes. Funcionalidades novas ficam após a v1.0.0.
 

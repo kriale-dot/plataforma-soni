@@ -1,7 +1,7 @@
 # SONI — Preparação de deploy no Ubuntu 24.04 / DigitalOcean
 
 **Data de decisão:** 2026-10-16.
-**Status:** diagnóstico inicial recebido e favorável; PHP-FPM/módulos, serviço de banco, RAM, domínio, DNS e implantação ainda pendentes. Este guia NÃO é uma confirmação de que a aplicação esteja no ar.
+**Status deste guia:** registro histórico da preparação e execução, incluindo comandos e diagnósticos iniciais que já foram superados. Em **2026-10-16**, o responsável confirmou que o MVP 0.9.0 está acessível por HTTPS e encerrou operacionalmente o deploy. Para o estado consolidado, consultar [SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md](SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md). Alguns trechos abaixo são registros de momentos anteriores e não representam o estado atual.
 
 ## Infraestrutura confirmada
 

@@ -1,6 +1,12 @@
 # SONI — Contexto permanente
 
-**Atualizado:** 2026-10-15 · **Repositório:** https://github.com/kriale-dot/plataforma-soni · **Paleta escolhida:** Paleta 1 — Harmonia Técnica.
+**Atualizado:** 2026-10-16 · **Repositório:** https://github.com/kriale-dot/plataforma-soni · **Paleta escolhida:** Paleta 1 — Harmonia Técnica.
+
+## Decisão operacional de 2026-10-16
+- O responsável encerrou a execução do deploy do **MVP v0.9.0** após validação das páginas e bibliotecas no servidor de produção.
+- Ambiente implantado: frontend principal em `https://somdaigreja.com.br`, área `/admin`, API em `https://api.somdaigreja.com.br`, MySQL 8 e Apache/mod_php no Droplet existente.
+- Backups externos e restauração, rate limiting, monitoramento, homologação E2E dos quizzes e revisões adicionais de segurança **ficaram pendentes** por escolha do responsável; não declarar a release v1.0.0 oficialmente homologada.
+- O projeto será retomado para eventuais correções reportadas. Registro detalhado: [Encerramento do deploy](SONI_DEPLOY_ENCERRAMENTO_2026-10-16.md).
 
 ## Definições confirmadas
 - Projeto: Plataforma SONI, dedicada à sonorização de igrejas.
