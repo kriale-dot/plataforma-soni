@@ -131,3 +131,22 @@ Consultar [SONI_CHECKLIST_LANCAMENTO.md](SONI_CHECKLIST_LANCAMENTO.md). Os ponto
 ## Próxima interação
 
 Receber saída dos comandos somente leitura, confirmar disponibilidade/versões e projetar um VirtualHost exclusivo para SONI. **Não instalar nem modificar o Droplet nesta etapa.**
+
+## Diagnóstico adicional confirmado em 2026-10-16
+
+- Caminho `/var/www/somdaigreja.com.br` existe e está **vazio** (`root:root`). Pastas `frontend` e `api` ainda não existem.
+- Apache com módulos `dir`, `headers`, `php`, `rewrite` e `ssl`. `proxy_fcgi` não apareceu; nenhum serviço PHP-FPM foi listado. Planejar API com Apache/mod_php, sem instalar FPM nesta etapa.
+- MySQL `active` (versão efetiva do servidor ainda a consultar).
+- RAM 7,8 GiB total e 4,2 GiB disponíveis; sem swap. Disco 68 GB livres segundo inspeção anterior.
+- Repositório `kriale-dot/plataforma-soni` é público; permite `git clone` HTTPS sem token. Como o diretório base está vazio, o clone diretamente nele produzirá as pastas `frontend` e `api` exigidas, sem sobrescrever dados existentes.
+
+### Próxima ação: clonar somente o código
+
+```bash
+cd /var/www/somdaigreja.com.br
+sudo git clone --branch main --single-branch https://github.com/kriale-dot/plataforma-soni.git .
+git status --short --branch
+ls -ld frontend api
+```
+
+Ainda não executar `composer install`, `npm install`, migração, `a2ensite`, reiniciar Apache, configurar DNS ou alterar permissões até verificar o clone e as versões de ferramentas. Repositório versionado nunca deve conter `api/.env` nem `api/storage` de produção.

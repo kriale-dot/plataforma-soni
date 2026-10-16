@@ -13,7 +13,10 @@
 - [x] Layout de deploy escolhido: frontend em `/var/www/somdaigreja.com.br/frontend/dist` para raiz e www; API em `/var/www/somdaigreja.com.br/api/public` para `api.somdaigreja.com.br`. Painel integrado em `/admin`.
 - [x] Domínios anteriores `somdaigreja.com.br`, `api.somdaigreja.com.br` e `admin.somdaigreja.com.br` tiveram VirtualHosts desativados pelo responsável; arquivos/dados/DNS/certificados preservados.
 - [x] Ajuste de código para URLs de mídias em API cross-origin e lista estrita de origens frontend (`FRONTEND_URL`/`FRONTEND_ALT_URL`) implementado; CI pendente.
-- [ ] Inspecionar conteúdo de `/var/www/somdaigreja.com.br` e serviços PHP/banco antes de qualquer cópia/reativação.
+- [x] Responsável confirmou que `/var/www/somdaigreja.com.br` existe e está vazio e que `frontend` e `api` ainda não existem.
+- [x] Apache possui `dir_module`, `headers_module`, `php_module`, `rewrite_module`, `ssl_module`; PHP operando com mod_php (não apareceu serviço PHP-FPM).
+- [x] Serviço MySQL ativo; RAM total 7,8 GiB, disponível 4,2 GiB; sem swap configurada.
+- [ ] Clonar repositório público na pasta vazia, conferir versões de Composer/Node e preparar arquivos; nenhuma cópia/deploy no servidor confirmada ainda.
 - [ ] Nenhuma migração, alteração de DNS, configuração do Apache ou instalação foi executada no servidor nesta etapa.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 
