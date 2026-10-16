@@ -1,7 +1,7 @@
 # SONI — Preparação de deploy no Ubuntu 24.04 / DigitalOcean
 
 **Data de decisão:** 2026-10-16.
-**Status:** hospedagem escolhida, **diagnóstico pendente**. Este guia NÃO é uma confirmação de que a aplicação esteja no ar.
+**Status:** diagnóstico inicial recebido e favorável; PHP-FPM/módulos, serviço de banco, RAM, domínio, DNS e implantação ainda pendentes. Este guia NÃO é uma confirmação de que a aplicação esteja no ar.
 
 ## Infraestrutura confirmada
 
@@ -29,6 +29,29 @@ free -h
 Os comandos coletam informação do sistema e **não devem alterar** pacotes, configurações ou banco. A ausência de algum executável não exige instalá-lo imediatamente; registrar a ausência e prosseguir com segurança.
 
 **Privacidade:** não colar conteúdo de `.env`, certificados, senhas, tokens, dumps, IP público, chaves privadas ou URLs administrativas secretas. `apache2ctl -S` pode mostrar nomes de sites: omitir os que desejar antes de compartilhar.
+
+## Resultado parcial do diagnóstico (informado pelo responsável em 2026-10-16)
+
+- Ubuntu 24.04.4 LTS, Apache 2.4.58, PHP CLI 8.3.6; módulos PHP `fileinfo` e `pdo_mysql` presentes.
+- Cliente `mysql` 8.0.46 está instalado. `mariadb` ausente **não é erro e não exige instalação**. O resultado `mysql --version` identifica apenas o cliente; tipo/versão e estado do serviço de banco ainda não foram verificados.
+- O Apache apresenta VirtualHosts HTTPS ativos de diversos domínios existentes em `*:443`, e HTTP em `*:80`. **Nenhum VirtualHost SONI foi criado**.
+- Partição raiz: 96 GB de capacidade, 29 GB usados, 68 GB livres (31% ocupação).
+- Não foram informadas saídas de `apache2ctl -M`, `free -h` e checagem do serviço banco/PHP-FPM.
+- Não alterar os VirtualHosts/certificados existentes, não executar `apt install` nesta fase e não disponibilizar dados sensíveis do servidor.
+
+**Próxima decisão:** escolher um subdomínio exclusivo para SONI. Sugestão de organização, sem configurar ainda: `soni.somdaigreja.com.br`. A escolha deve ser confirmada pelo responsável.
+
+**Consultas adicionais seguras, quando solicitado:**
+
+```bash
+sudo apache2ctl -M | grep -E 'rewrite_module|ssl_module|proxy_fcgi_module|headers_module|php_module'
+free -h
+systemctl is-active mysql
+systemctl is-active mariadb
+systemctl list-units 'php*-fpm.service' --type=service --all --no-pager
+```
+
+Esses comandos apenas leem informações. O estado `inactive` ou `unknown` não autoriza instalar nem reiniciar serviços sem verificar a configuração.
 
 ## Etapa 2 — Planejamento (após inspecionar diagnóstico)
 

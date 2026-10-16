@@ -8,7 +8,8 @@
 
 ## Preparação de produção — escolha do servidor (2026-10-16)
 - [x] Responsável confirmou reutilizar o Droplet DigitalOcean com Ubuntu 24.04 LTS como destino da SONI.
-- [ ] Diagnóstico somente leitura da configuração efetiva do Apache, PHP, banco e recursos.
+- [x] Diagnóstico parcial: Ubuntu 24.04.4, Apache 2.4.58, PHP CLI 8.3.6 + fileinfo/pdo_mysql, cliente MySQL 8.0.46, diversos VirtualHosts 80/443, disco com 68 GB livres.
+- [ ] Confirmar RAM, módulos Apache, modo PHP (PHP-FPM/mod_php), servidor SQL e disponibilidade do serviço; domínio exclusivo ainda não definido.
 - [ ] Nome de domínio/subdomínio, VirtualHost isolado e caminho final ainda não definidos.
 - [ ] Nenhuma migração, alteração de DNS, configuração do Apache ou instalação foi executada no servidor nesta etapa.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
@@ -163,6 +164,6 @@
 **Novos módulos e melhorias opcionais:** adiados para pós-lançamento, conforme escopo congelado.
 
 ## Próxima ação
-Servidor DigitalOcean Ubuntu 24.04 escolhido. Iniciar diagnóstico somente leitura (`docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`); depois escolher domínio e VirtualHost isolado, validar segurança, backup off-site, restauração, homologação e aceite da v1.0.0. **Não criar funcionalidades novas nesta fase.**
+Diagnóstico inicial do Droplet favorável (servidor compartilhado com vários VirtualHosts; disco 68 GB livres). Confirmar subdomínio da SONI; concluir inspeção dos módulos Apache/PHP-FPM/banco/RAM antes de planejar VirtualHost isolado, segurança, backup e homologação. **Não criar funcionalidades novas nesta fase.**
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

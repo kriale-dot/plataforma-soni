@@ -9,10 +9,13 @@
 ## Decisão de infraestrutura — confirmada em 2026-10-16
 
 - [x] Servidor selecionado: Droplet DigitalOcean já existente, com Ubuntu 24.04 LTS, compartilhado com outras aplicações do responsável.
-- [ ] Verificar versões e configuração real do Apache, PHP/PHP-FPM, MariaDB/MySQL, módulos habilitados e recursos livres, antes de instalar qualquer pacote.
-- [ ] Definir o domínio/subdomínio da SONI; não assumir endereço nem registrar DNS ainda.
+- [ ] Completar diagnóstico dos serviços: Apache 2.4.58, PHP CLI 8.3.6, pdo_mysql/fileinfo e MySQL client 8.0.46 confirmados em 2026-10-16; faltam versão/estado do servidor SQL, PHP-FPM/mod_php, módulos Apache e RAM.
+- [ ] Confirmar subdomínio exclusivo para a SONI, sem registrar DNS antes do aceite (sugestão: soni.somdaigreja.com.br).
 - [ ] Projetar isolamento da SONI por VirtualHost, diretório e banco exclusivos, sem alterar sites e bancos já ativos.
 - [ ] Verificar backups externos e plano de recuperação do Droplet antes da implantação.
+
+- [x] Partição raiz verificada: 96 GB total, 29 GB utilizados, 68 GB livres (31%).
+- [x] Apache já utiliza múltiplos VirtualHosts TLS nos demais sites; preservar suas configurações.
 
 **Procedimento somente leitura:** [Guia de diagnóstico Ubuntu / DigitalOcean](SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md).
 
