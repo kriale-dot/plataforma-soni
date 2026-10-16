@@ -42,7 +42,7 @@
 ### Fase B — Segurança e privacidade (P0)
 - [ ] Habilitar HTTPS com certificado válido, redirecionamento de HTTP para HTTPS e cabeçalhos seguros adequados.
 - [ ] Configurar `APP_ENV=production`, tratamento de erros sem stack trace público, `FRONTEND_URL`/CORS estrito e rotação de credenciais/segredo JWT.
-- [ ] Implantar limite de tentativas no login administrativo e na submissão pública de quizzes; definir resposta `429`, janela, IP/proxy confiável e auditoria mínima.
+- [ ] **Adiado por decisão do responsável em 2026-10-16:** implantar limite de tentativas no login administrativo e submissão pública de quizzes (`429`, janela, IP/proxy confiável e auditoria mínima). O adiamento não comprova segurança contra força bruta/abuso.
 - [ ] Revisar upload/download: MIME, assinatura de arquivos, extensão, tamanho no PHP/reverse proxy, locais graváveis, `nosniff`, permissões e autorização de rascunhos/arquivos ocultos.
 - [ ] Determinar política para arquivos PDF e vídeo de terceiros: origem confiável, varredura antivírus antes de publicar, retenção e remoção de conteúdo perigoso.
 - [ ] Validar senhas, permissões de diretórios, proteção de endpoints administrativos, inexistência de gabaritos antes da correção e bloqueio de dados privados.
