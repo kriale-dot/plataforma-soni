@@ -94,3 +94,10 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - VirtualHosts antigos desses domínios foram desativados. Nenhum diretório, banco, certificado ou DNS foi removido; preservar /var/www/atendente-ia por depender de outro domínio.
 - Dev usar /api; produção VITE_API_BASE_URL=https://api.somdaigreja.com.br/api e API com FRONTEND_URL e FRONTEND_ALT_URL exatos.
 - Inspecionar pastas e configuração real Apache/PHP/banco antes de copiar arquivos.
+
+## Proposta de conteúdo — Teste de Ouvido 01 (2026-10-16)
+
+- A nova atividade solicitada é o **Teste de Ouvido 01 — Identificação de Frequências**, como conteúdo do módulo Quiz já existente, e não um novo subsistema.
+- Script PHP de importação gera WAVs de tons puros e 12 questões, insere mídia/questões/devolutivas e mantém **DRAFT por padrão**.
+- Nenhuma migração, modificação de servidor ou publicação ocorre ao incluir o código no GitHub. A importação deve ser executada conscientemente e validada antes de publicar.
+- Orientações e limitações: `docs/SONI_TESTE_OUVIDO_01.md`. Implementação em branch/PR para revisão; MVP 0.9.0 em produção permanece inalterado.
