@@ -6,6 +6,16 @@
 
 > **Regra de avanço:** marcar uma caixa apenas depois de executar a verificação no ambiente-alvo e guardar evidência (data, comando sem segredos, resultado, URL de CI ou anotação de teste). Não guardar senhas, tokens, dumps, arquivos de usuários ou `.env` no repositório.
 
+## Decisão de infraestrutura — confirmada em 2026-10-16
+
+- [x] Servidor selecionado: Droplet DigitalOcean já existente, com Ubuntu 24.04 LTS, compartilhado com outras aplicações do responsável.
+- [ ] Verificar versões e configuração real do Apache, PHP/PHP-FPM, MariaDB/MySQL, módulos habilitados e recursos livres, antes de instalar qualquer pacote.
+- [ ] Definir o domínio/subdomínio da SONI; não assumir endereço nem registrar DNS ainda.
+- [ ] Projetar isolamento da SONI por VirtualHost, diretório e banco exclusivos, sem alterar sites e bancos já ativos.
+- [ ] Verificar backups externos e plano de recuperação do Droplet antes da implantação.
+
+**Procedimento somente leitura:** [Guia de diagnóstico Ubuntu / DigitalOcean](SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md).
+
 ## Ordem de execução
 
 ### Fase A — Levantamento e preparação de ambiente (P0)

@@ -1,10 +1,17 @@
 # SONI — Status de desenvolvimento
 
-**Data:** 2026-10-15  
+**Data:** 2026-10-16  
 **Versão:** 0.9.0 — MVP funcional congelado (próxima meta: 1.0.0)  
 **Etapa:** 7/8 — Preparação para produção, segurança e implantação  
 **Estado:** MVP v0.9.0 aprovado pelo responsável em 2026-10-15 após confirmação de testes locais; CI React/PHP/MariaDB aprovado (38817558203). Migrações 001–005 aplicadas no Windows. **Ainda não liberado para produção:** faltam checklist P0, cópia externa e restauração de backup, HTTPS, limites de abuso, homologação e monitoramento.
 
+
+## Preparação de produção — escolha do servidor (2026-10-16)
+- [x] Responsável confirmou reutilizar o Droplet DigitalOcean com Ubuntu 24.04 LTS como destino da SONI.
+- [ ] Diagnóstico somente leitura da configuração efetiva do Apache, PHP, banco e recursos.
+- [ ] Nome de domínio/subdomínio, VirtualHost isolado e caminho final ainda não definidos.
+- [ ] Nenhuma migração, alteração de DNS, configuração do Apache ou instalação foi executada no servidor nesta etapa.
+- [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 
 ## Marco oficial — MVP v0.9.0 congelado (2026-10-15)
 - [x] Responsável aprovou explicitamente o congelamento da v0.9.0 como produto mínimo viável.
@@ -156,6 +163,6 @@
 **Novos módulos e melhorias opcionais:** adiados para pós-lançamento, conforme escopo congelado.
 
 ## Próxima ação
-Começar o checklist P0 em `docs/SONI_CHECKLIST_LANCAMENTO.md`: definir servidor, domínio, fluxo de deploy e ambiente isolado; depois segurança, backup off-site, teste de restauração, homologação e aceite da v1.0.0. **Não criar funcionalidades novas nesta fase.**
+Servidor DigitalOcean Ubuntu 24.04 escolhido. Iniciar diagnóstico somente leitura (`docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`); depois escolher domínio e VirtualHost isolado, validar segurança, backup off-site, restauração, homologação e aceite da v1.0.0. **Não criar funcionalidades novas nesta fase.**
 
 **Limite da verificação:** CI consegue compilar/validar o código, mas não substitui a validação visual/end-to-end no ambiente do responsável.

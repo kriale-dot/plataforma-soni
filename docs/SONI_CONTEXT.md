@@ -74,3 +74,9 @@ A seleção é definitiva até nova solicitação explícita. Remover o seletor 
 - A etapa seguinte é preparar v1.0.0 para produção, com escopo de funcionalidades congelado.
 - Documentos de referência: docs/SONI_MVP_ESCOPO.md e docs/SONI_CHECKLIST_LANCAMENTO.md. Não iniciar novas funcionalidades opcionais até homologação da v1.0.0.
 - Aprovação funcional local não substitui HTTPS, security hardening, rate limiting, backup off-site, restauração e monitoramento.
+
+## Infraestrutura de produção escolhida (2026-10-16)
+- Usuário confirmou que a SONI será implantada no Droplet já existente da DigitalOcean com Ubuntu 24.04 LTS.
+- O servidor hospeda outros serviços: isolar SONI por VirtualHost e banco, sem modificar outras aplicações; nenhum deploy foi executado ainda.
+- Domínio, Apache, PHP-FPM, banco, DNS, TLS, espaço e atualizações precisam ser inspecionados; primeiro passo é diagnóstico somente leitura.
+- Guia: docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md.
