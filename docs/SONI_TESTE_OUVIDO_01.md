@@ -1,6 +1,6 @@
 # SONI — Teste de Ouvido 01: Identificação de Frequências
 
-**Situação:** implementação proposta em branch de trabalho; **não importada no banco de produção**, **não publicada** e ainda sem homologação do usuário. Não altera rotas, frontend, esquema SQL nem o MVP 0.9.0 atual.
+**Situação:** código integrado à branch `main` após CI de PR aprovado; **não importado no banco local ou de produção**, **não publicado** e ainda sem homologação auditiva do responsável. Não altera rotas, frontend, esquema SQL nem o MVP 0.9.0 atual.
 
 ## Objetivo didático
 
@@ -35,7 +35,7 @@ As divisões não são universais. Em áudio musical, as bandas frequentemente s
 
 ## Importação — ambiente local Windows
 
-Após incorporar a branch/PR:
+Após atualizar o repositório local com `git pull origin main`:
 
 ```powershell
 cd api
