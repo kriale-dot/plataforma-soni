@@ -26,8 +26,9 @@
 - [x] CORS corrigido no `.env` e frontend conseguiu comunicar-se com API; upload/prévia de imagem de 3–5 MB testados com sucesso.
 - [x] Limites de upload ajustados no VirtualHost HTTPS da API (40 MB arquivo/48 MB POST); teste de imagem acima de 2 MB aprovado.
 - [x] Biblioteca de documentos PDF e PNG: responsável confirmou upload, visualização pública, publicação e ocultação funcionando.
-- [ ] Testar biblioteca de vídeos YouTube/MP4-WebM, inclusive prévia privada, publicação e ocultação.
-- [ ] Testar proteção de rotas, rate limits, backup externo, restauração isolada, monitoramento e homologação E2E. Não considerar v1.0.0 lançada até completar P0.
+- [x] Biblioteca de vídeos YouTube/MP4-WebM validada pelo responsável: prévia privada, publicação, reprodução e ocultação aprovadas.
+- [ ] Realizar primeiro backup real do MySQL e mídias da SONI, cópia externa e restauração isolada; testar proteção de rotas, rate limits, monitoramento e homologação E2E.
+- [x] Código de backup adaptado para localizar `mariadb-dump` ou `mysqldump` e não exigir permissão global `PROCESS` do MySQL 8 (CI pendente). Não considerar v1.0.0 lançada até completar P0.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 
 ## Marco oficial — MVP v0.9.0 congelado (2026-10-15)

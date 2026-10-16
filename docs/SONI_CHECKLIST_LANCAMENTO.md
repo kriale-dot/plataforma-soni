@@ -19,7 +19,7 @@
 - [x] CORS corrigido e comunicação de frontend com API funcionando após correção do `.env`.
 - [x] Configuração do VirtualHost da API com limite de upload de 40 MB e POST de 48 MB; teste de imagem acima de 2 MB confirmado.
 - [x] Biblioteca de documentos PDF e PNG: upload, publicação, visualização e ocultação validados pelo responsável.
-- [ ] Validar biblioteca de vídeos YouTube e MP4/WebM, player público, rascunhos e ocultação.
+- [x] Biblioteca de vídeos YouTube e MP4/WebM, player público, rascunhos e ocultação testados com sucesso pelo responsável.
 - [ ] Verificar backups externos e plano de recuperação do Droplet antes da implantação.
 
 - [x] Partição raiz verificada: 96 GB total, 29 GB utilizados, 68 GB livres (31%).

@@ -90,7 +90,21 @@ final class SiteMaintenance
                 return $candidate;
             }
         }
-        return 'mariadb-dump';
+        // Em servidores MySQL 8, o cliente padrão costuma ser mysqldump.
+        // Preferir MariaDB quando disponível para manter compatibilidade anterior.
+        $path = getenv('PATH');
+        if (is_string($path)) {
+            foreach (['mariadb-dump', 'mysqldump'] as $binary) {
+                foreach (explode(PATH_SEPARATOR, $path) as $folder) {
+                    if ($folder === '') continue;
+                    $candidate = rtrim($folder, '/\\') . DIRECTORY_SEPARATOR . $binary;
+                    if (is_file($candidate) && is_executable($candidate)) {
+                        return $candidate;
+                    }
+                }
+            }
+        }
+        throw new RuntimeException('Nenhum cliente de dump disponível: mariadb-dump ou mysqldump. Configure SONI_DUMP_BIN.');
     }
 
     private static function dump(string $destination): void
@@ -135,6 +149,8 @@ final class SiteMaintenance
                 '--single-transaction',
                 '--quick',
                 '--hex-blob',
+                // Evita exigir PROCESS global no MySQL 8 para acessar tablespaces.
+                '--no-tablespaces',
                 '--skip-triggers',
                 '--default-character-set=utf8mb4',
                 '--result-file=' . $destination,
@@ -145,7 +161,7 @@ final class SiteMaintenance
                 0 => ['pipe', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w'],
             ], $pipes, dirname(__DIR__));
             if (!is_resource($process)) {
-                throw new RuntimeException('mariadb-dump não encontrado. Configure SONI_DUMP_BIN.');
+                throw new RuntimeException('Cliente de dump não pôde ser iniciado. Configure SONI_DUMP_BIN.');
             }
             fclose($pipes[0]);
             // Capturar resposta do processo sem exibir credenciais nem conteúdo privado.
@@ -155,7 +171,7 @@ final class SiteMaintenance
             fclose($pipes[2]);
             $exit = proc_close($process);
             if ($exit !== 0 || !is_file($destination) || filesize($destination) < 100) {
-                throw new RuntimeException('mariadb-dump falhou. Confira executável e permissões SELECT do usuário.');
+                throw new RuntimeException('Exportação SQL falhou. Confira executável e permissões SELECT do usuário.');
             }
         } finally {
             @unlink($defaultsFile);

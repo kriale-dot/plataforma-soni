@@ -175,3 +175,15 @@ Se o banco ou usuário já existir, interromper e investigar antes de criar, alt
 - Responsável confirmou as quatro verificações HTTP de frontend e API corretas. Nenhum relatório completo de testes do painel, mídias ou segurança ainda.
 - **Próximo passo:** checar permissões de `api/.env` e `api/storage` para `www-data` e testar integração administrativa.
 - **Status:** infraestrutura base funcional, *não* declarar lançamento v1.0.0; P0 permanecem pendentes.
+
+
+## Backups SQL e de mídias — preparação para MySQL 8
+
+- No servidor existente a versão confirmada é MySQL 8.0.46. O script de backup antes usava apenas `mariadb-dump`, não presente no diagnóstico inicial.
+- O mecanismo agora procura `mariadb-dump` ou `mysqldump` no PATH, preservando a opção `SONI_DUMP_BIN` para caminhos específicos.
+- Usa `--no-tablespaces` para dispensar privilégio `PROCESS` global no MySQL 8. Não ampliar privilégios de `soni_app` somente para gerar dumps.
+- A operação `php bin/backup.php` grava SQL + mídias em `api/storage/backups` (fora da área pública), com hashes no manifesto e verificação local.
+- Rodar com uma conta administrativa local com acesso de leitura ao `.env`, banco e `storage/site_media`; manter backups como `root:root` em modo privado. **Nunca tornar `storage/backups` gravável para `www-data`**.
+- Não executar `api/tests/maintenance-smoke.php` contra dados reais; é destrutivo.
+- Passos após validar o ambiente: primeiro backup local íntegro, cópia criptografada fora do Droplet, restauração de ensaio em banco e diretório isolados (sem interferir em `plataforma_soni`), agendamento e monitoramento.
+- O comando de diagnóstico `command -v mariadb-dump; command -v mysqldump` não imprime credenciais.
