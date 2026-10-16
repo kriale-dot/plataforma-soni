@@ -22,8 +22,12 @@
 - [x] Migrações 001–005 concluídas e consideradas corretas pelo responsável.
 - [x] VirtualHosts específicos frontend e API criados/habilitados, TLS existentes (frontend/raiz/www e API) e `apache2ctl configtest` = Syntax OK.
 - [x] Apache recarregado e quatro checagens HTTP aprovadas pelo responsável: frontend raiz, www e `/admin`, API `/api/health` e `/api/site` (descritos coletivamente como quatro verificações).
-- [ ] Verificar permissões `.env` e escrita de `api/storage/site_media` para `www-data`.
-- [ ] Testar login administrativo no navegador, uploads/leituras cross-origin, proteção das rotas e testes E2E. Não considerar v1.0.0 lançada até completar P0.
+- [x] `.env` confirmado `640 root:www-data`; mídia em `api/storage/site_media` recebeu permissão restrita de escrita para `www-data`, com teste real de escrita aprovado pelo responsável.
+- [x] CORS corrigido no `.env` e frontend conseguiu comunicar-se com API; upload/prévia de imagem de 3–5 MB testados com sucesso.
+- [x] Limites de upload ajustados no VirtualHost HTTPS da API (40 MB arquivo/48 MB POST); teste de imagem acima de 2 MB aprovado.
+- [x] Biblioteca de documentos PDF e PNG: responsável confirmou upload, visualização pública, publicação e ocultação funcionando.
+- [ ] Testar biblioteca de vídeos YouTube/MP4-WebM, inclusive prévia privada, publicação e ocultação.
+- [ ] Testar proteção de rotas, rate limits, backup externo, restauração isolada, monitoramento e homologação E2E. Não considerar v1.0.0 lançada até completar P0.
 - [x] Procedimento de diagnóstico criado em `docs/SONI_DEPLOY_UBUNTU_DIGITALOCEAN.md`.
 
 ## Marco oficial — MVP v0.9.0 congelado (2026-10-15)

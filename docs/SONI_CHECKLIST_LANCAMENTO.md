@@ -15,7 +15,11 @@
 - [x] Inspeção confirmou diretório base existente e vazio, sem `frontend` nem `api`, em 2026-10-16; não será necessário substituir arquivos anteriores nesta pasta.
 - [x] Git clonado, dependências PHP/Node instaladas, build React realizado; migrações 001–005 relatadas como corretas pelo responsável.
 - [x] VirtualHosts HTTPS ativados e checagens de frontend/API aprovadas, sem concluir homologação funcional e segurança.
-- [ ] Confirmar permissão de escrita segura para mídias do Apache, login administrativo, testes HTTP de arquivos PDF/PNG e vídeos e limites de upload.
+- [x] Permissões de mídia validadas (`www-data` escreve exclusivamente em `api/storage/site_media`); `.env` legível por `www-data`, modo `640`.
+- [x] CORS corrigido e comunicação de frontend com API funcionando após correção do `.env`.
+- [x] Configuração do VirtualHost da API com limite de upload de 40 MB e POST de 48 MB; teste de imagem acima de 2 MB confirmado.
+- [x] Biblioteca de documentos PDF e PNG: upload, publicação, visualização e ocultação validados pelo responsável.
+- [ ] Validar biblioteca de vídeos YouTube e MP4/WebM, player público, rascunhos e ocultação.
 - [ ] Verificar backups externos e plano de recuperação do Droplet antes da implantação.
 
 - [x] Partição raiz verificada: 96 GB total, 29 GB utilizados, 68 GB livres (31%).
