@@ -231,6 +231,10 @@ $app->get('/api/admin/quizzes/{id:[0-9]+}', static function (Request $request, R
 $app->put('/api/admin/quizzes/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
     return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::updateQuiz($db, (int) $args['id'], (array) $request->getParsedBody()));
 });
+$app->delete('/api/admin/quizzes/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::deleteQuiz($db, (int) $args['id']));
+});
+
 // Atualizar as faixas sem afetar o histórico das tentativas já finalizadas.
 $app->put('/api/admin/quizzes/{id:[0-9]+}/feedback-ranges', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
     return $adminSite($request, $response, static fn (\PDO $db): array =>

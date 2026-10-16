@@ -61,6 +61,9 @@
 .quizField{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:800;color:#49626A;min-width:0}
 .quizActions{justify-content:flex-start;margin-top:12px}
 .quizActions a{font-size:13px;font-weight:800;color:#087F74}
+.quizActions .quizDeleteButton{background:#A92E39;color:#fff;border:1px solid #8B1F2B}
+.quizActions .quizDeleteButton:hover:not(:disabled){background:#8B1F2B}
+.quizActions .quizDeleteButton:focus-visible{outline:3px solid #153B4A;outline-offset:2px}
 .quizQuestionArea{margin-top:35px;padding-top:20px;border-top:1px solid #DFE8E9}
 .quizQuestionRow{padding:13px 0;border-bottom:1px solid #E4EEEE}
 .quizQuestionRow strong{font-weight:700;font-size:14px;color:#153B4A;word-break:break-word}

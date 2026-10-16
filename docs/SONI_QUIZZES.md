@@ -18,6 +18,15 @@ Provas digitais interativas dentro da plataforma, sem PDFs preenchidos. Aluno vi
 - Mídias em testes publicados recebem permissão pública; rascunhos não.
 - Questões publicadas precisam ser retiradas de publicação para editar; questões de testes com tentativas registradas ficam imutáveis para preservar resultados.
 
+## Exclusão definitiva de testes respondidos (2026-10-16)
+- O administrador pode excluir um teste inteiro, publicado ou em rascunho, mesmo que tenha tentativas registradas; não é preciso criar versões.
+- Em **Gerenciar testes**, selecione o teste e clique em **Excluir teste**. Confirme o aviso e digite `EXCLUIR`.
+- A ação apaga definitivamente o teste, questões, alternativas, faixas de devolutiva, tentativas, respostas, pontuações e históricos de devolutiva em uma transação.
+- Arquivos da biblioteca de mídia não são apagados e podem ser reutilizados em outros conteúdos.
+- A proteção que impede *editar questões* de testes já respondidos permanece inalterada. Não é necessária uma migração do banco.
+- `DELETE /api/admin/quizzes/{id}` exige JWT; retorna `deleted`, `id` e `attempts_deleted`.
+- O teste automatizado de exclusão é destrutivo e só deve rodar no banco descartável do CI, nunca na base de produção.
+
 ## Rotas
 Públicas:
 - \`GET /api/quizzes\` — catálogo somente dos publicados.

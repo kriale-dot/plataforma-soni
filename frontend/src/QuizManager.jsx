@@ -135,6 +135,30 @@ export default function QuizManager({ token, onUnauthorized }) {
     }
   }
 
+  async function deleteQuiz() {
+    if (!quiz || busy) return;
+    const attempts = Number((catalog?.quizzes || []).find((item) => Number(item.id) === Number(quiz.id))?.attempt_count || 0);
+    const warning = 'Excluir definitivamente o teste "' + quiz.title + '"?\n\n'
+      + 'Serão excluídas as questões, alternativas, faixas de devolutiva e ' + attempts
+      + ' tentativa(s), incluindo respostas, notas e devolutivas.\n'
+      + 'Os arquivos enviados à biblioteca de mídias serão preservados.\n\n'
+      + 'Essa operação é IRREVERSÍVEL.';
+    if (!window.confirm(warning)) return;
+    if (window.prompt('Para confirmar a exclusão, digite EXCLUIR:') !== 'EXCLUIR') return;
+
+    const result = await execute(
+      () => apiRequest('/admin/quizzes/' + quiz.id, { method: 'DELETE', token }),
+      'Teste excluído definitivamente. As mídias foram preservadas.'
+    );
+    if (result?.deleted) {
+      setQuiz(null);
+      setMeta(null);
+      setFeedbackRanges([]);
+      setQuestion(null);
+      setQuestionId(null);
+    }
+  }
+
   async function saveMeta(event) {
     event.preventDefault();
     const result = await execute(
@@ -328,6 +352,7 @@ export default function QuizManager({ token, onUnauthorized }) {
               </button>
               {quiz.publication_status === 'PUBLISHED' &&
                 <a href={'/testes/' + quiz.id} target="_blank" rel="noopener noreferrer">Abrir teste público ↗</a>}
+              <button type="button" className="quizDeleteButton" disabled={busy} onClick={deleteQuiz}>Excluir teste</button>
             </div>
           </form>
 

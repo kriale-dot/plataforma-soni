@@ -307,6 +307,36 @@ final class QuizService
         throw new RuntimeException('Questão não disponível após salvar.');
     }
 
+    /**
+     * Exclui permanentemente um teste, mesmo após tentativas concluídas.
+     * As FKs CASCADE apagam respostas/devolutivas e questões/alternativas/faixas.
+     * Os arquivos da biblioteca de mídia são preservados.
+     */
+    public static function deleteQuiz(PDO $db, int $id): array
+    {
+        $db->beginTransaction();
+        try {
+            // Bloqueia a linha para serializar com novas submissões de respostas.
+            self::getQuiz($db, $id, true);
+
+            $removeAttempts = $db->prepare('DELETE FROM quiz_attempts WHERE quiz_id = ?');
+            $removeAttempts->execute([$id]);
+            $attemptsDeleted = $removeAttempts->rowCount();
+
+            $removeQuiz = $db->prepare('DELETE FROM quizzes WHERE id = ?');
+            $removeQuiz->execute([$id]);
+            if ($removeQuiz->rowCount() !== 1) {
+                throw new RuntimeException('Não foi possível excluir o teste.');
+            }
+            $db->commit();
+        } catch (Throwable $error) {
+            if ($db->inTransaction()) $db->rollBack();
+            throw $error;
+        }
+
+        return ['deleted' => true, 'id' => $id, 'attempts_deleted' => $attemptsDeleted];
+    }
+
     public static function deleteQuestion(PDO $db, int $quizId, int $questionId): array
     {
         $db->beginTransaction();

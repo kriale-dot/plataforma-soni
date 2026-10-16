@@ -7,6 +7,11 @@
 
 
 
+## Atualização pós-deploy — exclusão de testes respondidos (2026-10-16)
+- [x] Adicionado no código o endpoint administrativo para excluir permanentemente um teste e todo seu histórico de respostas, mesmo que haja tentativas. Exclusão transacional; mídia preservada.
+- [x] Botão **Excluir teste** com confirmação reforçada no painel.
+- [ ] Aplicar atualização do GitHub ao ambiente de produção, reconstruir frontend e validar o fluxo. **Este registro não significa que o servidor já foi atualizado.**
+
 ## Encerramento operacional do deploy — 2026-10-16
 
 **Decisão do responsável:** encerrar nesta data a sessão de implantação da Plataforma SONI, deixando o serviço HTTPS em operação e o acompanhamento de incidentes para demanda futura. **Isto é aceite de encerramento operacional do deploy do MVP 0.9.0, não é certificação de conformidade de segurança nem emissão da release 1.0.0.** Nenhuma alteração adicional no Droplet foi solicitada nesta decisão.
