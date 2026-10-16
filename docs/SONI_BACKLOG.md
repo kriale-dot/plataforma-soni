@@ -25,7 +25,7 @@ Funcionalidades e otimizações não bloqueadoras (novos perfis, certificados, g
 
 - [x] Conteúdo e gerador CLI de áudios incluídos em branch isolada (12 questões, 11 sons, rascunho).
 - [x] Teste automatizado de estrutura e de WAV incluído no workflow de PR.
-- [ ] Aguardar CI verde, revisão e integração do PR.
+- [x] CI verde e PR #1 integrado à `main` (2026-10-16).
 - [ ] Importar no banco local e conferir todos os players/alternativas por ouvido.
 - [ ] Aprovar conteúdo e publicar o teste em produção, somente após validação do responsável.
 - A entrega reutiliza o motor de quizzes do MVP; não substitui correções P0 de segurança pendentes.
