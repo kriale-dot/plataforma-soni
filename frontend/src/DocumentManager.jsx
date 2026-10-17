@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiRequest, apiUploadFile, apiMediaBlob } from './lib/api.js';
+import { UPLOAD_LIMIT_MIB, maxUploadBytes } from './lib/uploadLimits.js';
 import './documents.css';
 
 const blank = () => ({
@@ -128,8 +129,9 @@ export default function DocumentManager({ token, onUnauthorized }) {
       setError('Selecione um PDF ou PNG.');
       return;
     }
-    if (file.size > (file.name.toLowerCase().endsWith('.pdf') ? 20 : 6) * 1024 * 1024) {
-      setError('O arquivo excede o limite permitido.');
+    const kind = file.name.toLowerCase().endsWith('.pdf') ? 'DOCUMENT' : 'IMAGE';
+    if (file.size > maxUploadBytes(kind)) {
+      setError('O arquivo excede o limite de ' + UPLOAD_LIMIT_MIB[kind] + ' MiB.');
       return;
     }
     await execute(
@@ -224,7 +226,7 @@ export default function DocumentManager({ token, onUnauthorized }) {
             <label className="wide"><span>Descrição</span>
               <textarea rows={4} maxLength={4000} value={form.description || ''} onChange={(e) => setForm({ ...form, description: e.target.value })}/>
             </label>
-            <label className="wide"><span>Enviar arquivo PDF (até 20 MB) ou PNG (até 6 MB)</span>
+            <label className="wide"><span>Enviar arquivo PDF (até {UPLOAD_LIMIT_MIB.DOCUMENT} MiB) ou PNG (até {UPLOAD_LIMIT_MIB.IMAGE} MiB)</span>
               <input type="file" accept=".pdf,.png,application/pdf,image/png" disabled={busy}
                 onChange={sendFile} aria-label="Enviar documento PDF ou PNG"/>
             </label>

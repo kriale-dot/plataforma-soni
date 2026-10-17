@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiRequest, apiUploadFile, apiMediaBlob, apiMediaUrl } from './lib/api.js';
+import { UPLOAD_LIMIT_MIB, maxUploadBytes } from './lib/uploadLimits.js';
 import './site-editor.css';
 
 const blockTypes = [
@@ -29,7 +30,6 @@ const acceptForKind = (kind) => {
   if (kind === 'AUDIO') return '.mp3,.wav,.ogg';
   return '.mp4,.webm';
 };
-const maxForKind = (kind) => kind === 'IMAGE' ? 6 * 1024 * 1024 : kind === 'AUDIO' ? 15 * 1024 * 1024 : 32 * 1024 * 1024;
 
 function BlockPreview({ block, media, token }) {
   const [source, setSource] = useState('');
@@ -159,8 +159,8 @@ export default function SiteEditor({ token, onUnauthorized }) {
     if (!file || !editing || busy) return;
     const kind = mediaKindForBlock(editing.type);
     if (!kind) return;
-    if (file.size > maxForKind(kind)) {
-      setError('Arquivo muito grande para este tipo de mídia.');
+    if (file.size > maxUploadBytes(kind)) {
+      setError('Arquivo excede o limite de ' + UPLOAD_LIMIT_MIB[kind] + ' MiB.');
       return;
     }
     setBusy(true);
@@ -342,7 +342,7 @@ export default function SiteEditor({ token, onUnauthorized }) {
                         </select>
                       </label>
                       <label>
-                        <span>Enviar novo arquivo ({mediaKindForBlock(editing.type) === 'IMAGE' ? 'até 6 MB' : mediaKindForBlock(editing.type) === 'AUDIO' ? 'até 15 MB' : 'até 32 MB'})</span>
+                        <span>Enviar novo arquivo (até {UPLOAD_LIMIT_MIB[mediaKindForBlock(editing.type)]} MiB)</span>
                         <input aria-label="Selecionar arquivo de mídia" type="file" disabled={busy} accept={acceptForKind(mediaKindForBlock(editing.type))} onChange={uploadMedia}/>
                       </label>
                       <small>Arquivos ficam fora da pasta pública. Faça upload, verifique a prévia e salve o bloco.</small>

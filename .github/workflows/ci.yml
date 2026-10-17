@@ -51,6 +51,7 @@ jobs:
           php -l src/MediaLibrary.php
           php -r 'require "vendor/autoload.php"; if (!class_exists("Soni\\SiteMedia")) exit(1);'
           php -l tests/site-media-http-smoke.php
+          php -l tests/upload-limits-smoke.php
           php -l tests/media-delete-http-smoke.php
           php -l tests/site-cms-http-smoke.php
           php -l bin/migrate.php
@@ -73,6 +74,9 @@ jobs:
           php -l tests/ear-frequency-smoke.php
           php -l tests/maintenance-smoke.php
           php -r 'require "vendor/autoload.php"; if (!class_exists("Soni\\SiteMaintenance")) exit(1);'
+      - name: Validar limites de upload
+        working-directory: api
+        run: php tests/upload-limits-smoke.php
       - name: Testar autenticação
         working-directory: api
         run: php tests/auth-smoke.php

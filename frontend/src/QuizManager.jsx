@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiRequest, apiUploadFile } from './lib/api.js';
+import { UPLOAD_LIMIT_MIB, maxUploadBytes } from './lib/uploadLimits.js';
 import './quiz.css';
 
 const blankOption = () => ({ option_text: '', image_media_id: null, audio_media_id: null, is_correct: false });
@@ -273,6 +274,11 @@ export default function QuizManager({ token, onUnauthorized }) {
     const file = event.target.files?.[0];
     event.target.value = '';
     if (!file || !quiz || busy) return;
+    const kind = /\.(mp3|wav|ogg)$/i.test(file.name) ? 'AUDIO' : 'IMAGE';
+    if (file.size > maxUploadBytes(kind)) {
+      setError('O limite de upload é ' + UPLOAD_LIMIT_MIB[kind] + ' MiB.');
+      return;
+    }
     setBusy(true);
     setError('');
     setMessage('');
@@ -439,7 +445,7 @@ export default function QuizManager({ token, onUnauthorized }) {
 
             {draft && <div className="quizMediaUpload">
               <h4>Biblioteca de mídias das questões</h4>
-              <p>Você pode usar imagens e áudios já enviados ou adicionar novos arquivos aqui.</p>
+              <p>Você pode usar imagens e áudios já enviados ou adicionar novos arquivos aqui. Imagens até {UPLOAD_LIMIT_MIB.IMAGE} MiB; áudios até {UPLOAD_LIMIT_MIB.AUDIO} MiB.</p>
               <input type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.mp3,.wav,.ogg" aria-label="Enviar imagem ou áudio para questão" disabled={busy} onChange={upload}/>
             </div>}
             {draft && question && <form className="quizQuestionEditor" onSubmit={saveQuestion}>
