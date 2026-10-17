@@ -337,20 +337,58 @@ final class QuizService
         return ['deleted' => true, 'id' => $id, 'attempts_deleted' => $attemptsDeleted];
     }
 
-    public static function deleteQuestion(PDO $db, int $quizId, int $questionId): array
+    /**
+     * Exclui uma questão, suas alternativas e todo o histórico de tentativas
+     * deste teste (incluindo respostas, notas e devolutivas), em uma transação.
+     * Outros testes e arquivos de mídia não são afetados.
+     * A exclusão independe do bloqueio de edição em testes já respondidos.
+     */
+    public static function deleteQuestion(PDO $db, int $quizId, int $questionId, string $confirmation): array
     {
+        if ($confirmation !== 'EXCLUIR') {
+            throw new InvalidArgumentException('Confirme a exclusão da questão digitando EXCLUIR.');
+        }
         $db->beginTransaction();
         try {
-            self::mutable($db, $quizId);
+            // O mesmo bloqueio é usado na submissão de respostas: impede
+            // uma tentativa nova enquanto o histórico está sendo removido.
+            $quiz = self::getQuiz($db, $quizId, true);
+            $stmt = $db->prepare('SELECT id FROM quiz_questions WHERE quiz_id = ? AND id = ? FOR UPDATE');
+            $stmt->execute([$quizId, $questionId]);
+            if (!$stmt->fetchColumn()) {
+                throw new InvalidArgumentException('Questão não encontrada neste teste.');
+            }
+
+            // Um teste alterado só poderá voltar ao público após revisão.
+            $unpublished = $quiz['publication_status'] === 'PUBLISHED';
+            if ($unpublished) {
+                $db->prepare("UPDATE quizzes SET publication_status = 'DRAFT' WHERE id = ?")
+                   ->execute([$quizId]);
+            }
+
+            // As respostas anteriores guardam FKs RESTRICT para questões e
+            // alternativas. Excluímos TODAS as tentativas deste teste antes
+            // da questão; as FKs CASCADE removem respostas e devolutivas.
+            $stmt = $db->prepare('DELETE FROM quiz_attempts WHERE quiz_id = ?');
+            $stmt->execute([$quizId]);
+            $attemptsDeleted = $stmt->rowCount();
+
             $stmt = $db->prepare('DELETE FROM quiz_questions WHERE quiz_id = ? AND id = ?');
             $stmt->execute([$quizId, $questionId]);
-            if ($stmt->rowCount() !== 1) throw new InvalidArgumentException('Questão não encontrada.');
+            if ($stmt->rowCount() !== 1) {
+                throw new RuntimeException('Não foi possível excluir a questão.');
+            }
             $db->commit();
         } catch (Throwable $err) {
             if ($db->inTransaction()) $db->rollBack();
             throw $err;
         }
-        return ['deleted' => true];
+        return [
+            'deleted' => true,
+            'id' => $questionId,
+            'attempts_deleted' => $attemptsDeleted,
+            'unpublished' => $unpublished,
+        ];
     }
 
     public static function listPublic(PDO $db): array

@@ -263,7 +263,10 @@ $app->put('/api/admin/quizzes/{id:[0-9]+}/questions/{questionId:[0-9]+}', static
     return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::saveQuestion($db, (int) $args['id'], (int) $args['questionId'], (array) $request->getParsedBody()));
 });
 $app->delete('/api/admin/quizzes/{id:[0-9]+}/questions/{questionId:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
-    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::deleteQuestion($db, (int) $args['id'], (int) $args['questionId']));
+    return $adminSite($request, $response, static fn (\PDO $db): array => QuizService::deleteQuestion(
+        $db, (int) $args['id'], (int) $args['questionId'],
+        (string) ((is_array($request->getParsedBody()) ? $request->getParsedBody() : [])['confirmation'] ?? '')
+    ));
 });
 
 // Biblioteca pública: catálogo e consulta de documentos publicados (PDF/PNG).

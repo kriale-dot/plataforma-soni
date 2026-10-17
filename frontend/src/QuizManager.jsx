@@ -245,14 +245,28 @@ export default function QuizManager({ token, onUnauthorized }) {
   }
 
   async function deleteQuestion(id) {
-    if (!window.confirm('Excluir permanentemente esta questão e suas alternativas?')) return;
+    if (!quiz || busy) return;
+    const warning = 'Excluir definitivamente esta questão do teste "' + quiz.title + '"?\n\n'
+      + 'A questão e suas alternativas serão apagadas. TODAS as tentativas anteriores DESTE TESTE '
+      + 'também serão apagadas, incluindo respostas das outras questões, notas e devolutivas.\n\n'
+      + 'As demais questões e outros testes serão preservados. '
+      + 'Se estiver publicado, este teste voltará a rascunho. '
+      + 'Os arquivos da biblioteca de mídias serão preservados.\n\n'
+      + 'Esta operação é IRREVERSÍVEL.';
+    if (!window.confirm(warning)) return;
+    if (window.prompt('Para apagar esta questão e o histórico de respostas deste teste, digite EXCLUIR:') !== 'EXCLUIR') return;
     const result = await execute(
       () => apiRequest('/admin/quizzes/' + quiz.id + '/questions/' + id, {
-        method: 'DELETE', token,
+        method: 'DELETE', token, body: { confirmation: 'EXCLUIR' },
       }),
-      'Questão excluída.'
+      ''
     );
-    if (result) await openQuiz(quiz.id);
+    if (result?.deleted) {
+      await openQuiz(quiz.id);
+      setMessage('Questão excluída definitivamente. ' + Number(result.attempts_deleted || 0)
+        + ' tentativa(s) anterior(es) deste teste e seus resultados removidos.'
+        + (result.unpublished ? ' O teste voltou a rascunho.' : ''));
+    }
   }
 
   async function upload(event) {
@@ -416,12 +430,12 @@ export default function QuizManager({ token, onUnauthorized }) {
             </div>
             {quiz.questions.map((entry, i) => <div className="quizQuestionRow" key={entry.id}>
               <div><strong>{i + 1}. {entry.prompt_text || '(Questão por imagem/áudio)'}</strong><small>{entry.options.length} alternativas</small></div>
-              {draft && <div>
-                <button type="button" disabled={busy} onClick={() => editQuestion(entry)}>Editar</button>
+              <div>
+                {draft && <button type="button" disabled={busy} onClick={() => editQuestion(entry)}>Editar</button>}
                 <button type="button" disabled={busy} onClick={() => deleteQuestion(entry.id)}>Excluir</button>
-              </div>}
+              </div>
             </div>)}
-            {!draft && <p className="quizNotice">Para alterar questões, volte o teste para rascunho. Testes com tentativas registradas mantêm seu conteúdo, para preservar a validade dos resultados; nesse caso, crie outro teste.</p>}
+            {!draft && <p className="quizNotice">Para editar questões, retorne o teste a rascunho. Para excluir uma questão (inclusive de teste respondido), clique em Excluir e confirme a remoção de todas as tentativas, notas e devolutivas deste teste.</p>}
 
             {draft && <div className="quizMediaUpload">
               <h4>Biblioteca de mídias das questões</h4>

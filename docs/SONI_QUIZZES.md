@@ -25,6 +25,15 @@ Provas digitais interativas dentro da plataforma, sem PDFs preenchidos. Aluno vi
 - Arquivos da biblioteca de mídia não são apagados e podem ser reutilizados em outros conteúdos.
 - A proteção que impede *editar questões* de testes já respondidos permanece inalterada. Não é necessária uma migração do banco.
 - `DELETE /api/admin/quizzes/{id}` exige JWT; retorna `deleted`, `id` e `attempts_deleted`.
+
+## Exclusão individual de questões, mesmo após respostas (2026-10-17)
+- Em **Gerenciar testes → Questões**, o botão **Excluir** fica disponível inclusive para testes publicados e já respondidos, sem criar outra versão.
+- A operação exige duas confirmações no painel, inclusive digitar `EXCLUIR`, e também exige `{"confirmation":"EXCLUIR"}` na API protegida por JWT.
+- Em uma **transação MySQL**, primeiro elimina **todas as tentativas daquele teste**, com respostas, pontuações e devolutivas históricas; depois exclui a questão selecionada e suas alternativas. **Outras questões, outros testes e arquivos de mídia são preservados**.
+- O teste afetado volta a **rascunho**, se estava publicado. Depois de revisar, pode ser republicado. Não é possível recuperar os históricos excluídos pelo painel.
+- **Editar uma questão** continua bloqueado enquanto existirem tentativas, para manter a regra de integridade anterior. Após apagar o histórico ao excluir uma questão, a edição das restantes volta a ser possível em rascunho.
+- `DELETE /api/admin/quizzes/{id}/questions/{qid}` retorna `deleted`, `id`, `attempts_deleted` e `unpublished`.
+- `api/tests/quiz-question-delete-http-smoke.php` só deve ser executado no banco descartável do GitHub Actions, **nunca em produção**.
 - O teste automatizado de exclusão é destrutivo e só deve rodar no banco descartável do CI, nunca na base de produção.
 
 ## Rotas

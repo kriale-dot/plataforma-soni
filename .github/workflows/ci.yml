@@ -66,6 +66,7 @@ jobs:
           php -l tests/quiz-feedback-http-smoke.php
           php -l tests/quiz-http-smoke.php
           php -l tests/quiz-delete-http-smoke.php
+          php -l tests/quiz-question-delete-http-smoke.php
           php -l bin/backup.php
           php -l bin/media-audit.php
           php -l bin/seed-ear-frequency-01.php
@@ -155,6 +156,7 @@ jobs:
           php tests/quiz-http-smoke.php
           php tests/quiz-feedback-http-smoke.php
           php tests/quiz-delete-http-smoke.php
+          php tests/quiz-question-delete-http-smoke.php
           php tests/documents-http-smoke.php
           php tests/videos-http-smoke.php
           php tests/cors-http-smoke.php
