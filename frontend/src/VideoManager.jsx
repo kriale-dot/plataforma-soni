@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiRequest, apiUploadFile, apiMediaBlob } from './lib/api.js';
+import { UPLOAD_LIMIT_MIB, maxUploadBytes } from './lib/uploadLimits.js';
 import './videos.css';
 
 const fresh = () => ({
@@ -108,7 +109,7 @@ export default function VideoManager({ token, onUnauthorized }) {
     event.target.value = '';
     if (!file) return;
     if (!/\.(mp4|webm)$/i.test(file.name)) { setError('Escolha um arquivo MP4 ou WebM.'); return; }
-    if (file.size > 32 * 1024 * 1024) { setError('O limite de upload é 32 MiB.'); return; }
+    if (file.size > maxUploadBytes('VIDEO')) { setError('O limite de upload é ' + UPLOAD_LIMIT_MIB.VIDEO + ' MiB.'); return; }
     await act(() => apiUploadFile('/admin/site/media', file, token),
       'Vídeo enviado! Confira a prévia e salve o cadastro para vinculá-lo.', (uploaded) => {
         setForm((current) => ({ ...current, media_id: uploaded.id, source_type: 'UPLOAD' }));
@@ -185,7 +186,7 @@ export default function VideoManager({ token, onUnauthorized }) {
             {form.source_type === 'YOUTUBE' ? <label className="wide"><span>URL HTTPS do YouTube</span>
               <input type="url" required maxLength={350} placeholder="https://www.youtube.com/watch?v=..." value={form.youtube_url || ''} onChange={(event) => { setForm({ ...form, youtube_url: event.target.value }); setPreview(false); }}/>
             </label> : <>
-              <label className="wide"><span>Enviar vídeo MP4 ou WebM (até 32 MiB)</span><input type="file" accept=".mp4,.webm,video/mp4,video/webm" disabled={busy} onChange={upload}/></label>
+              <label className="wide"><span>Enviar vídeo MP4 ou WebM (até {UPLOAD_LIMIT_MIB.VIDEO} MiB)</span><input type="file" accept=".mp4,.webm,video/mp4,video/webm" disabled={busy} onChange={upload}/></label>
               <label className="wide"><span>Arquivo enviado</span><select required value={form.media_id || ''} onChange={(event) => { setForm({ ...form, media_id: event.target.value }); setPreview(false); }}>
                 <option value="">Selecione o arquivo</option>
                 {(catalog?.media || []).map((item) => <option value={item.id} key={item.id}>{item.original_name} (#{item.id})</option>)}

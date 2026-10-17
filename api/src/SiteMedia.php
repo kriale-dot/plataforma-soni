@@ -16,17 +16,17 @@ use Slim\Psr7\Stream;
 final class SiteMedia
 {
     private const ALLOWED = [
-        'jpg' => ['IMAGE', 'image/jpeg', 6 * 1024 * 1024],
-        'jpeg' => ['IMAGE', 'image/jpeg', 6 * 1024 * 1024],
-        'png' => ['IMAGE', 'image/png', 6 * 1024 * 1024],
-        'webp' => ['IMAGE', 'image/webp', 6 * 1024 * 1024],
-        'gif' => ['IMAGE', 'image/gif', 6 * 1024 * 1024],
-        'mp3' => ['AUDIO', 'audio/mpeg', 15 * 1024 * 1024],
-        'wav' => ['AUDIO', 'audio/x-wav', 15 * 1024 * 1024],
-        'ogg' => ['AUDIO', 'audio/ogg', 15 * 1024 * 1024],
-        'mp4' => ['VIDEO', 'video/mp4', 32 * 1024 * 1024],
-        'webm' => ['VIDEO', 'video/webm', 32 * 1024 * 1024],
-        'pdf' => ['DOCUMENT', 'application/pdf', 20 * 1024 * 1024],
+        'jpg' => ['IMAGE', 'image/jpeg', 20 * 1024 * 1024],
+        'jpeg' => ['IMAGE', 'image/jpeg', 20 * 1024 * 1024],
+        'png' => ['IMAGE', 'image/png', 20 * 1024 * 1024],
+        'webp' => ['IMAGE', 'image/webp', 20 * 1024 * 1024],
+        'gif' => ['IMAGE', 'image/gif', 20 * 1024 * 1024],
+        'mp3' => ['AUDIO', 'audio/mpeg', 50 * 1024 * 1024],
+        'wav' => ['AUDIO', 'audio/x-wav', 50 * 1024 * 1024],
+        'ogg' => ['AUDIO', 'audio/ogg', 50 * 1024 * 1024],
+        'mp4' => ['VIDEO', 'video/mp4', 200 * 1024 * 1024],
+        'webm' => ['VIDEO', 'video/webm', 200 * 1024 * 1024],
+        'pdf' => ['DOCUMENT', 'application/pdf', 50 * 1024 * 1024],
     ];
 
     private static function directory(): string
