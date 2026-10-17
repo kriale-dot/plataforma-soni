@@ -48,8 +48,10 @@ jobs:
           php -l src/SiteRepository.php
           php -l src/SiteCms.php
           php -l src/SiteMedia.php
+          php -l src/MediaLibrary.php
           php -r 'require "vendor/autoload.php"; if (!class_exists("Soni\\SiteMedia")) exit(1);'
           php -l tests/site-media-http-smoke.php
+          php -l tests/media-delete-http-smoke.php
           php -l tests/site-cms-http-smoke.php
           php -l bin/migrate.php
           php -l bin/db-check.php
@@ -170,3 +172,14 @@ jobs:
             echo 'ERRO: o importador duplicou o teste'
             exit 1
           fi
+      - name: Testar exclusão administrativa de mídias em uso (banco descartável)
+        working-directory: api
+        run: |
+          php -S 127.0.0.1:8282 -t public public/index.php > /tmp/soni-media-delete-php.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" || true' EXIT
+          for i in $(seq 1 10); do
+            if curl -fsS http://127.0.0.1:8282/api/health >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          php tests/media-delete-http-smoke.php

@@ -12,6 +12,13 @@
 - [x] Botão **Excluir teste** com confirmação reforçada no painel.
 - [ ] Aplicar atualização do GitHub ao ambiente de produção, reconstruir frontend e validar o fluxo. **Este registro não significa que o servidor já foi atualizado.**
 
+## Novo módulo — exclusão de arquivos de mídia em uso (implementação para validação)
+- Funcionalidade preparada: biblioteca administrativa central de mídias, com contagem de vínculos e exclusão explícita (digitar `EXCLUIR`).
+- Ao excluir, o arquivo físico é removido do servidor, documentos/vídeos associados deixam o catálogo, blocos afetados são ocultados e quizzes afetados voltam a rascunho; tentativas e notas anteriores permanecem no banco.
+- Não exige migrações de banco. CI destrutivo deve ser executado apenas no banco descartável do GitHub Actions.
+- **Pendente:** aplicar a alteração no repositório, obter CI aprovado e então implantar no Droplet. Não executar comandos de exclusão de produção durante validação.
+- Guia: `docs/SONI_MIDIAS_EXCLUSAO.md`.
+
 ## Encerramento operacional do deploy — 2026-10-16
 
 **Decisão do responsável:** encerrar nesta data a sessão de implantação da Plataforma SONI, deixando o serviço HTTPS em operação e o acompanhamento de incidentes para demanda futura. **Isto é aceite de encerramento operacional do deploy do MVP 0.9.0, não é certificação de conformidade de segurança nem emissão da release 1.0.0.** Nenhuma alteração adicional no Droplet foi solicitada nesta decisão.

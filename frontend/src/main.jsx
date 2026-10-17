@@ -10,7 +10,7 @@ import './styles.css';
 const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
 
 function Root() {
-  if (currentPath === '/admin' || currentPath === '/admin/site' || currentPath === '/admin/quizzes' || currentPath === '/admin/documents' || currentPath === '/admin/videos') return <AdminPage />;
+  if (currentPath === '/admin' || currentPath === '/admin/site' || currentPath === '/admin/quizzes' || currentPath === '/admin/documents' || currentPath === '/admin/videos' || currentPath === '/admin/media') return <AdminPage />;
 
   if (currentPath === '/testes' || /^\/testes\/[1-9][0-9]*$/.test(currentPath)) {
     return <PublicQuizzes />;

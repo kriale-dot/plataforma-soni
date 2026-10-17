@@ -14,6 +14,7 @@ use Soni\Database;
 use Soni\SiteRepository;
 use Soni\SiteCms;
 use Soni\SiteMedia;
+use Soni\MediaLibrary;
 use Soni\QuizService;
 use Soni\QuizFeedback;
 use Soni\DocumentService;
@@ -178,6 +179,20 @@ $app->post('/api/admin/site/media', static function (Request $request, ResponseI
     } catch (Throwable) {
         return Http::json($response, ['error' => 'Não foi possível enviar o arquivo.'], 503);
     }
+});
+
+// Biblioteca central de mídias: acesso e exclusão restritos a JWT administrativo.
+$app->get('/api/admin/media', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    $query = $request->getQueryParams();
+    return $adminSite($request, $response, static fn (\PDO $db): array => MediaLibrary::list(
+        $db, (int) ($query['offset'] ?? 0), (int) ($query['limit'] ?? 50)
+    ));
+});
+
+$app->delete('/api/admin/media/{id:[0-9]+}', static function (Request $request, ResponseInterface $response, array $args) use ($adminSite): ResponseInterface {
+    return $adminSite($request, $response, static fn (\PDO $db): array => MediaLibrary::delete(
+        $db, (int) $args['id'], (string) (($request->getParsedBody()['confirmation'] ?? ''))
+    ));
 });
 
 // Área pública de provas: não inclui gabarito, explicação nem indicador is_correct.
