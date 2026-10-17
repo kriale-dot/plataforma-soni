@@ -100,6 +100,7 @@ mediaCheck($code === 422 && is_file($imagePath), 'Exclusão sem confirmação re
 
 [$code, $deleted] = mediaHttp('DELETE', '/admin/media/' . $imageId, ['confirmation' => 'EXCLUIR'], $jwt);
 mediaCheck($code === 200 && ($deleted['deleted'] ?? false) === true && ($deleted['physical_deleted'] ?? false) === true, 'Imagem em uso excluída');
+clearstatcache(true, $imagePath);
 mediaCheck(!is_file($imagePath), 'Bytes removidos do disco');
 mediaCheck((int) ($deleted['blocks_hidden'] ?? 0) === 1 && (int) ($deleted['quizzes_unpublished'] ?? 0) === 1, 'Bloco ocultado e teste movido para rascunho');
 $stmt = $db->prepare('SELECT media_id, is_visible FROM site_blocks WHERE id = ?');
