@@ -5,7 +5,7 @@ declare(strict_types=1);
 // Teste de configuração seguro: não acessa banco de dados nem grava mídias.
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-$limits = (new ReflectionClass(\\Soni\\SiteMedia::class))->getReflectionConstant('ALLOWED');
+$limits = (new ReflectionClass(\Soni\SiteMedia::class))->getReflectionConstant('ALLOWED');
 if ($limits === false) throw new RuntimeException('Mapa ALLOWED não encontrado.');
 $allowed = $limits->getValue();
 $expected = [
@@ -34,4 +34,4 @@ foreach ($expected as $ext => [$kind, $mib]) {
         throw new RuntimeException('Limite/tipo de upload incorreto: .' . $ext);
     }
 }
-echo "Limites de upload verificados (imagem 20, áudio/PDF 50, vídeo 200 MiB).\\n";
+echo "Limites de upload verificados (imagem 20, áudio/PDF 50, vídeo 200 MiB).\n";
