@@ -26,5 +26,10 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offs
 .siteVideo{display:block;width:min(100%,800px);aspect-ratio:16/9;border:0;border-radius:10px;margin-top:25px;background:#15252E}
 .siteContentBlock audio{display:block;width:min(100%,700px);margin-top:25px}
 .siteCta{padding:70px 0;background:var(--primary);color:#fff}.siteCta p{max-width:760px;line-height:1.8}.siteCta a{margin-top:20px}
-.cardBottom a{font-weight:800;color:#153B4A}.cardBottom a:hover{text-decoration:underline}
+/* Chamadas visiveis e acessiveis nos cards de Testes, Documentos e Videos. */
+.cardBottom{flex-wrap:wrap;row-gap:14px}
+.cardBottom a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:11px 16px;border-radius:9px;background:var(--primary);color:#fff;font-size:13px;line-height:1.25;font-weight:800;letter-spacing:0;white-space:nowrap;box-shadow:0 5px 12px #153B4A24;transition:background-color .2s,box-shadow .2s,transform .2s}
+.cardBottom a:hover{background:#216070;color:#fff;text-decoration:none;box-shadow:0 8px 16px #153B4A35;transform:translateY(-1px)}
+.cardBottom a:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
+@media(max-width:560px){.cardBottom a{flex:1 1 100%;width:100%}}
 @media(max-width:920px){.siteImageText{grid-template-columns:1fr}}
