@@ -33,3 +33,6 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offs
 .cardBottom a:focus-visible{outline:3px solid var(--amber);outline-offset:3px}
 @media(max-width:560px){.cardBottom a{flex:1 1 100%;width:100%}}
 @media(max-width:920px){.siteImageText{grid-template-columns:1fr}}
+
+/* Centralizar horizontalmente os botões dos cartões de recursos. */
+.cardBottom a{margin-left:auto;margin-right:auto}
