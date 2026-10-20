@@ -59,6 +59,8 @@ jobs:
           php -l src/SiteMaintenance.php
           php -l src/QuizService.php
           php -l src/QuizFeedback.php
+          php -l src/QuizResultEmail.php
+          php -l tests/quiz-result-email-smoke.php
           php -l src/DocumentService.php
           php -l src/VideoService.php
           php -l tests/cors-http-smoke.php
@@ -74,6 +76,9 @@ jobs:
           php -l tests/ear-frequency-smoke.php
           php -l tests/maintenance-smoke.php
           php -r 'require "vendor/autoload.php"; if (!class_exists("Soni\\SiteMaintenance")) exit(1);'
+      - name: Validar assinatura e geracao do PDF
+        working-directory: api
+        run: php tests/quiz-result-email-smoke.php
       - name: Validar limites de upload
         working-directory: api
         run: php tests/upload-limits-smoke.php
