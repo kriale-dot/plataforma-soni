@@ -131,7 +131,7 @@ final class QuizResultEmail
         $pages = array_chunk($wrapped, 45);
         $objects = [1 => '<< /Type /Catalog /Pages 2 0 R >>'];
         $kids = [];
-        $next = 3;
+        $next = 4;
         foreach ($pages as $page) {
             $pageId = $next++;
             $contentId = $next++;
@@ -143,12 +143,11 @@ final class QuizResultEmail
             }
             $commands[] = 'ET';
             $stream = implode("\n", $commands) . "\n";
-            $objects[$pageId] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ' . ($next) . ' 0 R >> >> /Contents ' . $contentId . ' 0 R >>';
+            $objects[$pageId] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ' . (3) . ' 0 R >> >> /Contents ' . $contentId . ' 0 R >>';
             $objects[$contentId] = '<< /Length ' . strlen($stream) . " >>\nstream\n" . $stream . "endstream";
         }
-        $fontId = $next;
         $objects[2] = '<< /Type /Pages /Kids [' . implode(' ', $kids) . '] /Count ' . count($kids) . ' >>';
-        $objects[$fontId] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+        $objects[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
         ksort($objects);
         $pdf = "%PDF-1.4\n";
         $offsets = [0];
