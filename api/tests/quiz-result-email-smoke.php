@@ -40,9 +40,27 @@ $result = [
     'feedback_text' => str_repeat('Desempenho satisfatório com atenção à microfonia. ', 60),
     'study_recommendation' => 'Revise ganho e posicionamento.',
 ];
+$result['answers'] = [
+    [
+        'prompt_text' => 'Qual é a função do ganho no pré-amplificador?',
+        'question_image' => null, 'question_audio' => null,
+        'was_correct' => 1,
+        'selected_text' => 'Ajustar o nível de entrada', 'selected_image' => null, 'selected_audio' => null,
+        'correct_text' => 'Ajustar o nível de entrada', 'correct_image' => null, 'correct_audio' => null,
+        'explanation' => 'O ganho controla a amplificação do sinal de entrada.',
+    ],
+    [
+        'prompt_text' => 'O que causa microfonia?', 'question_image' => null, 'question_audio' => null,
+        'was_correct' => 0,
+        'selected_text' => 'Ruído elétrico', 'selected_image' => null, 'selected_audio' => null,
+        'correct_text' => 'Realimentação acústica', 'correct_image' => null, 'correct_audio' => null,
+        'explanation' => 'Microfonia acontece quando o som do alto-falante retorna ao microfone.',
+    ],
+];
 $pdf = $makePdf->invoke(null, $result);
 verify(str_starts_with($pdf, '%PDF-1.4'), 'PDF com cabeçalho correto');
-verify(str_contains($pdf, 'Teste de microfonia') && str_contains($pdf, '80.00%'), 'PDF contém resultados');
+verify(str_contains($pdf, 'Teste de microfonia') && str_contains($pdf, '80,00%'), 'PDF contém resultados');
+verify(str_contains($pdf, 'QUEST') && str_contains($pdf, 'Sua resposta:') && str_contains($pdf, 'Resposta correta:'), 'PDF contém gabarito comentado');
 verify(str_contains($pdf, '%%EOF'), 'PDF com marcador final');
 preg_match('/\/Count (\d+)/', $pdf, $pages);
 verify((int) ($pages[1] ?? 0) >= 2, 'PDF com paginação para devolutivas longas');
