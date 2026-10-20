@@ -67,6 +67,25 @@ final class QuizResultEmail
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$result) throw new InvalidArgumentException('Resultado não encontrado.');
 
+            // Gabarito da tentativa, obtido das respostas registradas.
+            // Questões ou alternativas com mídia são identificadas no relatório.
+            $detail = $db->prepare(
+                'SELECT q.prompt_text, q.image_media_id AS question_image, q.audio_media_id AS question_audio,
+                        q.explanation, aa.was_correct,
+                        selected.option_text AS selected_text, selected.image_media_id AS selected_image,
+                        selected.audio_media_id AS selected_audio,
+                        correct.option_text AS correct_text, correct.image_media_id AS correct_image,
+                        correct.audio_media_id AS correct_audio
+                   FROM quiz_attempt_answers aa
+                   JOIN quiz_questions q ON q.id = aa.question_id
+                   JOIN quiz_options selected ON selected.id = aa.option_id
+                   JOIN quiz_options correct ON correct.question_id = q.id AND correct.is_correct = 1
+                  WHERE aa.attempt_id = ?
+                  ORDER BY q.sort_order, q.id'
+            );
+            $detail->execute([$attemptId]);
+            $result['answers'] = $detail->fetchAll(PDO::FETCH_ASSOC);
+
             $insert = $db->prepare('INSERT IGNORE INTO quiz_result_email_sends (attempt_id, email) VALUES (?, ?)');
             $insert->execute([$attemptId, $email]);
             if ($insert->rowCount() !== 1) {
@@ -119,54 +138,127 @@ final class QuizResultEmail
         ];
     }
 
-    // PDF autocontido: não requer dependências adicionais no servidor.
+    // Relatório A4 com cabeçalho, seções e gabarito comentado.
+    // Mantém geração autocontida, sem alterar dependências do Composer.
     private static function pdf(array $result): string
     {
-        $lines = [
-            'PLATAFORMA SONI - SONORIZACAO DE IGREJAS',
-            'RESULTADO E DEVOLUTIVA',
-            '',
-            'Teste: ' . $result['title'],
-            'Realizado em: ' . $result['submitted_at'],
-            'Acertos: ' . $result['correct_answers'] . ' de ' . $result['total_questions'],
-            'Percentual: ' . $result['score_percent'] . '%',
-            '',
-            'CLASSIFICACAO: ' . $result['label'],
-            '',
-            'DEVOLUTIVA',
-            $result['feedback_text'],
-            '',
-            'RECOMENDACOES DE ESTUDO',
-            $result['study_recommendation'] ?: 'Sem recomendacoes adicionais.',
-            '',
-            'www.somdaigreja.com.br',
-        ];
-        $wrapped = [];
-        foreach ($lines as $line) {
-            $line = preg_replace('/\s+/u', ' ', trim((string) $line));
-            $line = iconv('UTF-8', 'Windows-1252//TRANSLIT//IGNORE', $line);
-            foreach (explode("\n", wordwrap($line, 85, "\n", true)) as $part) $wrapped[] = $part;
+        $navy = [0.082, 0.231, 0.290];     // #153B4A
+        $teal = [0.031, 0.498, 0.455];     // #087F74
+        $gold = [0.847, 0.635, 0.290];     // #D8A24A
+        $green = [0.231, 0.620, 0.420];    // #3B9E6B
+        $terra = [0.769, 0.498, 0.400];    // #C47F66
+        $muted = [0.365, 0.435, 0.451];
+        $white = [1, 1, 1];
+        $pages = [];
+        $commands = [];
+        $y = 0;
+
+        $color = static fn (array $rgb, string $op): string =>
+            sprintf('%.3F %.3F %.3F %s', $rgb[0], $rgb[1], $rgb[2], $op);
+        $rect = static function (float $x, float $bottom, float $w, float $h, array $fill) use ($color): string {
+            return $color($fill, 'rg') . "\n" . sprintf('%.1F %.1F %.1F %.1F re f', $x, $bottom, $w, $h);
+        };
+        $text = static function (float $x, float $top, string $value, int $fontSize, array $fill) use ($color): string {
+            $value = iconv('UTF-8', 'Windows-1252//TRANSLIT//IGNORE', $value);
+            $value = str_replace(['\\', '(', ')', "\r", "\n"], ['\\\\', '\(', '\)', ' ', ' '], $value);
+            return $color($fill, 'rg') . "\nBT /F1 " . $fontSize . " Tf " .
+                sprintf('1 0 0 1 %.1F %.1F Tm', $x, 842 - $top) .
+                ' (' . $value . ") Tj ET";
+        };
+        $newPage = static function () use (&$commands, &$y, &$pages, $rect, $text, $navy, $gold, $muted, $white): void {
+            if ($commands !== []) $pages[] = implode("\n", $commands) . "\n";
+            $commands = [
+                $rect(0, 764, 595, 78, $navy),
+                $rect(42, 751, 75, 4, $gold),
+                $text(42, 39, 'SONI  |  SONORIZAÇÃO DE IGREJAS', 17, $white),
+                $text(42, 59, 'RELATÓRIO DE AVALIAÇÃO', 10, $white),
+                $rect(42, 43, 511, 1, [0.88, 0.90, 0.91]),
+                $text(42, 815, 'www.somdaigreja.com.br', 9, $muted),
+            ];
+            $y = 112;
+        };
+        $newPage();
+        $ensure = static function (float $height) use (&$y, $newPage): void {
+            if ($y + $height > 785) $newPage();
+        };
+        $line = static function (string $value, array $ink, int $size = 11, int $indent = 0) use (&$y, &$commands, $text, $ensure): void {
+            $value = trim(preg_replace('/\s+/u', ' ', $value));
+            $max = $size >= 15 ? 42 : ($indent > 0 ? 82 : 92);
+            $segments = preg_split('/\r\n|\r|\n/', wordwrap(iconv('UTF-8', 'Windows-1252//TRANSLIT//IGNORE', $value), $max, "\n", true));
+            foreach ($segments as $segment) {
+                $ensure($size + 6);
+                // Already converted to WinAnsi for safe line wrapping.
+                $commands[] = $text(42 + $indent, $y, iconv('Windows-1252', 'UTF-8//IGNORE', $segment), $size, $ink);
+                $y += $size + 6;
+            }
+        };
+        $heading = static function (string $value) use (&$y, &$commands, $ensure, $rect, $line, $navy, $gold): void {
+            $ensure(47);
+            $y += 13;
+            $commands[] = $rect(42, 842 - $y + 4, 4, 22, $gold);
+            $line($value, $navy, 15, 12);
+            $y += 5;
+        };
+
+        $heading('Resultado do teste');
+        $line((string) $result['title'], $navy, 15);
+        $line('Data: ' . (string) $result['submitted_at'], $muted);
+        $ensure(64);
+        $commands[] = $rect(42, 842 - ($y + 50), 511, 56, [0.940, 0.970, 0.965]);
+        $commands[] = $text(56, $y + 22, 'ACERTOS: ' . $result['correct_answers'] . ' / ' . $result['total_questions'], 13, $navy);
+        $commands[] = $text(335, $y + 26, number_format((float) $result['score_percent'], 2, ',', '.') . '%', 24, $teal);
+        $y += 73;
+
+        $heading('Classificação e devolutiva');
+        $line((string) $result['label'], $teal, 13);
+        $line((string) $result['feedback_text'], $navy);
+        $heading('Recomendações de estudo');
+        $line((string) ($result['study_recommendation'] ?: 'Sem recomendações adicionais.'), $navy);
+        $heading('Gabarito comentado');
+
+        foreach (($result['answers'] ?? []) as $index => $entry) {
+            $isCorrect = (int) $entry['was_correct'] === 1;
+            $accent = $isCorrect ? $green : $terra;
+            $ensure(65);
+            $y += 7;
+            $commands[] = $rect(42, 842 - ($y + 15), 511, 22, $isCorrect ? [0.92, 0.97, 0.93] : [0.99, 0.95, 0.92]);
+            $commands[] = $text(52, $y + 10, 'QUESTÃO ' . ($index + 1) . '  -  ' . ($isCorrect ? 'CORRETA' : 'ERRADA'), 11, $accent);
+            $y += 35;
+            $question = trim((string) ($entry['prompt_text'] ?? ''));
+            $line($question !== '' ? $question : '[Questão com mídia]', $navy);
+            if ($entry['question_image']) $line('Esta questão contém imagem.', $muted, 9);
+            if ($entry['question_audio']) $line('Esta questão contém áudio.', $muted, 9);
+
+            $describe = static function (array $data, string $prefix) use ($entry): string {
+                $label = trim((string) ($entry[$prefix . '_text'] ?? ''));
+                $media = [];
+                if ($entry[$prefix . '_image']) $media[] = 'imagem';
+                if ($entry[$prefix . '_audio']) $media[] = 'áudio';
+                return $label . ($media !== [] ? ($label !== '' ? ' ' : '') . '[' . implode(' e ', $media) . ']' : '');
+            };
+            $line('Sua resposta: ' . ($describe($entry, 'selected') ?: '[sem texto]'), $isCorrect ? $green : $terra, 10);
+            if (!$isCorrect) $line('Resposta correta: ' . ($describe($entry, 'correct') ?: '[sem texto]'), $green, 10);
+            if (trim((string) ($entry['explanation'] ?? '')) !== '') {
+                $line('Explicação: ' . $entry['explanation'], $muted, 10);
+            }
+            $y += 12;
         }
-        $pages = array_chunk($wrapped, 45);
-        $objects = [1 => '<< /Type /Catalog /Pages 2 0 R >>'];
+        $pages[] = implode("\n", $commands) . "\n";
+
+        $objects = [
+            1 => '<< /Type /Catalog /Pages 2 0 R >>',
+            3 => '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+        ];
         $kids = [];
         $next = 4;
-        foreach ($pages as $page) {
+        foreach ($pages as $stream) {
             $pageId = $next++;
             $contentId = $next++;
             $kids[] = $pageId . ' 0 R';
-            $commands = ["BT", "/F1 12 Tf", "50 790 Td", "16 TL"];
-            foreach ($page as $line) {
-                $line = str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $line);
-                $commands[] = '(' . $line . ') Tj T*';
-            }
-            $commands[] = 'ET';
-            $stream = implode("\n", $commands) . "\n";
-            $objects[$pageId] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 ' . (3) . ' 0 R >> >> /Contents ' . $contentId . ' 0 R >>';
+            $objects[$pageId] = '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents ' . $contentId . ' 0 R >>';
             $objects[$contentId] = '<< /Length ' . strlen($stream) . " >>\nstream\n" . $stream . "endstream";
         }
         $objects[2] = '<< /Type /Pages /Kids [' . implode(' ', $kids) . '] /Count ' . count($kids) . ' >>';
-        $objects[3] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
         ksort($objects);
         $pdf = "%PDF-1.4\n";
         $offsets = [0];
