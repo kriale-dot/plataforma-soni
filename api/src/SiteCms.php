@@ -62,7 +62,7 @@ final class SiteCms
     {
         $settings = $pdo->query(
             'SELECT site_title, site_description, meta_title, meta_description,
-                    contact_email, contact_phone FROM site_settings WHERE id = 1'
+                    contact_email, contact_phone, show_visit_counter FROM site_settings WHERE id = 1'
         )->fetch();
         $blocks = $pdo->query(
             'SELECT id, type, title, subtitle, body_text, media_url, media_id, alt_text,
@@ -96,10 +96,18 @@ final class SiteCms
         if ($data['contact_email'] !== null && filter_var($data['contact_email'], FILTER_VALIDATE_EMAIL) === false) {
             throw new InvalidArgumentException('E-mail de contato inválido.');
         }
+        $show = $input['show_visit_counter'] ?? $pdo->query(
+            'SELECT show_visit_counter FROM site_settings WHERE id = 1'
+        )->fetchColumn();
+        if (!in_array($show, [true, false, 1, 0, '1', '0'], true)) {
+            throw new InvalidArgumentException('Configuração de contador inválida.');
+        }
+        $data['show_visit_counter'] = (int) (bool) $show;
         $stmt = $pdo->prepare(
             'UPDATE site_settings SET site_title = :site_title, site_description = :site_description,
              meta_title = :meta_title, meta_description = :meta_description,
-             contact_email = :contact_email, contact_phone = :contact_phone WHERE id = 1'
+             contact_email = :contact_email, contact_phone = :contact_phone,
+             show_visit_counter = :show_visit_counter WHERE id = 1'
         );
         $stmt->execute($data);
         return self::readAdmin($pdo)['settings'];

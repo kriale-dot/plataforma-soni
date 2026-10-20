@@ -278,6 +278,12 @@ export default function SiteEditor({ token, onUnauthorized }) {
                     value={settings[field] ?? ''} onChange={(event) => setSettings({ ...settings, [field]: event.target.value })} />}
             </label>
           ))}
+          <label className="siteEditorCheck">
+            <input type="checkbox" checked={Boolean(Number(settings.show_visit_counter))}
+              onChange={(event) => setSettings({ ...settings, show_visit_counter: event.target.checked ? 1 : 0 })} />
+            <span>Mostrar o total de visitas no rodapé do site institucional</span>
+          </label>
+          <small>As visitas continuam sendo contabilizadas e aparecem no relatório administrativo mesmo com esta opção desmarcada.</small>
           <button type="submit" disabled={busy}>{busy ? 'Salvando...' : 'Salvar configurações'}</button>
         </form>
       )}

@@ -20,6 +20,7 @@ use Soni\QuizFeedback;
 use Soni\QuizResultEmail;
 use Soni\DocumentService;
 use Soni\VideoService;
+use Soni\Analytics;
 use Psr\Http\Message\UploadedFileInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -61,6 +62,24 @@ $app->get('/api/site', static function (Request $request, ResponseInterface $res
         return Http::json($response, SiteRepository::readPublic(Database::connect()));
     } catch (Throwable) {
         return Http::json($response, ['error' => 'Site institucional temporariamente indisponível.'], 503);
+    }
+});
+
+// Evento anônimo de navegação nas páginas públicas. Não exige identificação do visitante.
+$app->post('/api/analytics/visit', static function (Request $request, ResponseInterface $response): ResponseInterface {
+    try {
+        $body = $request->getParsedBody();
+        if (!is_array($body)) {
+            throw new InvalidArgumentException('Dados de visita inválidos.');
+        }
+        return Http::json($response, Analytics::record(
+            Database::connect(), $body,
+            $request->getHeaderLine('User-Agent'), $request->getHeaderLine('DNT')
+        ));
+    } catch (InvalidArgumentException $error) {
+        return Http::json($response, ['error' => $error->getMessage()], 422);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Não foi possível registrar a visita.'], 503);
     }
 });
 
@@ -107,6 +126,12 @@ $adminSite = static function (Request $request, ResponseInterface $response, cal
         return Http::json($response, ['error' => 'Falha ao consultar ou salvar o site.'], 503);
     }
 };
+
+$app->get('/api/admin/analytics', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
+    $days = $request->getQueryParams()['days'] ?? 30;
+    return $adminSite($request, $response, static fn (\PDO $db): array =>
+        Analytics::report($db, filter_var($days, FILTER_VALIDATE_INT) !== false ? (int) $days : 0));
+});
 
 $app->get('/api/admin/site', static function (Request $request, ResponseInterface $response) use ($adminSite): ResponseInterface {
     return $adminSite($request, $response, static fn (\PDO $db): array => SiteCms::readAdmin($db));
