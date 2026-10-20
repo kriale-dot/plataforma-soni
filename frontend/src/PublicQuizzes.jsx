@@ -66,6 +66,10 @@ function Play({ id }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailStatus, setEmailStatus] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,6 +77,9 @@ function Play({ id }) {
     setError('');
     setAnswers({});
     setResult(null);
+    setEmail('');
+    setEmailStatus('');
+    setEmailError('');
     apiRequest('/quizzes/' + id, { signal: controller.signal })
       .then(setQuiz)
       .catch((err) => { if (err.name !== 'AbortError') setError(err.message); });
@@ -99,6 +106,23 @@ function Play({ id }) {
       setError(err.message || 'Não foi possível enviar as respostas.');
     } finally {
       setBusy(false);
+    }
+  }
+  async function sendResult(event) {
+    event.preventDefault();
+    if (!result?.result_token || emailBusy || emailStatus) return;
+    setEmailBusy(true);
+    setEmailError('');
+    try {
+      const response = await apiRequest('/quizzes/attempts/' + result.attempt_id + '/email', {
+        method: 'POST',
+        body: { email: email.trim(), result_token: result.result_token },
+      });
+      setEmailStatus(response.message || 'Solicitação encaminhada ao servidor de e-mail.');
+    } catch (err) {
+      setEmailError(err.message || 'Não foi possível enviar o relatório.');
+    } finally {
+      setEmailBusy(false);
     }
   }
   const byQuestion = Object.fromEntries((result?.feedback ?? []).map((entry) => [entry.question_id, entry]));
@@ -129,6 +153,19 @@ function Play({ id }) {
               <p>{result.performance_feedback.study_recommendation}</p>
             </>}
           </div>}
+          <form onSubmit={sendResult} className="quizResultEmail">
+            <h3>Receba o resultado e a devolutiva em PDF</h3>
+            <p>Opcional: informe seu e-mail para receber o relatório em anexo.</p>
+            <label htmlFor="soni-result-email">Seu e-mail</label>
+            <input id="soni-result-email" type="email" maxLength={254} autoComplete="email"
+              value={email} onChange={(event) => setEmail(event.target.value)}
+              placeholder="seuemail@exemplo.com" required disabled={emailBusy || !!emailStatus}/>
+            <button type="submit" disabled={emailBusy || !!emailStatus || !email.trim()}>
+              {emailBusy ? 'Enviando...' : 'Enviar meu resultado em PDF'}
+            </button>
+            {emailStatus && <p role="status">{emailStatus}</p>}
+            {emailError && <p className="quizAlert quizError" role="alert">{emailError}</p>}
+          </form>
           <p>Confira abaixo o gabarito e as explicações de cada questão.</p>
           <a href="/testes">Escolher outro teste →</a>
         </section>}
