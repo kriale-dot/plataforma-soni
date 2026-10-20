@@ -495,6 +495,7 @@ final class QuizService
         }
         return [
             'attempt_id' => $attemptId,
+            'email_token' => QuizResultEmail::token($id, $attemptId),
             'total' => $total,
             'correct' => $correct,
             'score_percent' => $score,
