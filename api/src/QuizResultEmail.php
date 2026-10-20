@@ -46,11 +46,15 @@ final class QuizResultEmail
         self::authenticate($attemptId, $token);
 
         $from = (string) ($_ENV['SONI_MAIL_FROM'] ?? '');
+        $apiKey = (string) ($_ENV['BREVO_API_KEY'] ?? '');
         if (!filter_var($from, FILTER_VALIDATE_EMAIL) || preg_match('/[\r\n]/', $from)) {
-            throw new RuntimeException('Remetente de e-mail não configurado.');
+            throw new RuntimeException('Remetente Brevo não configurado.');
+        }
+        if ($apiKey === '' || preg_match('/[\r\n]/', $apiKey)) {
+            throw new RuntimeException('Chave da API Brevo não configurada.');
         }
 
-        // Reserva atômica para evitar múltiplos envios da mesma tentativa.
+        // Reserva atômica: permite somente uma solicitação por tentativa.
         $db->beginTransaction();
         try {
             $stmt = $db->prepare(
@@ -74,30 +78,45 @@ final class QuizResultEmail
             throw $error;
         }
 
-        $pdf = self::pdf($result);
-        $boundary = 'SONI_' . bin2hex(random_bytes(16));
-        $subject = 'Resultado do teste SONI';
-        $plain = "Olá!\r\n\r\nSegue em anexo o PDF com seu resultado e a devolutiva do teste SONI.\r\n\r\nEquipe SONI";
-        $headers = [
-            'From: Plataforma SONI <' . $from . '>',
-            'MIME-Version: 1.0',
-            'Content-Type: multipart/mixed; boundary="' . $boundary . '"',
+        $payload = [
+            'sender' => ['name' => 'Plataforma SONI', 'email' => $from],
+            'to' => [['email' => $email]],
+            'subject' => 'Resultado e devolutiva do teste SONI',
+            'htmlContent' => '<p>Olá!</p><p>Seu resultado e sua devolutiva da Plataforma SONI estão anexados em PDF.</p><p>Equipe SONI</p>',
+            'textContent' => "Olá!\n\nSeu resultado e sua devolutiva da Plataforma SONI estão anexados em PDF.\n\nEquipe SONI",
+            'attachment' => [['name' => 'resultado-soni.pdf', 'content' => base64_encode(self::pdf($result))]],
+            'tags' => ['soni-resultado'],
         ];
-        $message = '--' . $boundary . "\r\n"
-            . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
-            . chunk_split(base64_encode($plain), 76, "\r\n")
-            . '--' . $boundary . "\r\n"
-            . "Content-Type: application/pdf; name=\"resultado-soni.pdf\"\r\n"
-            . "Content-Disposition: attachment; filename=\"resultado-soni.pdf\"\r\n"
-            . "Content-Transfer-Encoding: base64\r\n\r\n"
-            . chunk_split(base64_encode($pdf), 76, "\r\n")
-            . '--' . $boundary . "--\r\n";
 
-        if (!mail($email, $subject, $message, implode("\r\n", $headers), '-f' . $from)) {
-            $db->prepare('DELETE FROM quiz_result_email_sends WHERE attempt_id = ?')->execute([$attemptId]);
-            throw new RuntimeException('O servidor não conseguiu encaminhar o e-mail.');
+        $context = stream_context_create(['http' => [
+            'method' => 'POST',
+            'header' => [
+                'api-key: ' . $apiKey,
+                'Content-Type: application/json',
+                'Accept: application/json',
+            ],
+            'content' => json_encode($payload, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
+            'ignore_errors' => true,
+            'timeout' => 20,
+        ]]);
+        $raw = @file_get_contents('https://api.brevo.com/v3/smtp/email', false, $context);
+        $statusLine = $http_response_header[0] ?? '';
+        preg_match('/^HTTP\\/\\S+\\s+(\\d{3})/', $statusLine, $match);
+        $status = (int) ($match[1] ?? 0);
+        $response = is_string($raw) ? json_decode($raw, true) : null;
+
+        if ($status !== 201 || !is_array($response) || empty($response['messageId'])) {
+            // Timeout pode ocorrer após aceite no Brevo: não liberar reenvio
+            // automático em falhas ambíguas para evitar duplicações.
+            if ($status >= 400 && $status < 500) {
+                $db->prepare('DELETE FROM quiz_result_email_sends WHERE attempt_id = ?')->execute([$attemptId]);
+            }
+            throw new RuntimeException('O Brevo não confirmou o envio (HTTP ' . $status . ').');
         }
-        return ['sent' => true, 'message' => 'Solicitação de envio aceita pelo servidor de e-mail.'];
+        return [
+            'sent' => true,
+            'message' => 'O Brevo aceitou seu e-mail. Confira sua caixa de entrada e a pasta de spam.',
+        ];
     }
 
     // PDF autocontido: não requer dependências adicionais no servidor.
