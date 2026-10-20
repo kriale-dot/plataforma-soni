@@ -17,6 +17,7 @@ use Soni\SiteMedia;
 use Soni\MediaLibrary;
 use Soni\QuizService;
 use Soni\QuizFeedback;
+use Soni\QuizResultEmail;
 use Soni\DocumentService;
 use Soni\VideoService;
 use Psr\Http\Message\UploadedFileInterface;
@@ -224,6 +225,19 @@ $app->post('/api/quizzes/{id:[0-9]+}/attempts', static function (Request $reques
         return Http::json($response, ['error' => $error->getMessage()], 422);
     } catch (Throwable) {
         return Http::json($response, ['error' => 'Não foi possível finalizar o teste.'], 503);
+    }
+});
+
+// Entrega opcional de relatório de tentativa, mediante token temporário.
+$app->post('/api/quizzes/attempts/{id:[0-9]+}/email', static function (Request $request, ResponseInterface $response, array $args): ResponseInterface {
+    try {
+        $body = $request->getParsedBody();
+        if (!is_array($body)) throw new InvalidArgumentException('Dados inválidos.');
+        return Http::json($response, QuizResultEmail::send(Database::connect(), (int) $args['id'], $body));
+    } catch (InvalidArgumentException $error) {
+        return Http::json($response, ['error' => $error->getMessage()], 422);
+    } catch (Throwable) {
+        return Http::json($response, ['error' => 'Não foi possível enviar o PDF por e-mail. Confira a configuração do servidor.'], 503);
     }
 });
 
