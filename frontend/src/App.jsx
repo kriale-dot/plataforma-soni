@@ -90,7 +90,16 @@ function SiteBlock({ block }) {
   }
   if (block.type === 'IMAGEM' || block.type === 'TEXTO_IMAGEM') {
     return <section className="layout siteContentBlock siteImageText">
-      <div><span className="overline teal">{block.subtitle}</span><h2>{block.title}</h2><p>{block.body_text}</p></div>
+      <div>
+        <span className="overline teal">{block.subtitle}</span>
+        <h2>{block.title}</h2>
+        <p>{block.body_text}</p>
+        {block.type === 'TEXTO_IMAGEM' && url && (
+          <div className="heroButtons">
+            <a className="buttonAmber" href={url}>{block.button_label || 'Saiba mais'} <span aria-hidden="true">→</span></a>
+          </div>
+        )}
+      </div>
       {image && <img src={apiMediaUrl(block.media_url)} alt={block.alt_text || ''} loading="lazy"/>}
     </section>;
   }
