@@ -16,6 +16,7 @@ use Soni\SiteCms;
 use Soni\SiteMedia;
 use Soni\MediaLibrary;
 use Soni\QuizService;
+use Soni\QuizResultEmail;
 use Soni\QuizFeedback;
 use Soni\DocumentService;
 use Soni\VideoService;
@@ -224,6 +225,21 @@ $app->post('/api/quizzes/{id:[0-9]+}/attempts', static function (Request $reques
         return Http::json($response, ['error' => $error->getMessage()], 422);
     } catch (Throwable) {
         return Http::json($response, ['error' => 'Não foi possível finalizar o teste.'], 503);
+    }
+});
+
+// Envio facultativo: token assinado vincula pedido à tentativa finalizada.
+$app->post('/api/quizzes/{id:[0-9]+}/attempts/email', static function (Request $request, ResponseInterface $response, array $args): ResponseInterface {
+    try {
+        $body = $request->getParsedBody();
+        if (!is_array($body)) throw new InvalidArgumentException('Dados de e-mail inválidos.');
+        QuizResultEmail::send(Database::connect(), (int) $args['id'], $body);
+        return Http::json($response, ['sent' => true]);
+    } catch (InvalidArgumentException $error) {
+        return Http::json($response, ['error' => $error->getMessage()], 422);
+    } catch (Throwable $error) {
+        error_log('SONI quiz result email: ' . $error->getMessage());
+        return Http::json($response, ['error' => 'Não foi possível enviar o e-mail. Tente novamente.'], 503);
     }
 });
 

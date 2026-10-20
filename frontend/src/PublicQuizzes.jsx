@@ -66,6 +66,10 @@ function Play({ id }) {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [email, setEmail] = useState('');
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -73,6 +77,10 @@ function Play({ id }) {
     setError('');
     setAnswers({});
     setResult(null);
+    setEmail('');
+    setEmailBusy(false);
+    setEmailSent(false);
+    setEmailError('');
     apiRequest('/quizzes/' + id, { signal: controller.signal })
       .then(setQuiz)
       .catch((err) => { if (err.name !== 'AbortError') setError(err.message); });
@@ -99,6 +107,23 @@ function Play({ id }) {
       setError(err.message || 'Não foi possível enviar as respostas.');
     } finally {
       setBusy(false);
+    }
+  }
+  async function sendResultEmail(event) {
+    event.preventDefault();
+    if (!result || emailBusy || emailSent) return;
+    setEmailBusy(true);
+    setEmailError('');
+    try {
+      await apiRequest('/quizzes/' + id + '/attempts/email', {
+        method: 'POST',
+        body: { attempt_id: result.attempt_id, email_token: result.email_token, email: email.trim() },
+      });
+      setEmailSent(true);
+    } catch (err) {
+      setEmailError(err.message || 'Não foi possível enviar o e-mail.');
+    } finally {
+      setEmailBusy(false);
     }
   }
   const byQuestion = Object.fromEntries((result?.feedback ?? []).map((entry) => [entry.question_id, entry]));
@@ -129,6 +154,21 @@ function Play({ id }) {
               <p>{result.performance_feedback.study_recommendation}</p>
             </>}
           </div>}
+          <div className="quizResultEmail">
+            <h3>Receber resultado por e-mail</h3>
+            <p>Se desejar, enviamos sua pontuação, devolutiva e recomendação de estudo ao endereço informado.</p>
+            {emailSent ? <p className="quizAlert quizOk" role="status">Solicitação enviada! Confira sua caixa de entrada e spam.</p> :
+              <form onSubmit={sendResultEmail}>
+                <label htmlFor="quiz-result-email">Seu e-mail</label>
+                <div className="quizResultEmailFields">
+                  <input id="quiz-result-email" type="email" required maxLength={254}
+                    autoComplete="email" placeholder="voce@exemplo.com" value={email}
+                    onChange={(event) => setEmail(event.target.value)} disabled={emailBusy}/>
+                  <button type="submit" disabled={emailBusy}>{emailBusy ? 'Enviando...' : 'Enviar meu resultado'}</button>
+                </div>
+                {emailError && <p className="quizAlert quizError" role="alert">{emailError}</p>}
+              </form>}
+          </div>
           <p>Confira abaixo o gabarito e as explicações de cada questão.</p>
           <a href="/testes">Escolher outro teste →</a>
         </section>}

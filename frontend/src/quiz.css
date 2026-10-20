@@ -102,3 +102,13 @@
 .quizPerformanceFeedback p{color:#35474E;line-height:1.8}
 .quizPerformanceFeedback strong{font-size:13px;color:#153B4A}
 @media(max-width:540px){.quizFeedbackForm{padding:12px}.quizFeedbackRange{padding:12px}}
+
+/* Envio opcional de resultado após conclusão do teste. */
+.quizResultEmail{margin:24px 0;padding:20px;border:1px solid #BDDBD4;background:#F4FAF8;border-radius:12px}
+.quizResultEmail h3{font:800 18px Manrope,sans-serif;color:#153B4A;margin:0 0 8px}
+.quizResultEmail p{font-size:14px;line-height:1.6}
+.quizResultEmail label{display:block;font-weight:700;font-size:13px;margin-bottom:8px;color:#153B4A}
+.quizResultEmailFields{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+.quizResultEmailFields input{flex:1 1 230px;min-width:0;border:1px solid #B4C8C8;border-radius:8px;background:#fff;padding:11px 12px;color:#27333A;font:inherit}
+.quizResultEmailFields button{background:#153B4A;color:#fff;border:0;border-radius:8px;padding:11px 18px;font:700 14px 'DM Sans',sans-serif;cursor:pointer}
+.quizResultEmailFields button:disabled{opacity:.6;cursor:wait}
