@@ -80,7 +80,7 @@ final class QuizResultEmail
         $payload = json_encode([
             'sender' => ['email' => $sender, 'name' => 'SONI - Som da Igreja'],
             'to' => [['email' => $email]],
-            'subject' => 'SONI | Resultado do teste: ' . mb_substr((string) $result['title'], 0, 120),
+            'subject' => 'SONI | Resultado do teste: ' . substr((string) $result['title'], 0, 120),
             'textContent' => $message,
         ], JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
         $ch = curl_init('https://api.brevo.com/v3/smtp/email');
