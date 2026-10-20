@@ -47,6 +47,8 @@ jobs:
           php -l src/Database.php
           php -l src/SiteRepository.php
           php -l src/SiteCms.php
+          php -l src/Analytics.php
+          php -l tests/analytics-http-smoke.php
           php -l src/SiteMedia.php
           php -l src/MediaLibrary.php
           php -r 'require "vendor/autoload.php"; if (!class_exists("Soni\\SiteMedia")) exit(1);'
@@ -161,6 +163,7 @@ jobs:
             sleep 1
           done
           php tests/site-cms-http-smoke.php
+          php tests/analytics-http-smoke.php
           php tests/site-media-http-smoke.php
           php tests/quiz-http-smoke.php
           php tests/quiz-feedback-http-smoke.php

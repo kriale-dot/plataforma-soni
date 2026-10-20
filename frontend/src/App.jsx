@@ -133,6 +133,7 @@ function groupBlocks(blocks) {
 export default function App() {
   const [site, setSite] = useState(null);
   const [error, setError] = useState('');
+  const [liveCount, setLiveCount] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -153,6 +154,12 @@ export default function App() {
     }
     meta.content = site.settings?.meta_description || site.settings?.site_description || '';
   }, [site]);
+
+  useEffect(() => {
+    const receive = (event) => setLiveCount(event.detail?.visit_count ?? null);
+    window.addEventListener('soni:visit-count', receive);
+    return () => window.removeEventListener('soni:visit-count', receive);
+  }, []);
 
   const groups = useMemo(() => groupBlocks(site?.blocks ?? []), [site]);
   return (
@@ -192,7 +199,9 @@ export default function App() {
       </main>
 
       <footer className="footer">
-        <div className="layout footerInner"><div><strong>SONI</strong><small>PLATAFORMA DE SONORIZAÇÃO DE IGREJAS</small></div><span>© SONI · Aprendizagem e sonorização de igrejas</span></div>
+        <div className="layout footerInner"><div><strong>SONI</strong><small>PLATAFORMA DE SONORIZAÇÃO DE IGREJAS</small></div>
+          {Number(site?.settings?.show_visit_counter) === 1 && <span className="siteVisitCounter" aria-label="Visitas ao site">◉ {Number(liveCount ?? site?.settings?.visit_count ?? 0).toLocaleString('pt-BR')} visitas</span>}
+          <span>© SONI · Aprendizagem e sonorização de igrejas</span></div>
       </footer>
     </div>
   );

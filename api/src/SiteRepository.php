@@ -11,9 +11,13 @@ final class SiteRepository
     public static function readPublic(PDO $pdo): array
     {
         $settings = $pdo->query(
-            'SELECT site_title, site_description, meta_title, meta_description, contact_email, contact_phone
+            'SELECT site_title, site_description, meta_title, meta_description, contact_email, contact_phone, show_visit_counter
              FROM site_settings WHERE id = 1 LIMIT 1'
         )->fetch();
+
+        if ($settings !== false && (int) $settings['show_visit_counter'] === 1) {
+            $settings['visit_count'] = Analytics::totalVisits($pdo);
+        }
 
         $blocks = $pdo->query(
             "SELECT b.id, b.type, b.title, b.subtitle, b.body_text, b.media_id,
