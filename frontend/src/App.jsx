@@ -181,7 +181,7 @@ export default function App() {
             <a href="#sobre">Sobre</a><a href="/testes">Testes</a>
             <a href="/documentos">Documentos</a><a href="/videos">Vídeos</a>
           </nav>
-          <a className="navCta" href="#recursos">Explorar plataforma <span aria-hidden="true">↗</span></a>
+          <a className="navCta navCtaCourse" href="https://pay.hotmart.com/W24729918T?off=2jwegut5&amp;checkoutMode=10&amp;bid=1792245844984" target="_blank" rel="noopener noreferrer">Curso de Sonorização de Igrejas <span aria-hidden="true">↗</span></a>
         </div>
       </header>
 
