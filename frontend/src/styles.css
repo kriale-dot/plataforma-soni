@@ -35,3 +35,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--amber);outline-offs
 @media(max-width:560px){.cardBottom a{flex:1 1 100%;width:100%}}
 @media(max-width:920px){.siteImageText{grid-template-columns:1fr}}
 
+/* Link do curso no cabeçalho: legível no desktop e no celular. */
+.navCtaCourse{display:inline-flex;align-items:center;justify-content:center;gap:8px;max-width:260px;text-align:center;line-height:1.3}
+.navCtaCourse span{margin-left:0}
+@media(max-width:560px){.headerInner{gap:10px}.brand small{display:none}.navCtaCourse{font-size:11px;max-width:180px;padding:9px 10px}.navCtaCourse span{display:none}}
