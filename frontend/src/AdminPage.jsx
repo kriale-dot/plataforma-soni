@@ -8,14 +8,51 @@ import AnalyticsDashboard from './AnalyticsDashboard.jsx';
 import { apiRequest } from './lib/api.js';
 import './admin.css';
 
+// Mantém a autenticação apenas durante a sessão da aba, nunca a senha.
+const ADMIN_SESSION_KEY = 'soni_admin_token';
+const adminViewFromPath = () => ({
+  '/admin/site': 'site',
+  '/admin/quizzes': 'quizzes',
+  '/admin/documents': 'documents',
+  '/admin/videos': 'videos',
+  '/admin/media': 'media',
+  '/admin/analytics': 'analytics',
+})[window.location.pathname] || 'dashboard';
+
 export default function AdminPage() {
   const [health, setHealth] = useState('verificando');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [token, setToken] = useState(null);
+  const [restoringSession, setRestoringSession] = useState(true);
   const [busy, setBusy] = useState(false);
-  const [view, setView] = useState('dashboard');
+  const [view, setView] = useState(adminViewFromPath);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    const controller = new AbortController();
+    let storedToken = null;
+    try { storedToken = window.sessionStorage.getItem(ADMIN_SESSION_KEY); } catch { /* Armazenamento desabilitado. */ }
+
+    if (!storedToken) {
+      setRestoringSession(false);
+      return () => { active = false; controller.abort(); };
+    }
+
+    apiRequest('/admin/me', { token: storedToken, signal: controller.signal })
+      .then(() => { if (active) setToken(storedToken); })
+      .catch((err) => {
+        if (!active) return;
+        if (err.status === 401) {
+          try { window.sessionStorage.removeItem(ADMIN_SESSION_KEY); } catch { /* Sem armazenamento. */ }
+        } else if (err.name !== 'AbortError') {
+          setError('Não foi possível validar a sessão anterior. Verifique a conexão com a API.');
+        }
+      })
+      .finally(() => { if (active) setRestoringSession(false); });
+    return () => { active = false; controller.abort(); };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -41,15 +78,11 @@ export default function AdminPage() {
 
       if (!login.token) throw new Error('Token de autenticação não recebido.');
       await apiRequest('/admin/me', { token: login.token });
-      // Em memória apenas; recarregar a página encerra a sessão do frontend.
+      // O JWT dura no máximo uma hora e não é compartilhado via localStorage.
+      try { window.sessionStorage.setItem(ADMIN_SESSION_KEY, login.token); } catch { /* Apenas em memória. */ }
       setToken(login.token);
       setPassword('');
-      if (window.location.pathname === '/admin/site') setView('site');
-      if (window.location.pathname === '/admin/quizzes') setView('quizzes');
-      if (window.location.pathname === '/admin/documents') setView('documents');
-      if (window.location.pathname === '/admin/videos') setView('videos');
-      if (window.location.pathname === '/admin/media') setView('media');
-      if (window.location.pathname === '/admin/analytics') setView('analytics');
+      setView(adminViewFromPath());
     } catch (err) {
       if (err.status === 503) setError('O administrador ainda não foi configurado no arquivo api/.env.');
       else if (err.status === 401) setError('E-mail ou senha inválidos.');
@@ -60,6 +93,7 @@ export default function AdminPage() {
   }
 
   const logout = useCallback(() => {
+    try { window.sessionStorage.removeItem(ADMIN_SESSION_KEY); } catch { /* Sem armazenamento. */ }
     setToken(null);
     setPassword('');
     setError('');
@@ -128,7 +162,7 @@ export default function AdminPage() {
               <button type="button" onClick={logout}>Sair da administração</button>
             </div>
           )}
-          {token && view === 'site' ? <SiteEditor token={token} onUnauthorized={logout} /> : token && view === 'quizzes' ? <QuizManager token={token} onUnauthorized={logout} /> : token && view === 'documents' ? <DocumentManager token={token} onUnauthorized={logout} /> : token && view === 'videos' ? <VideoManager token={token} onUnauthorized={logout} /> : token && view === 'media' ? <MediaLibrary token={token} onUnauthorized={logout} /> : token && view === 'analytics' ? <AnalyticsDashboard token={token} onUnauthorized={logout} /> : (
+          {restoringSession ? <section className="adminPanel" role="status"><div className="adminPanelHead"><strong>Verificando sessão administrativa...</strong></div></section> : token && view === 'site' ? <SiteEditor token={token} onUnauthorized={logout} /> : token && view === 'quizzes' ? <QuizManager token={token} onUnauthorized={logout} /> : token && view === 'documents' ? <DocumentManager token={token} onUnauthorized={logout} /> : token && view === 'videos' ? <VideoManager token={token} onUnauthorized={logout} /> : token && view === 'media' ? <MediaLibrary token={token} onUnauthorized={logout} /> : token && view === 'analytics' ? <AnalyticsDashboard token={token} onUnauthorized={logout} /> : (
           <section className="adminPanel" aria-label="Autenticação do administrador">
             <div className="adminPanelHead">
               <strong>{token ? 'Sessão autenticada' : 'Entrar na plataforma'}</strong>
@@ -165,7 +199,7 @@ export default function AdminPage() {
                   placeholder="Digite sua senha" disabled={busy} />
                 {error && <p className="adminError" role="alert">{error}</p>}
                 <button type="submit" disabled={busy}>{busy ? 'Verificando...' : 'Entrar'}</button>
-                <p className="adminHelp">O acesso só será liberado depois que o arquivo <code>api/.env</code> estiver configurado.</p>
+                <p className="adminHelp">O acesso só será liberado depois que o arquivo <code>api/.env</code> estiver configurado. Após entrar, você poderá navegar pelo site e voltar nesta aba enquanto a sessão for válida (até 1 hora).</p>
               </form>
             )}
           </section>
