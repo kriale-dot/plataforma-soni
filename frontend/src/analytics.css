@@ -30,3 +30,6 @@
 .analyticsInventory span{display:grid;gap:9px;padding:15px;border:1px solid #e2eded;border-radius:9px;color:#60747b;font-size:13px}
 .analyticsInventory strong{color:var(--primary);font-size:21px}
 @media(max-width:760px){.analyticsColumns{grid-template-columns:1fr}.analyticsPanel{padding:16px}.analyticsCards{grid-template-columns:repeat(2,minmax(0,1fr))}.analyticsCard strong{font-size:24px}}
+
+.analyticsPeriodInfo{font-size:13px;color:#48616a;margin:0 0 16px;line-height:1.6}
+.analyticsPeriodInfo strong{color:var(--primary)}

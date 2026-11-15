@@ -92,16 +92,30 @@ final class Analytics
         if (!in_array($days, [7, 30, 90], true)) {
             throw new InvalidArgumentException('Período deve ser de 7, 30 ou 90 dias.');
         }
+        // O período abrange dias civis completos a partir da meia-noite de São Paulo,
+        // incluindo o dia atual. Aplicar a mesma janela a todos os indicadores.
+        $tz = new \DateTimeZone('America/Sao_Paulo');
+        $today = new \DateTimeImmutable('today', $tz);
+        $firstDay = $today->modify('-' . ($days - 1) . ' days');
+        $startUtc = $firstDay->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+        $todayUtc = $today->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
         $scalar = static fn (string $sql): int => (int) $pdo->query($sql)->fetchColumn();
+        $countSince = static function (string $sql, string $start) use ($pdo): int {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$start]);
+            return (int) $stmt->fetchColumn();
+        };
         $totals = [
             'visits_all' => self::totalVisits($pdo),
-            'visits_today' => $scalar("SELECT COUNT(*) FROM analytics_sessions
-                WHERE DATE(DATE_SUB(started_at, INTERVAL 3 HOUR)) = DATE(DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 HOUR))"),
+            'visits_today' => $countSince('SELECT COUNT(*) FROM analytics_sessions WHERE started_at >= ?', $todayUtc),
+            'visits_period' => $countSince('SELECT COUNT(*) FROM analytics_sessions WHERE started_at >= ?', $startUtc),
             'visits_7d' => $scalar('SELECT COUNT(*) FROM analytics_sessions WHERE started_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 7 DAY)'),
             'visits_30d' => $scalar('SELECT COUNT(*) FROM analytics_sessions WHERE started_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 30 DAY)'),
             'pageviews_all' => $scalar('SELECT COUNT(*) FROM analytics_pageviews'),
+            'pageviews_period' => $countSince('SELECT COUNT(*) FROM analytics_pageviews WHERE viewed_at >= ?', $startUtc),
             'pageviews_30d' => $scalar('SELECT COUNT(*) FROM analytics_pageviews WHERE viewed_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 30 DAY)'),
             'attempts_all' => $scalar('SELECT COUNT(*) FROM quiz_attempts'),
+            'attempts_period' => $countSince('SELECT COUNT(*) FROM quiz_attempts WHERE submitted_at >= ?', $startUtc),
             'attempts_30d' => $scalar('SELECT COUNT(*) FROM quiz_attempts WHERE submitted_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 30 DAY)'),
         ];
 
@@ -109,25 +123,23 @@ final class Analytics
         $visits = $pdo->prepare(
             'SELECT DATE(DATE_SUB(started_at, INTERVAL 3 HOUR)) AS day, COUNT(*) AS amount
              FROM analytics_sessions
-             WHERE started_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL ? DAY)
+             WHERE started_at >= ?
              GROUP BY day ORDER BY day'
         );
-        $visits->bindValue(1, $days + 1, PDO::PARAM_INT);
+        $visits->bindValue(1, $startUtc, PDO::PARAM_STR);
         $visits->execute();
         $dailyVisits = array_column($visits->fetchAll(), 'amount', 'day');
 
         $views = $pdo->prepare(
             'SELECT DATE(DATE_SUB(viewed_at, INTERVAL 3 HOUR)) AS day, COUNT(*) AS amount
              FROM analytics_pageviews
-             WHERE viewed_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL ? DAY)
+             WHERE viewed_at >= ?
              GROUP BY day ORDER BY day'
         );
-        $views->bindValue(1, $days + 1, PDO::PARAM_INT);
+        $views->bindValue(1, $startUtc, PDO::PARAM_STR);
         $views->execute();
         $dailyViews = array_column($views->fetchAll(), 'amount', 'day');
 
-        $tz = new \DateTimeZone('America/Sao_Paulo');
-        $today = new \DateTimeImmutable('today', $tz);
         $series = [];
         for ($i = $days - 1; $i >= 0; $i--) {
             $day = $today->modify("-{$i} days")->format('Y-m-d');
@@ -142,10 +154,10 @@ final class Analytics
             'SELECT page_path AS path, COUNT(*) AS views,
                     COUNT(DISTINCT session_id) AS sessions
              FROM analytics_pageviews
-             WHERE viewed_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL ? DAY)
+             WHERE viewed_at >= ?
              GROUP BY page_path ORDER BY views DESC, page_path ASC LIMIT 12'
         );
-        $stmt->bindValue(1, $days, PDO::PARAM_INT);
+        $stmt->bindValue(1, $startUtc, PDO::PARAM_STR);
         $stmt->execute();
         $pages = $stmt->fetchAll();
 
@@ -153,10 +165,10 @@ final class Analytics
             'SELECT q.id, q.title, COUNT(a.id) AS attempts,
                     ROUND(AVG(a.score_percent), 1) AS average_score
              FROM quizzes q LEFT JOIN quiz_attempts a
-               ON a.quiz_id = q.id AND a.submitted_at >= DATE_SUB(UTC_TIMESTAMP(), INTERVAL ? DAY)
+               ON a.quiz_id = q.id AND a.submitted_at >= ?
              GROUP BY q.id, q.title ORDER BY attempts DESC, q.title ASC LIMIT 12'
         );
-        $stmt->bindValue(1, $days, PDO::PARAM_INT);
+        $stmt->bindValue(1, $startUtc, PDO::PARAM_STR);
         $stmt->execute();
         $quizzes = $stmt->fetchAll();
 
@@ -169,6 +181,8 @@ final class Analytics
 
         return [
             'days' => $days,
+            'start_date' => $firstDay->format('Y-m-d'),
+            'end_date' => $today->format('Y-m-d'),
             'timezone' => 'America/Sao_Paulo',
             'totals' => $totals,
             'series' => $series,

@@ -36,6 +36,8 @@ export default function AnalyticsDashboard({ token, onUnauthorized }) {
   }, [days, token, onUnauthorized, revision]);
 
   const total = report?.totals;
+  const period = report?.days ?? days;
+  const datePtBr = (date) => date ? date.split('-').reverse().join('/') : '';
   const maxVisits = Math.max(1, ...(report?.series ?? []).map((day) => Number(day.visits)));
   return (
     <section className="analytics" aria-label="Relatórios de utilização da SONI">
@@ -55,24 +57,24 @@ export default function AnalyticsDashboard({ token, onUnauthorized }) {
       {error && <p className="adminError" role="alert">{error}</p>}
       {loading && <p role="status">Consultando indicadores...</p>}
       {!loading && report && <>
+        <p className="analyticsPeriodInfo" role="status">Exibindo dados de <strong>{datePtBr(report.start_date)}</strong> a <strong>{datePtBr(report.end_date)}</strong> ({period} dias, horário de Brasília).</p>
         <div className="analyticsCards">
           {[
-            ['Visitas totais', total.visits_all],
+            ['Visitas no período (' + period + ' dias)', total.visits_period],
+            ['Visualizações no período (' + period + ' dias)', total.pageviews_period],
+            ['Testes concluídos no período (' + period + ' dias)', total.attempts_period],
             ['Visitas hoje', total.visits_today],
-            ['Visitas nos últimos 7 dias', total.visits_7d],
-            ['Visitas nos últimos 30 dias', total.visits_30d],
-            ['Visualizações totais', total.pageviews_all],
-            ['Visualizações em 30 dias', total.pageviews_30d],
-            ['Testes concluídos (total)', total.attempts_all],
-            ['Testes concluídos (30 dias)', total.attempts_30d],
+            ['Visitas totais (histórico)', total.visits_all],
+            ['Visualizações totais (histórico)', total.pageviews_all],
+            ['Testes concluídos (histórico)', total.attempts_all],
           ].map(([label, value]) => (
             <article className="analyticsCard" key={label}><span>{label}</span><strong>{format(value)}</strong></article>
           ))}
         </div>
 
         <div className="analyticsPanel">
-          <h3>Visitas diárias — últimos {days} dias</h3>
-          <div className="analyticsBars" role="img" aria-label={'Visitas diárias durante ' + days + ' dias'}>
+          <h3>Visitas diárias — {period} dias selecionados</h3>
+          <div className="analyticsBars" role="img" aria-label={'Visitas diárias durante ' + period + ' dias'}>
             {report.series.map((item) => (
               <div key={item.date} className="analyticsBarCol" title={item.date + ': ' + format(item.visits) + ' visitas, ' + format(item.pageviews) + ' visualizações'}>
                 <span className="analyticsBar" style={{ height: Math.max(2, Number(item.visits) / maxVisits * 100) + '%' }} />
@@ -85,7 +87,7 @@ export default function AnalyticsDashboard({ token, onUnauthorized }) {
 
         <div className="analyticsColumns">
           <section className="analyticsPanel">
-            <h3>Páginas mais acessadas · {days} dias</h3>
+            <h3>Páginas mais acessadas · {period} dias</h3>
             <div className="analyticsTableScroll">
               <table><thead><tr><th>Página</th><th>Exibições</th><th>Sessões</th></tr></thead>
                 <tbody>{report.pages.map((page) => <tr key={page.path}><td>{displayPage(page.path)}</td><td>{format(page.views)}</td><td>{format(page.sessions)}</td></tr>)}
@@ -94,7 +96,7 @@ export default function AnalyticsDashboard({ token, onUnauthorized }) {
             </div>
           </section>
           <section className="analyticsPanel">
-            <h3>Testes mais realizados · {days} dias</h3>
+            <h3>Testes mais realizados · {period} dias</h3>
             <div className="analyticsTableScroll">
               <table><thead><tr><th>Teste</th><th>Tentativas</th><th>Média</th></tr></thead>
                 <tbody>{report.quizzes.map((item) => <tr key={item.id}><td>{item.title}</td><td>{format(item.attempts)}</td><td>{percent(item.average_score)}</td></tr>)}
